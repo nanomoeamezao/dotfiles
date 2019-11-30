@@ -18,7 +18,7 @@ function run {
 #run "volumeicon"
 #run "nitrogen --restore"
 #run "conky -c $HOME/.config/awesome/system-overview"
-run VBoxClient-all
+#run VBoxClient-all
 #run applications from startup
 #run "firefox"
 #run "atom"

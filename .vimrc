@@ -1,12 +1,12 @@
-filetype off
-execute pathogen#infect()
+call plug#begin('~/.vim/plugged')
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'w0rp/ale'
+Plug 'ctrlpvim/ctrlp.vim'
+call plug#end()
 syntax on
 " set Vim-specific sequences for RGB colors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-set termguicolors
-set background=dark
-colorscheme solarized8
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 filetype plugin indent on
 set splitbelow
 set splitright
@@ -14,7 +14,10 @@ set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
 let mapleader = ","
-nmap <leader>w :w!<cr>
+"set keymap=russian-jcukenwin
+"set iminsert=0
+"set imsearch=0
+map <leader>w :w!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -31,6 +34,7 @@ set wildignore=*.o,*~,*.pyc
        endif
 "Always show current position
 "set ruler
+
 set relativenumber
 "" Height of the command bar
 set cmdheight=2
@@ -85,10 +89,7 @@ map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove 
 map <leader>t<leader> :tabnext<cr> 
- " Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
 " " Opens a new tab with the current buffer's path
 " " Super useful when editing files in the same directory
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
@@ -102,29 +103,12 @@ nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
 "vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 "vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 set nu
 set clipboard=unnamed
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize=35
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark<Space>
-map <leader>nf :NERDTreeFind<cr>
-"pymode stuff
-"let g:pymode_lint_select = ["W0011", "W430"]
-"let g:pymode_rope_completion = 0
-"let g:pymode_lint_ignore = ["E501", "W"]
-"let g:pymode_python = 'python3'
-"autocmd BufRead *.py setlocal colorcolumn=0
-"let g:pymode_options_colorcolumn = 0
-"ycm completion
-"let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-let g:ycm_auto_trigger = 0
-let g:ycm_complete_in_strings = 0 
-" Airline stuff
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='solarized'
 " special markdown setup
 let g:instant_markdown_slow = 1
+" ale
+let g:ale_python_flake8_options = "--ignore=E501"
+let g:ale_linter = {'python': ['flake8']}
+let g:ale_disable_lsp = 1
+let g:ale_linters_explicit = 1

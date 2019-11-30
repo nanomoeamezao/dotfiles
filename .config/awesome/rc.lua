@@ -42,7 +42,6 @@ local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- }}}
 
 
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -110,7 +109,7 @@ local filemanager       = "pcmanfm"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
-local terminal          = "st"
+local terminal          = "urxvt"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
@@ -207,7 +206,7 @@ beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/theme
 local myawesomemenu = {
     { "hotkeys", function() return false, hotkeys_popup.show_help end },
     { "manual", terminal .. " -e 'man awesome'" },
-    { "edit config", "st vim /home/dt/.config/awesome/rc.lua" },
+    { "edit config", "urxvt vim /home/dt/.config/awesome/rc.lua" },
     { "arandr", "arandr" },
     { "restart", awesome.restart },
 }
@@ -293,7 +292,7 @@ globalkeys = my_table.join(
     --    {description = "surf web browser" , group = "gui apps" }),
     --awful.key({ modkey, altkey  }, "c", function () awful.util.spawn( "st -e cmus" ) end,
     --    {description = "cmus" , group = "terminal apps" }),
-    awful.key({ modkey, altkey }, "e", function () awful.util.spawn( "st -e ranger" ) end,
+    awful.key({ modkey, altkey }, "e", function () awful.util.spawn( "urxvt -e ranger" ) end,
         {description = "ranger" , group = "terminal apps" }),
     --awful.key({ modkey, altkey  }, "f", function () awful.util.spawn( "st -e sh ./.config/vifm/scripts/vifmrun" ) end,
     --    {description = "vifm" , group = "terminal apps" }),
@@ -529,13 +528,13 @@ globalkeys = my_table.join(
    --           {description = "show weather", group = "widgets"}),
 
     -- Brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
+    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("brightnessctl s +10%") end,
               {description = "+10%", group = "hotkeys"}),
-    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
+    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("brightnessctl s 10%-") end,
               {description = "-10%", group = "hotkeys"}),
 
     -- ALSA volume control
-    --awful.key({ modkey1 }, "Up",
+   -- awful.key({ modkey1 }, "Up",
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))

@@ -10,10 +10,11 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/neozumm/.oh-my-zsh"
-export TERM="st-256color"
+export TERM="rxvt-unicode-256color"
 export BATTHEME="TwoDark"
-export PAGER=bat
+export PAGER=most
 export EDITOR=vim
+export LIBVA_DRIVER_NAME="iHD"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -33,6 +34,7 @@ POWERLEVEL9K_VI_COMMAND_MODE_STRING='NORMAL'
 # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 ZLE_RPROMPT_INDENT=0
+POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' list-colors ''
@@ -130,7 +132,8 @@ alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+bindkey "^[Od" backward-word
+bindkey "^[Oc" forward-word
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 source /usr/share/fzf/key-bindings.zsh
