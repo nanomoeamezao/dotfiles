@@ -751,6 +751,15 @@ awful.rules.rules = {
     { rule = { class = "Gimp*", role = "gimp-image-window" },
           properties = { maximized = true } },
 
+    { rule = { class = "Firefox" },
+          properties = { tag = awful.util.tagnames[2]} },
+
+    { rule = { class = "Bitwarden" },
+          properties = { tag = awful.util.tagnames[2]} },
+
+    { rule = { class = "Bitwarden" },
+          properties = { ontop = true } },
+
     { rule = { class = "inkscape" },
           properties = { maximized = true } },
 
@@ -795,6 +804,7 @@ awful.rules.rules = {
           "Unetbootin.elf",
           "Wpa_gui",
           "pinentry",
+		  "Bitwarden",
           "veromix",
           "xtightvncviewer"},
 

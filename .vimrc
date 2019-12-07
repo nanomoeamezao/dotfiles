@@ -110,5 +110,6 @@ let g:instant_markdown_slow = 1
 " ale
 let g:ale_python_flake8_options = "--ignore=E501"
 let g:ale_linter = {'python': ['flake8']}
-let g:ale_disable_lsp = 1
 let g:ale_linters_explicit = 1
+" let g:ale_python_flake8_executable = /home/neozumm/.local/bin/flake8
+let g:ale_python_flake9_use_global = 1
