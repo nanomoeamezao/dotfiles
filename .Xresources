@@ -50,23 +50,23 @@ URxvt.scrollBar: false
 URxvt.cursorColor: white
 
 !! Extensions
-URxvt.perl-ext-common: default,matcher,resize-font,url-select,keyboard-select,clipboard
+URxvt.perl-ext-common: default,matcher,keyboard-select
 URxvt.colorUL: #4682B4
 !! url-select
-URxvt.keysym.M-u: perl:url-select:select_next
-URxvt.url-select.launcher: urxvt -e firefox 
+URxvt.keysym.M-u: matcher:select
+URxvt.url-select.launcher: urxvt -e chromium 
 URxvt.url-select.underline: true
 !! keyboard-select:
 URxvt.keysym.M-Escape: perl:keyboard-select:activate
 !! resize-font
-URxvt.resize-font.smaller: C-j
-URxvt.resize-font.bigger:  C-k
+!!URxvt.resize-font.smaller: C-j
+!!URxvt.resize-font.bigger:  C-k
 !! Matcher
-URxvt.url-launcher:	urxvt -e firefox 
+URxvt.url-launcher:	urxvt -e chromium 
 URxvt.matcher.button: 1
+URxvt.keysym.C-Delete: matcher:last
+URxvt.keysym.M-Delete: matcher:list
 !!clipboard
-URxvt.keysym.M-c: perl:clipboard:copy
-URxvt.keysym.M-v: perl:clipboard:paste
 URxvt*depth: 32
 
 

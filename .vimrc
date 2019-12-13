@@ -14,9 +14,12 @@ set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
 let mapleader = ","
-"set keymap=russian-jcukenwin
-"set iminsert=0
-"set imsearch=0
+set keymap=russian-jcukenwin
+set iminsert=0
+set imsearch=0
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
+set langmap=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+nmap Ж :
 map <leader>w :w!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface

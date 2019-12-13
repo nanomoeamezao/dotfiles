@@ -102,7 +102,7 @@ local modkey1      = "Control"
 
 -- personal variables
 --change these variables if you want
-local browser           = "firefox"
+local browser           = "chrome"
 local editor            = os.getenv("EDITOR") or "vim"
 local editorgui         = "geany"
 local filemanager       = "pcmanfm"
@@ -292,7 +292,7 @@ globalkeys = my_table.join(
     --    {description = "surf web browser" , group = "gui apps" }),
     --awful.key({ modkey, altkey  }, "c", function () awful.util.spawn( "st -e cmus" ) end,
     --    {description = "cmus" , group = "terminal apps" }),
-    awful.key({ modkey, altkey }, "e", function () awful.util.spawn( "urxvt -e ranger" ) end,
+    awful.key({ modkey }, "e", function () awful.util.spawn( "urxvt -e ranger" ) end,
         {description = "ranger" , group = "terminal apps" }),
     --awful.key({ modkey, altkey  }, "f", function () awful.util.spawn( "st -e sh ./.config/vifm/scripts/vifmrun" ) end,
     --    {description = "vifm" , group = "terminal apps" }),
@@ -336,14 +336,14 @@ globalkeys = my_table.join(
         {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
         {description = "view next", group = "tag"}),
-    awful.key({ altkey,           }, "Escape", awful.tag.history.restore,
+    awful.key({ altkey,           }, "Tab", awful.tag.history.restore,
         {description = "go back", group = "tag"}),
 
      -- Tag browsing alt + tab
-    awful.key({ altkey,           }, "Tab",   awful.tag.viewnext,
-        {description = "view next", group = "tag"}),
-    awful.key({ altkey, "Shift"   }, "Tab",  awful.tag.viewprev,
-        {description = "view previous", group = "tag"}),
+    --awful.key({ altkey,           }, "Tab",   awful.tag.viewnext,
+    --    {description = "view next", group = "tag"}),
+    --awful.key({ altkey, "Shift"   }, "Tab",  awful.tag.viewprev,
+    --    {description = "view previous", group = "tag"}),
 
      -- Tag browsing modkey + tab
     awful.key({ modkey,           }, "Tab",   awful.tag.viewnext,
