@@ -12,7 +12,9 @@ fi
 export ZSH="/home/neozumm/.oh-my-zsh"
 export TERM="rxvt-unicode-256color"
 export BATTHEME="TwoDark"
-export PAGER=most
+export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo"
+export LESS=" -R"
+alias less='less -m -N -g -i -J --line-numbers --underline-special'
 export EDITOR=vim
 export LIBVA_DRIVER_NAME="iHD"
 # Set name of the theme to load --- if set to "random", it will

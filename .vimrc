@@ -1,7 +1,10 @@
 call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-Plug 'w0rp/ale'
+"Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"Plug 'w0rp/ale'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'conornewton/vim-pandoc-markdown-preview'
 call plug#end()
 syntax on
 " set Vim-specific sequences for RGB colors
@@ -24,6 +27,7 @@ map <leader>w :w!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set conceallevel=2
 " " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
 " " Turn on the Wild menu
@@ -108,11 +112,16 @@ nmap <M-k> mz:m-2<cr>`z
 "vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 set nu
 set clipboard=unnamed
-" special markdown setup
-let g:instant_markdown_slow = 1
+nmap <leader>u :!plantuml <C-R>% && feh <C-R>=expand("%:t:r")<cr>.png<cr>
 " ale
 let g:ale_python_flake8_options = "--ignore=E501"
 let g:ale_linter = {'python': ['flake8']}
 let g:ale_linters_explicit = 1
 " let g:ale_python_flake8_executable = /home/neozumm/.local/bin/flake8
 let g:ale_python_flake9_use_global = 1
+"md
+let g:pandoc#spell#enabled = 0
+let g:md_pdf_viewer="zathura"
+let g:instant_markdown_slow = 1
+let g:instant_markdown_autostart = 0
+let g:md_args = "-V lang=ru"

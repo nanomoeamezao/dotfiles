@@ -37,7 +37,7 @@ URxvt*imLocale: en_US.UTF-8
 URxvt*termName: rxvt-unicode-256color
 Urxvt*buffered: false
 URxvt.intensityStyles: false
-URxvt.font: xft:UbuntuMono Nerd Font:size=18, \
+URxvt.font: xft:UbuntuMono Nerd Font:size=16, \
             xft:Inconsolata Nerd Font Mono:size=18, \
             xft:DejaVuSansMono Nerd Font:size=18, \
             xft:DroidSansMono Nerd Font:size=18, \
@@ -48,21 +48,22 @@ URxvt.font: xft:UbuntuMono Nerd Font:size=18, \
 URxvt.saveLines: 2000
 URxvt.scrollBar: false
 URxvt.cursorColor: white
-
+URxvt*iso14755: False
 !! Extensions
 URxvt.perl-ext-common: default,matcher,keyboard-select
 URxvt.colorUL: #4682B4
 !! url-select
 URxvt.keysym.M-u: matcher:select
-URxvt.url-select.launcher: urxvt -e chromium 
 URxvt.url-select.underline: true
 !! keyboard-select:
 URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keyboard-select.clipboard: true
 !! resize-font
 !!URxvt.resize-font.smaller: C-j
 !!URxvt.resize-font.bigger:  C-k
 !! Matcher
-URxvt.url-launcher:	urxvt -e chromium 
+URxvt.url-launcher: xdg-open	
+URxvt.matcher.launcher.0: xdg-open 
 URxvt.matcher.button: 1
 URxvt.keysym.C-Delete: matcher:last
 URxvt.keysym.M-Delete: matcher:list

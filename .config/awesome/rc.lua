@@ -102,7 +102,7 @@ local modkey1      = "Control"
 
 -- personal variables
 --change these variables if you want
-local browser           = "chrome"
+local browser           = "chromium"
 local editor            = os.getenv("EDITOR") or "vim"
 local editorgui         = "geany"
 local filemanager       = "pcmanfm"
@@ -254,8 +254,10 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 -- {{{ Mouse bindings
 root.buttons(my_table.join(
     awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+	awful.button({ }, 4, function () end),
+	awful.button({ }, 5, function () end)
+    --awful.button({ }, 4, awful.tag.viewnext),
+    --awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
@@ -752,6 +754,8 @@ awful.rules.rules = {
           properties = { maximized = true } },
 
     { rule = { class = "Firefox" },
+          properties = { tag = awful.util.tagnames[2]} },
+    { rule = { class = "Chromium" },
           properties = { tag = awful.util.tagnames[2]} },
 
     { rule = { class = "Bitwarden" },
