@@ -317,9 +317,9 @@ globalkeys = my_table.join(
     --awful.key({ modkey, altkey  }, "y", function () awful.util.spawn( "st -e youtube-viewer" ) end,
     --    {description = "youtube-viewer" , group = "terminal apps" }),
 
-    -- screenshots
-    --awful.key({ }, "Print", function () awful.util.spawn("scrot 'ArcoLinuxD-%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'") end,
-    --    {description = "Scrot", group = "screenshots"}),
+    --screenshots
+    awful.key({ }, "Print", function () awful.util.spawn("flameshot gui") end,
+        {description = "Flameshot gui", group = "screenshots"}),
     --awful.key({ modkey1           }, "Print", function () awful.util.spawn( "xfce4-screenshooter" ) end,
     --    {description = "Xfce screenshot", group = "screenshots"}),
     --awful.key({ modkey1, "Shift"  }, "Print", function() awful.util.spawn("gnome-screenshot -i") end,
@@ -505,7 +505,6 @@ globalkeys = my_table.join(
               {description = "select next", group = "layout"}),
     --awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
              -- {description = "select previous", group = "layout"}),
-
     awful.key({ modkey, "Control" }, "n",
               function ()
                   local c = awful.client.restore()
@@ -530,9 +529,9 @@ globalkeys = my_table.join(
    --           {description = "show weather", group = "widgets"}),
 
     -- Brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("brightnessctl s +10%") end,
+    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("sudo brightnessctl s +10%") end,
               {description = "+10%", group = "hotkeys"}),
-    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("brightnessctl s 10%-") end,
+    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("sudo brightnessctl s 10%-") end,
               {description = "-10%", group = "hotkeys"}),
 
     -- ALSA volume control
@@ -889,9 +888,9 @@ client.connect_signal("request::titlebars", function(c)
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = true})
-end)
+--client.connect_signal("mouse::enter", function(c)
+--   c:emit_signal("request::activate", "mouse_enter", {raise = true})
+--end)
 
 -- No border for maximized clients
 function border_adjust(c)
@@ -912,4 +911,3 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Autostart applications
 awful.spawn.with_shell("~/.config/awesome/autostart.sh")
-awful.spawn.with_shell("compton --config  $HOME/.config/compton/compton.conf")

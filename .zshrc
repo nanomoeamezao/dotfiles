@@ -9,8 +9,11 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
+export GOPATH="$HOME/godir"
+export PATH="$GOPATH/bin:$PATH"
 export ZSH="/home/neozumm/.oh-my-zsh"
 export TERM="rxvt-unicode-256color"
+# export MESA_LOADER_DRIVER_OVERRIDE=iris
 export BATTHEME="TwoDark"
 export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo"
 export LESS=" -R"
@@ -104,7 +107,6 @@ autoload -Uz compinit
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 # User configuration
@@ -131,6 +133,11 @@ source $ZSH/oh-my-zsh.sh
 #
 # Example aliases
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+alias sc='sudo systemctl'
+alias scs='sudo systemctl start'
+alias scst='sudo systemctl stop'
+alias scr='sudo systemctl restart'
+alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
