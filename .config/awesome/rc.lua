@@ -33,7 +33,7 @@ naughty.config.defaults['icon_size'] = 100
 
 local lain          = require("lain")
 local freedesktop   = require("freedesktop")
-
+--local volume        = lain.widget.pulse()
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 local hotkeys_popup = require("awful.hotkeys_popup").widget
@@ -538,28 +538,28 @@ globalkeys = my_table.join(
    -- awful.key({ modkey1 }, "Up",
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+            os.execute(string.format("pamixer -i 5"))
             beautiful.volume.update()
         end),
     --awful.key({ modkey1 }, "Down",
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+            os.execute(string.format("pamixer -d 5"))
             beautiful.volume.update()
         end),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+            os.execute(string.format("pamixer -t"))
             beautiful.volume.update()
         end),
     awful.key({ modkey1, "Shift" }, "m",
         function ()
-            os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 100%%"))
             beautiful.volume.update()
         end),
     awful.key({ modkey1, "Shift" }, "0",
         function ()
-            os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 0%%"))
             beautiful.volume.update()
         end),
 

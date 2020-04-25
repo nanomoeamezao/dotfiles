@@ -25,3 +25,4 @@ function run {
 #run "dropbox"
 #run "insync start"
 #run "spotify"
+run "picom -b"

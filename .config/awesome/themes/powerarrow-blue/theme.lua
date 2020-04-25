@@ -154,12 +154,12 @@ theme.mail = lain.widget.imap({
 })
 --]]
 
--- ALSA volume
+--[[ALSA volume
 theme.volume = lain.widget.alsabar({
     --togglechannel = "IEC958,3",
     notification_preset = { font = theme.font, fg = theme.fg_normal },
 })
-
+--]]
 -- MPD
 local musicplr = "urxvt -title Music -g 130x34-320+16 -e ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
@@ -283,7 +283,20 @@ local bat = lain.widget.bat({
     end
 })
 
--- ALSA volume
+-- PulseAudio volume (based on multicolor theme)
+local volicon = wibox.widget.imagebox(theme.widget_vol)
+theme.volume = lain.widget.pulse ({
+	timeout = 1,
+    settings = function()
+        vlevel = volume_now.right .. "% "
+        if volume_now.muted == "yes" then
+            vlevel = vlevel .. " M"
+        end
+		widget:set_markup(lain.util.markup("#FFFFFF", vlevel))
+    end
+})
+
+--[[ ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa({
     settings = function()
@@ -300,7 +313,7 @@ theme.volume = lain.widget.alsa({
         widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
     end
 })
-
+--]]
 -- Net
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = net_widgets.wireless({interface="wlan0"})  

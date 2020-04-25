@@ -13,13 +13,16 @@ export GOPATH="$HOME/godir"
 export PATH="$GOPATH/bin:$PATH"
 export ZSH="/home/neozumm/.oh-my-zsh"
 export TERM="rxvt-unicode-256color"
-# export MESA_LOADER_DRIVER_OVERRIDE=iris
+export MESA_LOADER_DRIVER_OVERRIDE=iris
 export BATTHEME="TwoDark"
-export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo"
-export LESS=" -R"
+export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo --MOUSE"
+export LESS="-R --mouse --wheel-lines=5"
 alias less='less -m -N -g -i -J --line-numbers --underline-special'
 export EDITOR=vim
 export LIBVA_DRIVER_NAME="iHD"
+export XDG_CONFIG_HOME="$HOME/.config"    
+export XDG_CACHE_HOME="$HOME/.cache"
+export MAKEFLAGS="-j4"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
