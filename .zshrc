@@ -18,7 +18,7 @@ export BATTHEME="TwoDark"
 export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo --MOUSE"
 export LESS="-R --mouse --wheel-lines=5"
 alias less='less -m -N -g -i -J --line-numbers --underline-special'
-export EDITOR=vim
+export EDITOR=nvim
 export LIBVA_DRIVER_NAME="iHD"
 export XDG_CONFIG_HOME="$HOME/.config"    
 export XDG_CACHE_HOME="$HOME/.cache"

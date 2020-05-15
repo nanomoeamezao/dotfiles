@@ -103,7 +103,7 @@ local modkey1      = "Control"
 -- personal variables
 --change these variables if you want
 local browser           = "chromium"
-local editor            = os.getenv("EDITOR") or "vim"
+local editor            = os.getenv("EDITOR") or "nvim"
 local editorgui         = "geany"
 local filemanager       = "pcmanfm"
 local mailclient        = "geary"
@@ -275,6 +275,7 @@ globalkeys = my_table.join(
         beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
 	end,
     {description = "show rofi", group = "hotkeys"}),
+	awful.key({"Mod1"}, "Shift_L", function () beautiful.kbdcfg.switch_next() end, {description = "switch locale", group="hotkeys"}),
 
     -- My dmenu scripts (Alt+Ctrl+Key)
    -- awful.key({ altkey, "Control"  }, "e", function () awful.util.spawn( "./.dmenu/dmenu-edit-configs.sh" ) end,

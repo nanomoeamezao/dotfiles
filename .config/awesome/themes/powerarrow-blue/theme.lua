@@ -7,6 +7,7 @@
 
 local gears = require("gears")
 local lain  = require("lain")
+local helpers = require("lain.helpers")
 local awful = require("awful")
 local wibox = require("wibox")
 local net_widgets = require("net_widgets")
@@ -97,10 +98,16 @@ theme.titlebar_maximized_button_focus_active    = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
+local keyboard_layout = require("keyboard_layout")
 
 local markup = lain.util.markup
 local separators = lain.util.separators
 
+--keyboard
+theme.kbdcfg = keyboard_layout.kbdcfg({type = "tui"})
+theme.kbdcfg.add_primary_layout("English", "US", "us")
+theme.kbdcfg.add_primary_layout("Русский", "RU", "ru")
+theme.kbdcfg.bind()
 
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
@@ -417,7 +424,9 @@ function theme.at_screen_connect(s)
            -- wibox.container.background(wibox.container.margin(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, 4, 7), "#343434"),
             --arrow("alpha", "#7197E7"),
            -- wibox.container.background(wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, 3, 6), "#7197E7"),
-            arrow("#282a36", "#A77AC4"),
+            arrow("#282a36", "#7197E7"),
+            wibox.container.background(wibox.container.margin(theme.kbdcfg.widget, 2, 3), "#7197E7"),
+            arrow("#7197E7", "#A77AC4"),
             wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#A77AC4"),
             arrow("#A77AC4", "#7197E7"),
             wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#7197E7"),
