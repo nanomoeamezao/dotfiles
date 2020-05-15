@@ -109,7 +109,8 @@ local filemanager       = "pcmanfm"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
-local terminal          = "urxvt"
+--local terminal          = "urxvt"
+local terminal          = "alacritty"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
