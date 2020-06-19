@@ -10,9 +10,9 @@ local lain  = require("lain")
 local helpers = require("lain.helpers")
 local awful = require("awful")
 local wibox = require("wibox")
-
 local math, string, os = math, string, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local net_widgets = require("net_widgets")
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
@@ -216,11 +216,15 @@ theme.volume = lain.widget.alsa({
 
 -- Net
 local neticon = wibox.widget.imagebox(theme.widget_net)
-local net = lain.widget.net({
+--[[local net = lain.widget.net({
     settings = function()
         widget:set_markup(markup.fontfg(theme.font, "#FEFEFE", " " .. net_now.received .. " ↓↑ " .. net_now.sent .. " "))
     end
 })
+--]]
+
+local net = net_widgets.wireless({interface="wlan0"})  
+
 
 -- Separators
 local arrow = separators.arrow_left
@@ -307,7 +311,7 @@ function theme.at_screen_connect(s)
             arrow("#A77AC4", "#7197E7"),
             wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#7197E7"),
             arrow("#7197E7", "#A77AC4"),
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#A77AC4"),
+            wibox.container.background(wibox.container.margin(wibox.widget { nil, net, layout = wibox.layout.align.horizontal }, 3, 3), "#A77AC4"),
             arrow("#A77AC4", "#7197E7"),
             wibox.container.background(wibox.container.margin(clock, 4, 8), "#7197E7"),
             arrow("#7197E7", "alpha"),

@@ -274,8 +274,8 @@ globalkeys = my_table.join(
 	end,
     {description = "show rofi", group = "hotkeys"}),
 	awful.key({"Mod1"}, "Shift_L", function () beautiful.kbdcfg.switch_next() end, {description = "switch locale", group="hotkeys"}),
-	awful.key({ modkey }, "e", function () awful.spawn(terminal.." -e ranger" ) end,
-	{description = "ranger" , group = "terminal apps" }),
+	awful.key({ modkey }, "e", function () awful.spawn(terminal.." -e nnn" ) end,
+	{description = "nnn" , group = "terminal apps" }),
     
     --screenshots
     awful.key({ }, "Print", function () awful.util.spawn("flameshot gui") end,
