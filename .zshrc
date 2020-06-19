@@ -5,27 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export GOPATH="$HOME/codes/go"
-export PATH="$GOPATH/bin:$PATH"
-export ZSH="/home/neozumm/.oh-my-zsh"
-export TERM="alacritty"
-export MESA_LOADER_DRIVER_OVERRIDE=iris
-export BATTHEME="TwoDark"
-export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo --MOUSE"
-export LESS="-R --mouse --wheel-lines=5"
-alias less='less -m -N -g -i -J --line-numbers --underline-special'
-export EDITOR=nvim
-export VISUAL=nvim
-export LIBVA_DRIVER_NAME="iHD"
-export XDG_CONFIG_HOME="$HOME/.config"    
-export XDG_CACHE_HOME="$HOME/.cache"
-export MAKEFLAGS="-j4"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -139,6 +122,7 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+alias less='less -m -N -g -i -J --line-numbers --underline-special'
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 alias sc='sudo systemctl'
 alias scs='sudo systemctl start'
@@ -146,6 +130,7 @@ alias scst='sudo systemctl stop'
 alias scr='sudo systemctl restart'
 alias vimconf='nvim ~/.config/nvim/init.vim'
 alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
+alias vim='/usr/bin/nvim'
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word
@@ -153,3 +138,7 @@ bindkey "^[Oc" forward-word
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source /home/neozumm/.config/broot/launcher/bash/br
+
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+source /etc/profile.d/autojump.zsh

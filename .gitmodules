@@ -4,3 +4,6 @@
 [submodule "keyboard_layout"]
 	path = .config/awesome/keyboard_layout
 	url = https://github.com/echuraev/keyboard_layout.git
+[submodule ".config/awesome/lain"]
+	path = .config/awesome/lain
+	url = https://github.com/lcpz/lain.git
