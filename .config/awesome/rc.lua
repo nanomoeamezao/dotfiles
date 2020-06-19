@@ -759,7 +759,6 @@ awful.rules.rules = {
           "Sxiv",
           "Unetbootin.elf",
           "Wpa_gui",
-          "pinentry",
 		  "Bitwarden",
           "veromix",
           "xtightvncviewer"},
