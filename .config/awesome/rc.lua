@@ -42,6 +42,7 @@ local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- }}}
 
 
+awful.util.shell = "/usr/bin/zsh"
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -103,13 +104,12 @@ local modkey1      = "Control"
 -- personal variables
 --change these variables if you want
 local browser           = "chromium"
-local editor            = os.getenv("EDITOR") or "vim"
+local editor            = os.getenv("EDITOR") or "nvim"
 local editorgui         = "geany"
 local filemanager       = "pcmanfm"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
---local terminal          = "urxvt"
 local terminal          = "alacritty"
 local virtualmachine    = "virtualbox"
 
@@ -207,7 +207,6 @@ beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/theme
 local myawesomemenu = {
     { "hotkeys", function() return false, hotkeys_popup.show_help end },
     { "manual", terminal .. " -e 'man awesome'" },
-    { "edit config", "urxvt vim /home/dt/.config/awesome/rc.lua" },
     { "arandr", "arandr" },
     { "restart", awesome.restart },
 }
@@ -275,6 +274,10 @@ globalkeys = my_table.join(
         beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
 	end,
     {description = "show rofi", group = "hotkeys"}),
+	awful.key({"Mod1"}, "Shift_L", function () beautiful.kbdcfg.switch_next() end, {description = "switch locale", group="hotkeys"}),
+	awful.key({ modkey }, "e", function () awful.spawn(terminal.." -e ranger" ) end,
+	{description = "ranger" , group = "terminal apps" }),
+    
 
     -- My dmenu scripts (Alt+Ctrl+Key)
    -- awful.key({ altkey, "Control"  }, "e", function () awful.util.spawn( "./.dmenu/dmenu-edit-configs.sh" ) end,
@@ -295,8 +298,6 @@ globalkeys = my_table.join(
     --    {description = "surf web browser" , group = "gui apps" }),
     --awful.key({ modkey, altkey  }, "c", function () awful.util.spawn( "st -e cmus" ) end,
     --    {description = "cmus" , group = "terminal apps" }),
-    awful.key({ modkey }, "e", function () awful.util.spawn( "urxvt -e ranger" ) end,
-        {description = "ranger" , group = "terminal apps" }),
     --awful.key({ modkey, altkey  }, "f", function () awful.util.spawn( "st -e sh ./.config/vifm/scripts/vifmrun" ) end,
     --    {description = "vifm" , group = "terminal apps" }),
     --awful.key({ modkey, altkey  }, "i", function () awful.util.spawn( "st -e irssi" ) end,
@@ -807,7 +808,6 @@ awful.rules.rules = {
           "Sxiv",
           "Unetbootin.elf",
           "Wpa_gui",
-          "pinentry",
 		  "Bitwarden",
           "veromix",
           "xtightvncviewer"},

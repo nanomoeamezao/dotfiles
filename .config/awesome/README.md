@@ -2,37 +2,39 @@
 
 ![Screenshot of my desktop](https://www.gitlab.com/dwt1/dotfiles/raw/master/.screenshots/dotfiles09.png)
 
-Awesome is a highly configurable, next generation framework window manager for X.
+Awesome is a highly configurable, tiling window manager for X. It is very fast, extensible and licensed under the GNU GPLv2 license.  Awesome is a perfect "first" tiling window manager for those who want to try out tiling, but the extreme customization that you can achieve with awesome makes it a power user's dream.  Awesome is configured with Lua.
 
 # Features
 
-* Simple, small and extensible. It's easy to write your own layouts,
-  widgets and commands.
-* Configured in Python.
-* Command shell that allows all aspects of Qtile to be managed and
-  inspected.
-* Complete remote scriptability - write scripts to set up workspaces,
-  manipulate windows, update status bar widgets and more.
-* Qtile's remote scriptability makes it one of the most thoroughly
-  unit-tested window managers around.
+* Simple enough for beginner's but flexible enough for the power user.
+* Extremely customizable, maybe more so than any other window manager.
+* Configured in Lua.
+* A documented API to configure and define the behavior of your window manager.
 
 # My Keybindings
 
-The MODKEY is set to the Super key (aka the Windows key).
+The MODKEY is set to the Super key (aka the Windows key).  I try to keep the
+keybindings consistent with all of my window managers.
 
 | Keybinding | Action |
 | :--- | :--- |
-| `ALT + CRTL + Enter` | opens run launcher (dmenu is the run launcher but can be easily changed) |
-| `MODKEY + Enter` | opens terminal (st is the terminal but can be easily changed) |
+| `MODKEY + RETURN` | opens terminal (alacritty is the terminal but can be easily changed) |
+| `MODKEY + SHIFT + RETURN` | opens run launcher (dmenu is the run launcher but can be easily changed) |
 | `MODKEY + SHIFT + c` | closes window with focus |
 | `MODKEY + SHIFT + r` | restarts awesome |
 | `MODKEY + SHIFT + q` | quits awesome |
+| `MODKEY + 1-9` | switch focus to workspace (1-9) |
+| `MODKEY + SHIFT + 1-9` | send focused window to workspace (1-9) |
 | `MODKEY + j` | switches focus between windows in the stack, going down |
 | `MODKEY + k` | switches focus between windows in the stack, going up |
+| `MODKEY + h` | switches focus between windows in the stack, going left |
+| `MODKEY + l` | switches focus between windows in the stack, going right |
 | `MODKEY + SHIFT + j` | rotates the windows in the stack, going down|
 | `MODKEY + SHIFT + k` | rotates the windows in the stack, going up |
-| `MODKEY + 1-9` | switch focus to workspace (1-9) |
-| `MODKEY + SHIFT + 1-9` | sends focused window to workspace (1-9) |
+| `MODKEY + SHIFT + h` | rotates the windows in the stack, going left|
+| `MODKEY + SHIFT + l` | rotates the windows in the stack, going right |
+| `MODKEY + period` | switch focus to next monitor |
+| `MODKEY + comma` | switch focus to prev monitor |
 
 ## Getting Help With Awesome
 
@@ -56,9 +58,6 @@ Please report any issues you have with AwesomeWM on [our bugtracker](https://git
 
 You can submit pull requests on the [github repository](https://github.com/awesomeWM/awesome).
 Please read the [contributing guide](https://github.com/awesomeWM/awesome/blob/master/docs/02-contributing.md) for any coding, documentation or patch guidelines.
-
-## Status
-[![Build Status](https://travis-ci.com/awesomeWM/awesome.svg?branch=master)](https://travis-ci.com/awesomeWM/awesome)
 
 ## Documentation
 
