@@ -5,30 +5,32 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export GOPATH="$HOME/godir"
+export GOPATH="$HOME/codes/go"
 export PATH="$GOPATH/bin:$PATH"
 export ZSH="/home/neozumm/.oh-my-zsh"
-#export TERM="rxvt-unicode-256color"
+export TERM="alacritty"
 export MESA_LOADER_DRIVER_OVERRIDE=iris
 export BATTHEME="TwoDark"
 export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo --MOUSE"
 export LESS="-R --mouse --wheel-lines=5"
 alias less='less -m -N -g -i -J --line-numbers --underline-special'
 export EDITOR=nvim
+export VISUAL=nvim
 export LIBVA_DRIVER_NAME="iHD"
 export XDG_CONFIG_HOME="$HOME/.config"    
 export XDG_CACHE_HOME="$HOME/.cache"
-export MAKEFLAGS="-j8"
+export MAKEFLAGS="-j4"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 
-#ZSH_THEME="powerlevel9k"
 ZSH_THEME=powerlevel10k/powerlevel10k
 POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='5'
 POWERLEVEL9K_CONTEXT_DEFAULT_FOREGROUND='0'
@@ -39,7 +41,6 @@ POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='10'
 POWERLEVEL9K_VCS_MAX_SYNC_LATENCY_SECONDS='0.05'
 POWERLEVEL9K_VI_INSERT_MODE_STRING='INSERT' 
 POWERLEVEL9K_VI_COMMAND_MODE_STRING='NORMAL'
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 ZLE_RPROMPT_INDENT=0
 POWERLEVEL9K_INSTANT_PROMPT=quiet
@@ -47,11 +48,14 @@ POWERLEVEL9K_INSTANT_PROMPT=quiet
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=** r:|=**'
-zstyle ':completion:*' menu select=1
+zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle :compinstall filename '/home/neozumm/.zshrc'
 
-autoload -Uz compinit
+plugins=(zsh-completions)
+autoload -U compinit
+zmodload zsh/complist
+compinit
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -84,7 +88,7 @@ autoload -Uz compinit
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
- ENABLE_CORRECTION="true"
+ #ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -140,13 +144,12 @@ alias sc='sudo systemctl'
 alias scs='sudo systemctl start'
 alias scst='sudo systemctl stop'
 alias scr='sudo systemctl restart'
+alias vimconf='nvim ~/.config/nvim/init.vim'
 alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+
+source /home/neozumm/.config/broot/launcher/bash/br

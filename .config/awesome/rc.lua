@@ -276,61 +276,13 @@ globalkeys = my_table.join(
 	end,
     {description = "show rofi", group = "hotkeys"}),
 	awful.key({"Mod1"}, "Shift_L", function () beautiful.kbdcfg.switch_next() end, {description = "switch locale", group="hotkeys"}),
-
-    -- My dmenu scripts (Alt+Ctrl+Key)
-   -- awful.key({ altkey, "Control"  }, "e", function () awful.util.spawn( "./.dmenu/dmenu-edit-configs.sh" ) end,
-    --    {description = "edit config files" , group = "dmenu scripts" }),
-   -- awful.key({ altkey, "Control" }, "m", function () awful.util.spawn( "./.dmenu/dmenu-sysmon.sh" ) end,
-   --     {description = "system monitoring apps" , group = "dmenu scripts" }),
-   -- awful.key({ altkey, "Control" }, "p", function () awful.util.spawn( "passmenu" ) end,
-   --     {description = "passmenu" , group = "dmenu scripts" }),
-   -- awful.key({ altkey, "Control"  }, "s", function () awful.util.spawn( "./.dmenu/dmenu-surfraw.sh" ) end,
-   --     {description = "surfraw web search" , group = "dmenu scripts" }),
-   -- awful.key({ altkey, "Control"  }, "t", function () awful.util.spawn( "./.dmenu/dmenu-trading.sh" ) end,
-   --     {description = "trading programs" , group = "dmenu scripts" }),
-        
-    -- My applications (Super+Alt+Key)
-    --awful.key({ modkey, altkey  }, "a", function () awful.util.spawn( "st -e ncpamixer" ) end,
-     --   {description = "ncpamixer" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey }, "b", function () awful.util.spawn( "surf www.youtube.com/c/DistroTube" ) end,
-    --    {description = "surf web browser" , group = "gui apps" }),
-    --awful.key({ modkey, altkey  }, "c", function () awful.util.spawn( "st -e cmus" ) end,
-    --    {description = "cmus" , group = "terminal apps" }),
-    awful.key({ modkey }, "e", function () awful.util.spawn( "urxvt -e ranger" ) end,
+        awful.key({ modkey }, "e", function () awful.util.spawn( "alacritty -e ranger" ) end,
         {description = "ranger" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "f", function () awful.util.spawn( "st -e sh ./.config/vifm/scripts/vifmrun" ) end,
-    --    {description = "vifm" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "i", function () awful.util.spawn( "st -e irssi" ) end,
-    --    {description = "irssi" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "j", function () awful.util.spawn( "st -e joplin" ) end,
-    --    {description = "joplin" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey }, "l", function () awful.util.spawn( "st -e lynx --cfg=~/.lynx/lynx.cfg --lss=~/.lynx/lynx.lss -vikeys gopher://distro.tube" ) end,
-    --    {description = "lynx cli browser" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey }, "m", function () awful.util.spawn( "st -e toot curses" ) end,
-    --    {description = "toot curses" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey }, "n", function () awful.util.spawn( "st -e newsboat" ) end,
-    --    {description = "newsboat" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "p", function () awful.util.spawn( "st -e pianobar" ) end,
-    --    {description = "pianobar" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey }, "r", function () awful.util.spawn( "st -e rtv" ) end,
-    --    {description = "rtv" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "w", function () awful.util.spawn( "st -e wopr report.xml" ) end,
-    --    {description = "wopr report.xml" , group = "terminal apps" }),
-    --awful.key({ modkey, altkey  }, "y", function () awful.util.spawn( "st -e youtube-viewer" ) end,
-    --    {description = "youtube-viewer" , group = "terminal apps" }),
-
+    
     --screenshots
     awful.key({ }, "Print", function () awful.util.spawn("flameshot gui") end,
         {description = "Flameshot gui", group = "screenshots"}),
-    --awful.key({ modkey1           }, "Print", function () awful.util.spawn( "xfce4-screenshooter" ) end,
-    --    {description = "Xfce screenshot", group = "screenshots"}),
-    --awful.key({ modkey1, "Shift"  }, "Print", function() awful.util.spawn("gnome-screenshot -i") end,
-    --    {description = "Gnome screenshot", group = "screenshots"}),
-
-    -- Personal keybindings}}}
-
-
-    -- Hotkeys Awesome
+       -- Hotkeys Awesome
 
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
         {description = "show help", group="awesome"}),
