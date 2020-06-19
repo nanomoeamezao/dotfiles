@@ -1,3 +1,6 @@
 [submodule ".config/awesome/keyboard_layout"]
 	path = .config/awesome/keyboard_layout
 	url = https://github.com/echuraev/keyboard_layout.git
+[submodule ".config/awesome/net_widgets"]
+	path = .config/awesome/net_widgets
+	url = https://github.com/pltanton/net_widgets.git
