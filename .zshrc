@@ -131,6 +131,8 @@ alias scr='sudo systemctl restart'
 alias vimconf='nvim ~/.config/nvim/init.vim'
 alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
 alias vim='/usr/bin/nvim'
+alias awrc='nvim ~/.config/awesome/rc.lua'
+alias awtheme='nvim ~/.config/awesome/themes/powerarrow-blue/theme.lua'
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word

@@ -112,7 +112,7 @@ theme.kbdcfg.bind()
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
-    "%a %d %b %R", 60,
+    "date +'%R'", 60,
     function(widget, stdout)
         widget:set_markup(" " .. markup.font(theme.font, stdout))
     end
