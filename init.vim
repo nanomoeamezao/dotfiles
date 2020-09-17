@@ -6,9 +6,13 @@ if !exists('g:vscode')
   if dein#load_state('~/.cache/dein')
     call dein#begin('~/.cache/dein')
     call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-    call dein#add('Shougo/deoplete.nvim')
-    call dein#add('deoplete-plugins/deoplete-jedi')
-    call dein#add('nvie/vim-flake8')
+    call dein#add('tpope/vim-surround.git')
+    call dein#add('vim-airline/vim-airline')
+    call dein#add('ctrlpvim/ctrlp.vim')
+    call dein#add('vim-airline/vim-airline-themes')
+    call dein#add('joshdick/onedark.vim')
+    call dein#add('neoclide/coc.nvim', {'branch': 'release'})
+    call dein#add('sheerun/vim-polyglot')
     if !has('nvim')
       call dein#add('roxma/nvim-yarp')
       call dein#add('roxma/vim-hug-neovim-rpc')
@@ -16,22 +20,26 @@ if !exists('g:vscode')
     call dein#end()
     call dein#save_state()
   endif
+  if (has("termguicolors"))
+    set termguicolors
+  endif
 endif
 syntax on
-let g:python3_host_prog = 'C:\Users\User\AppData\Local\Programs\Python\Python38\python.exe'
-let g:deoplete#auto_complete=1
 " set Vim-specific sequences for RGB colors
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 filetype plugin indent on
 set splitbelow
+
+colorscheme onedark
+let g:airline_theme='onedark'
+
 set splitright
 set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
 let mapleader = ","
 set omnifunc=syntaxcomplete#Complete
-let g:deoplete#enable_at_startup = 1
 set keymap=russian-jcukenwin
 set iminsert=0
 set imsearch=0
@@ -79,6 +87,7 @@ set ttimeoutlen=5
 set noerrorbells
 set novisualbell
 set t_vb=
+set updatetime=300
 set tm=500
 set smarttab
 set tabstop=4
@@ -122,3 +131,6 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 map 0 ^
 set nu
 set clipboard=unnamed
+
+" COC
+
