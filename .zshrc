@@ -35,7 +35,6 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle :compinstall filename '/home/neozumm/.zshrc'
 
-plugins=(zsh-completions)
 autoload -U compinit
 zmodload zsh/complist
 compinit

@@ -1,6 +1,3 @@
-if &compatible
-  set nocompatible
-endif
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 if !exists('g:vscode')
   if dein#load_state('~/.cache/dein')
@@ -13,6 +10,9 @@ if !exists('g:vscode')
     call dein#add('joshdick/onedark.vim')
     call dein#add('neoclide/coc.nvim', {'branch': 'release'})
     call dein#add('sheerun/vim-polyglot')
+    call dein#add('antoinemadec/FixCursorHold.nvim')
+    call dein#add('justinmk/vim-sneak')
+    call dein#add('lambdalisue/fern.vim')
     if !has('nvim')
       call dein#add('roxma/nvim-yarp')
       call dein#add('roxma/vim-hug-neovim-rpc')
