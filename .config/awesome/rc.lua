@@ -244,7 +244,11 @@ beautiful.useless_gap                               = 4
                     layout = wibox.layout.fixed.horizontal,
                     wibox.widget.systray(),
                     seperator,
-					volumearc_widget(),
+					volumearc_widget({
+                            button_press = function(_, _, _, button)   -- Overwrites the button press behaviour to open pavucontrol when clicked
+        if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
+        end
+    end}),
                     seperator,
                     mykeyboardlayout,
                     seperator,
@@ -402,6 +406,12 @@ clientkeys = gears.table.join(
             c:raise()
         end ,
         {description = "(un)maximize horizontally", group = "client"}),
+	awful.key( {}, "XF86MonBrightnessDown", function () awful.spawn("/usr/bin/brightnessctl set 10%-")   end,
+		{description = "Brightness down", group = "brightness"}),
+	awful.key( {}, "XF86MonBrightnessUp", function () awful.spawn("/usr/bin/brightnessctl set 10%+")   end,
+		{description = "Brightness up", group = "brightness"}),
+	awful.key( {}, "XF86AudioMute", function () awful.spawn("/usr/bin/amixer -D pulse set Master toggle")   end,
+		{description = "Mute volume", group = "sound"}),
 	awful.key( {}, "XF86AudioRaiseVolume", function () awful.spawn("/usr/bin/amixer -D pulse sset Master 5%+")   end,
 		{description = "vol +", group = "sound"}),
 	awful.key( {}, "XF86AudioLowerVolume", function () awful.spawn("/usr/bin/amixer -D pulse sset Master 5%-")   end,

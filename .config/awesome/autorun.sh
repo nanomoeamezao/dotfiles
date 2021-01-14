@@ -8,9 +8,9 @@ function run {
 }
 
 ## run (only once) processes which spawn with different name
-if (command -v gnome-keyring-daemon && ! pgrep gnome-keyring-d); then
-    gnome-keyring-daemon --daemonize --login &
-fi
+#if (command -v gnome-keyring-daemon && ! pgrep gnome-keyring-d); then
+#    gnome-keyring-daemon --daemonize --login &
+#fi
 if (command -v start-pulseaudio-x11 && ! pgrep pulseaudio); then
     start-pulseaudio-x11 &
 fi
@@ -29,7 +29,9 @@ fi
 run nm-applet
 run light-locker
 run picom -b
+run lxpolkit
 run batterymon -t numix 
+run batsignal -f 95 -c "CHARGE ME FAGGOT"
 # run xcape -e 'Caps_Lock=Escape'
 run thunar --daemon
 # run pa-applet
