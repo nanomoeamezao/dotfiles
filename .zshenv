@@ -4,7 +4,6 @@ export PATH
 export GOPATH="$HOME/codes/go"
 export PATH="$GOPATH/bin:$PATH"
 export ZSH="/home/neozumm/.oh-my-zsh"
-export TERM="alacritty"
 export BATTHEME="TwoDark"
 export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo"
 export LESS="-R --mouse --wheel-lines=5"

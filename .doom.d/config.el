@@ -69,6 +69,12 @@
 (add-hook! python-mode-hook
   (setq 'flycheck-checker
        "python-flake8" ))
+(setenv
+  "DICPATH"
+  "/usr/share/hunspell")
+(after! ispell
+        (ispell-set-spellchecker-params)
+        (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

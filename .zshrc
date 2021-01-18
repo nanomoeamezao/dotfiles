@@ -38,6 +38,7 @@ zstyle :compinstall filename '/home/neozumm/.zshrc'
 autoload -U compinit
 zmodload zsh/complist
 compinit
+kitty + complete setup zsh | source /dev/stdin
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -131,7 +132,10 @@ alias vimconf='nvim ~/.config/nvim/init.vim'
 alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
 alias vim='/usr/bin/nvim'
 alias awrc='nvim ~/.config/awesome/rc.lua'
-alias awtheme='nvim ~/.config/awesome/themes/powerarrow-blue/theme.lua'
+chst ()
+{
+  curl cheat.sh/"$1"
+}
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word

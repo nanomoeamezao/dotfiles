@@ -46,7 +46,7 @@ beautiful.init(awful.util.getdir("config") .. "/themes/cesious/theme.lua")
 beautiful.notification_font = "Noto Sans Regular 14"
 beautiful.systray_icon_spacing = 3
 -- This is used later as the default terminal and editor to run.
-terminal = "alacritty"
+terminal = "kitty"
 browser = "chromium"
 filemanager = "thunar"
 editor = terminal .. "-e nvim"
@@ -244,17 +244,22 @@ beautiful.useless_gap                               = 4
                     layout = wibox.layout.fixed.horizontal,
                     wibox.widget.systray(),
                     seperator,
-					volumearc_widget({
+                    volumearc_widget({
+                            main_color = '#af13f7',
+                            mute_color = '#ff0000',
+                            thickness = 5,
+                            height = 25,
+                            get_volume_cmd = 'amixer -D pulse sget Master',
                             button_press = function(_, _, _, button)   -- Overwrites the button press behaviour to open pavucontrol when clicked
-        if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
-        end
-    end}),
+                                if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
+                                end
+                    end}),
                     seperator,
                     mykeyboardlayout,
                     seperator,
                     mytextclock,
                     s.mylayoutbox,
-                },
+        },
     }
 end)
 -- }}}
@@ -348,9 +353,7 @@ globalkeys = gears.table.join(
               {description = "select previous", group = "layout"}),
     awful.key({                   }, "Print", function () awful.spawn("/usr/bin/i3-scrot -d")   end,
               {description = "capture a screenshot", group = "screenshot"}),
-    awful.key({"Control"          }, "Print", function () awful.spawn("/usr/bin/i3-scrot -w")   end,
-              {description = "capture a screenshot of active window", group = "screenshot"}),
-    awful.key({"Shift"            }, "Print", function () awful.spawn("/usr/bin/i3-scrot -s")   end,
+    awful.key({"Shift"            }, "Print", function () awful.spawn("/usr/bin/flameshot gui")   end,
               {description = "capture a screenshot of selection", group = "screenshot"}),
 
     awful.key({ modkey, "Control" }, "n",
