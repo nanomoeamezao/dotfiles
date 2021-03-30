@@ -1,3 +1,6 @@
 [submodule "awesome-wm-widgets"]
 	path = .config/awesome/awesome-wm-widgets
 	url = https://github.com/streetturtle/awesome-wm-widgets.git
+[submodule ".zsh-plugins/completions"]
+	path = .zsh-plugins/completions
+	url = git://github.com/zsh-users/zsh-completions.git
