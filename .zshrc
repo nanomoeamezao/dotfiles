@@ -124,6 +124,10 @@ kitty + complete setup zsh | source /dev/stdin
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt inc_append_history
 alias less='less -m -N -g -i -J --line-numbers --underline-special'
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 alias sc='sudo systemctl'
