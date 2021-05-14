@@ -1,6 +1,5 @@
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 if !exists('g:vscode')
-  if dein#load_state('~/.cache/dein')
     call dein#begin('~/.cache/dein')
     call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
     call dein#add('tpope/vim-surround.git')
@@ -18,13 +17,11 @@ if !exists('g:vscode')
       call dein#add('roxma/vim-hug-neovim-rpc')
     endif
     call dein#end()
-    call dein#save_state()
-  endif
   if (has("termguicolors"))
     set termguicolors
   endif
 endif
-syntax on
+syntax enable
 " set Vim-specific sequences for RGB colors
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
