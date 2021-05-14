@@ -14,4 +14,4 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export MAKEFLAGS="-j4"
 export NNN_BMS="m:/mnt;h:~;a:~/.config/awesome;"
 export NNN_PLUG="j:autojump;"
-
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
