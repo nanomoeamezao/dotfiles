@@ -227,7 +227,7 @@ beautiful.useless_gap                               = 4
     -- Create a tasklist widget
 --    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 -- vol widget
-	local volumearc_widget = require("awesome-wm-widgets.volumearc-widget.volumearc")
+	local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
@@ -244,16 +244,17 @@ beautiful.useless_gap                               = 4
                     layout = wibox.layout.fixed.horizontal,
                     wibox.widget.systray(),
                     seperator,
-                    volumearc_widget({
+                    volume_widget{
                             main_color = '#af13f7',
                             mute_color = '#ff0000',
                             thickness = 5,
-                            height = 25,
+							size = 25,
+							widget_type = 'arc',
                             get_volume_cmd = 'amixer -D pulse sget Master',
                             button_press = function(_, _, _, button)   -- Overwrites the button press behaviour to open pavucontrol when clicked
                                 if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
                                 end
-                    end}),
+                    end},
                     seperator,
                     mykeyboardlayout,
                     seperator,
