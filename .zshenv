@@ -1,5 +1,6 @@
 typeset -U PATH path
 path=("$HOME/.local/bin" "$HOME/.config/composer/vendor/bin" "$HOME/.gem/ruby/2.6.0/bin" "$path[@]")
+fpath=(/home/neozumm/.zsh-plugins/completions/src $fpath)
 export PATH
 export GOPATH="$HOME/codes/go"
 export PATH="$GOPATH/bin:$PATH"
