@@ -145,7 +145,7 @@ chst ()
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word
-
+bindkey -e
 source /home/neozumm/.config/broot/launcher/bash/br
 
 source /usr/share/fzf/key-bindings.zsh
