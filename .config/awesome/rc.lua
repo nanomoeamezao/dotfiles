@@ -250,11 +250,8 @@ beautiful.useless_gap                               = 4
                             thickness = 5,
 							size = 25,
 							widget_type = 'arc',
-                            get_volume_cmd = 'amixer -D pulse sget Master',
-                            button_press = function(_, _, _, button)   -- Overwrites the button press behaviour to open pavucontrol when clicked
-                                if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
-                                end
-                    end},
+							mixer_cmd = 'pavucontrol',
+                    },
                     seperator,
                     mykeyboardlayout,
                     seperator,
