@@ -3,15 +3,19 @@ if !exists('g:vscode')
     call dein#begin('~/.cache/dein')
     call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
     call dein#add('tpope/vim-surround.git')
+    call dein#add('tpope/vim-fugitive')
+    call dein#add('airblade/vim-gitgutter')
     call dein#add('vim-airline/vim-airline')
+    call dein#add('vim-scripts/ReplaceWithRegister')
+    call dein#add('scrooloose/nerdcommenter')
     call dein#add('ctrlpvim/ctrlp.vim')
     call dein#add('vim-airline/vim-airline-themes')
     call dein#add('joshdick/onedark.vim')
-    call dein#add('neoclide/coc.nvim', {'branch': 'release'})
     call dein#add('sheerun/vim-polyglot')
     call dein#add('antoinemadec/FixCursorHold.nvim')
     call dein#add('justinmk/vim-sneak')
     call dein#add('lambdalisue/fern.vim')
+    call dein#add('mileszs/ack.vim')
     if !has('nvim')
       call dein#add('roxma/nvim-yarp')
       call dein#add('roxma/vim-hug-neovim-rpc')
@@ -34,8 +38,7 @@ let g:airline_theme='onedark'
 set splitright
 set foldmethod=indent
 set foldlevel=99
-nnoremap <space> za
-let mapleader = ","
+let mapleader = " "
 set omnifunc=syntaxcomplete#Complete
 set keymap=russian-jcukenwin
 set iminsert=0
@@ -125,35 +128,14 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 " => Editing mappings
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
- " Remap VIM 0 to first non-blank character
+" Remap VIM 0 to first non-blank character
 map 0 ^
 set nu
-set clipboard=unnamed
+set clipboard=unnamedplus
 
+" use ag for ACK
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 " COC
 

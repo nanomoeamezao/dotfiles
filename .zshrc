@@ -135,7 +135,7 @@ alias scs='sudo systemctl start'
 alias scst='sudo systemctl stop'
 alias scr='sudo systemctl restart'
 alias vimconf='nvim ~/.config/nvim/init.vim'
-alias doomupd="$HOME/.emacs.d/bin/doom upgrade"
+alias doom="$HOME/.emacs.d/bin/doom"
 alias vim='/usr/bin/nvim'
 alias awrc='nvim ~/.config/awesome/rc.lua'
 chst ()
@@ -143,11 +143,10 @@ chst ()
   curl cheat.sh/"$1"
 }
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-bindkey "^[Od" backward-word
-bindkey "^[Oc" forward-word
+bindkey ";5D" backward-word
+bindkey ";5C" forward-word
 bindkey -e
 source /home/neozumm/.config/broot/launcher/bash/br
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-source /etc/profile.d/autojump.zsh
