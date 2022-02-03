@@ -4,14 +4,17 @@ if !exists('g:vscode')
     call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
     call dein#add('tpope/vim-surround.git')
     call dein#add('tpope/vim-fugitive')
+    call dein#add('machakann/vim-highlightedyank')
     call dein#add('airblade/vim-gitgutter')
+    call dein#add('Shougo/deoplete.nvim')
+    call dein#add('deoplete-plugins/deoplete-go', {'build': 'make'})
     call dein#add('vim-airline/vim-airline')
     call dein#add('vim-scripts/ReplaceWithRegister')
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('ctrlpvim/ctrlp.vim')
     call dein#add('vim-airline/vim-airline-themes')
     call dein#add('joshdick/onedark.vim')
-    call dein#add('sheerun/vim-polyglot')
+    call dein#add('fatih/vim-go')
     call dein#add('antoinemadec/FixCursorHold.nvim')
     call dein#add('justinmk/vim-sneak')
     call dein#add('lambdalisue/fern.vim')
@@ -27,8 +30,8 @@ if !exists('g:vscode')
 endif
 syntax enable
 " set Vim-specific sequences for RGB colors
-"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 filetype plugin indent on
 set splitbelow
 
@@ -133,9 +136,63 @@ map 0 ^
 set nu
 set clipboard=unnamedplus
 
+" fern
+nmap <C-/> :Fern . -drawer -toggle<CR>
+
 " use ag for ACK
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
-" COC
 
+" git blames
+function! s:ToggleBlame()
+    if &l:filetype ==# 'fugitiveblame'
+        close
+    else
+        Git blame
+    endif
+endfunction
+
+nnoremap gb :call <SID>ToggleBlame()<CR>
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+" go
+let g:go_info_mode = "gopls"
+let g:go_def_mode = "gopls"
+
+" vim-go quickfix hotkeys
+nnoremap gn :cnext<CR>
+nnoremap gp :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+let g:go_list_type = "quickfix" " only use quickfixes
+
+" go callers
+nnoremap gc :GoCallers<CR>
+
+set autowrite
+autocmd FileType go nmap <leader>b <Plug>(go-build)
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+
+
+" vim-go highlights
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+
+inoremap <silent><expr> <TAB>
+		\ pumvisible() ? "\<C-n>" :
+		\ <SID>check_back_space() ? "\<TAB>" :
+		\ deoplete#manual_complete()
+		function! s:check_back_space() abort "{{{
+		  let col = col('.') - 1
+		  return !col || getline('.')[col - 1]  =~ '\s'
+		endfunction"}}}

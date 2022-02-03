@@ -26,7 +26,7 @@ run light-locker
 run picom -b
 #run lxpolkit
 run batterymon -t numix 
-run batsignal -f 95 -C "CHARGE ME FAGGOT" -m 320 -e -b
+run batsignal -f 95 -C "CHARGE ME FAGGOT" -m 320 -e
 # run xcape -e 'Caps_Lock=Escape'
 run thunar --daemon
 # run pa-applet
