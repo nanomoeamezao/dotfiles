@@ -3,11 +3,11 @@ if !exists('g:vscode')
     call dein#begin('~/.cache/dein')
     call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
     call dein#add('tpope/vim-surround.git')
+    call dein#add('ervandew/supertab')
     call dein#add('tpope/vim-fugitive')
     call dein#add('machakann/vim-highlightedyank')
     call dein#add('airblade/vim-gitgutter')
     call dein#add('Shougo/deoplete.nvim')
-    call dein#add('deoplete-plugins/deoplete-go', {'build': 'make'})
     call dein#add('vim-airline/vim-airline')
     call dein#add('vim-scripts/ReplaceWithRegister')
     call dein#add('scrooloose/nerdcommenter')
@@ -90,7 +90,7 @@ set ttimeoutlen=5
 set noerrorbells
 set novisualbell
 set t_vb=
-set updatetime=300
+set updatetime=100
 set tm=500
 set smarttab
 set tabstop=4
@@ -137,7 +137,7 @@ set nu
 set clipboard=unnamedplus
 
 " fern
-nmap <C-/> :Fern . -drawer -toggle<CR>
+nmap <C-H> :Fern . -drawer -toggle<CR>
 
 " use ag for ACK
 if executable('ag')
@@ -164,6 +164,7 @@ let g:go_def_mode = "gopls"
 nnoremap gn :cnext<CR>
 nnoremap gp :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
+nnoremap gN :cc<CR>
 let g:go_list_type = "quickfix" " only use quickfixes
 
 " go callers
@@ -173,7 +174,6 @@ set autowrite
 autocmd FileType go nmap <leader>b <Plug>(go-build)
 autocmd FileType go nmap <leader>r <Plug>(go-run)
 autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
 autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
 
 
@@ -184,15 +184,13 @@ let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
+let g:go_auto_sameids = 1
+let g:go_metalinter_autosave = 1
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 
-inoremap <silent><expr> <TAB>
-		\ pumvisible() ? "\<C-n>" :
-		\ <SID>check_back_space() ? "\<TAB>" :
-		\ deoplete#manual_complete()
-		function! s:check_back_space() abort "{{{
-		  let col = col('.') - 1
-		  return !col || getline('.')[col - 1]  =~ '\s'
-		endfunction"}}}
+set completeopt+=noselect
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
+
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"

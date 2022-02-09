@@ -6,8 +6,7 @@ export GOPATH="$HOME/codes/go"
 export PATH="$GOPATH/bin:$PATH"
 export ZSH="/home/neozumm/.oh-my-zsh"
 export BATTHEME="TwoDark"
-export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style pablo"
-export LESS="-R --mouse --wheel-lines=5"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export EDITOR=nvim
 export VISUAL=nvim
 export XDG_CONFIG_HOME="$HOME/.config"    
