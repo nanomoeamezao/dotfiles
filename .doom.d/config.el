@@ -1,5 +1,4 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
@@ -21,8 +20,7 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq default-input-method "russian-computer")
-(setq doom-font (font-spec :family "monospace" :size 18 :weight 'semi-light))
+
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -35,46 +33,9 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-(setq flycheck-check-syntax-automatically '(save idle-change idle-buffer-switch new-line mode-enabled))
-;; company stuff
-(after! company
-  (setq company-idle-delay 0.9
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-)
-;; tabnine
-;; (use-package! company-tabnine)
-(company-tng-configure-default)
-;; (add-to-list 'company-backends #'company-tabnine)
-(add-to-list 'company-backends #'company-files)
-;; (setq company-tabnine--disable-next-transform nil)
-;; (defun my-company--transform-candidates (func &rest args)
-;;   (if (not company-tabnine--disable-next-transform)
-;;       (apply func args)
-;;     (setq company-tabnine--disable-next-transform nil)
-;;     (car args)))
 
-;; (defun my-company-tabnine (func &rest args)
-;;   (when (eq (car args) 'candidates)
-;;     (setq company-tabnine--disable-next-transform t))
-;;   (apply func args))
-;; (advice-add #'company--transform-candidates :around #'my-company--transform-candidates)
-;; (advice-add #'company-tabnine :around #'my-company-tabnine)
-(setq +lsp-company-backends '(company-capf
-                              :with
-                              company-yasnippet
-                              :separate
-                              company-files
-                              ))
-(add-hook! python-mode-hook
-  (setq 'flycheck-checker
-       "python-flake8" ))
-(setenv
-  "DICPATH"
-  "/usr/share/hunspell")
-(after! ispell
-        (ispell-set-spellchecker-params)
-        (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
+(setq default-input-method "russian-computer")
+(setq doom-font (font-spec :family "monospace" :size 16 :weight 'semi-light))
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -91,3 +52,48 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(after! company
+  (setq company-idle-delay 0.9
+        company-minimum-prefix-length 2)
+  (setq company-show-quick-access t))
+
+
+(company-tng-configure-default)
+
+(add-to-list 'company-backends #'company-files)
+(setq +lsp-company-backends '(company-capf
+                              :with
+                              company-yasnippet
+                              :separate
+                              company-files))
+                              
+
+(map! :desc "g n" :n "g n" #'flycheck-next-error)
+(map! :desc "g p" :n "g p" #'flycheck-previous-error)
+
+(require 'evil-replace-with-register)
+(setq evil-replace-with-register-key (kbd "gr"))
+(evil-replace-with-register-install)
+
+(require 'dap-go)
+(setq dap-print-io t)
+(setq dap-auto-configure-features '(sessions locals controls tooltip))
+(add-hook 'dap-stopped-hook
+          (lambda (arg) (call-interactively #'dap-hydra)))
+(after! lsp-mode (flycheck-golangci-lint-setup))
+
+;; Add buffer local Flycheck checkers after LSP for different major modes.
+(defvar-local my-flycheck-local-cache nil)
+(defun my-flycheck-local-checker-get (fn checker property)
+  ;; Only check the buffer local cache for the LSP checker, otherwise we get
+  ;; infinite loops.
+  (if (eq checker 'lsp)
+      (or (alist-get property my-flycheck-local-cache)
+          (funcall fn checker property))
+    (funcall fn checker property)))
+(advice-add 'flycheck-checker-get
+            :around 'my-flycheck-local-checker-get)
+(add-hook 'lsp-managed-mode-hook
+            (lambda ()
+              (when (derived-mode-p 'go-mode)
+                (setq my-flycheck-local-cache '((next-checkers . (golangci-lint)))))))
