@@ -14,6 +14,9 @@ M.plugins = {
    },
 
    install = userPlugins,
+   default_plugin_config_replace = {
+      nvim_treesitter = plugin_conf.treesitter,
+   },
 }
 
 M.ui = {

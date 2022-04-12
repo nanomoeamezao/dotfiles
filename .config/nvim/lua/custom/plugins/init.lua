@@ -1,15 +1,6 @@
 return {
 
    {
-      "windwp/nvim-ts-autotag",
-      ft = { "html", "javascriptreact" },
-      after = "nvim-treesitter",
-      config = function()
-         require("nvim-ts-autotag").setup()
-      end,
-   },
-
-   {
       "jose-elias-alvarez/null-ls.nvim",
       after = "nvim-lspconfig",
       config = function()
@@ -61,7 +52,15 @@ return {
          require("surround").setup { mappings_style = "surround" }
       end,
    },
-   { "gaving/vim-textobj-argument" },
+   { "nvim-treesitter/nvim-treesitter-textobjects" },
+   {
+      "windwp/nvim-ts-autotag",
+      ft = { "html", "javascriptreact" },
+      after = "nvim-treesitter",
+      config = function()
+         require("nvim-ts-autotag").setup()
+      end,
+   },
    { "justinmk/vim-sneak" },
    { "vim-scripts/ReplaceWithRegister" },
 }
