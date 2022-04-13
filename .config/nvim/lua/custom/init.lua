@@ -1,2 +1,1 @@
-require "custom.mappings"
-require "custom.autochad_cmds"
+/home/neo/.config/nvim/lua/custom/./init.lua
