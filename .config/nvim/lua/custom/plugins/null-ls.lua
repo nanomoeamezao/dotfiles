@@ -3,12 +3,8 @@ local b = null_ls.builtins
 
 local sources = {
    b.diagnostics.buf,
-   b.formatting.goimports,
-   -- b.diagnostics.protoc_gen_lint,
-   b.code_actions.refactoring,
-   -- webdev stuff
-   b.formatting.deno_fmt,
-   b.formatting.prettierd.with { filetypes = { "html", "markdown", "css" } },
+   b.formatting.golines.with { extra_args = { "-m", "150" } },
+   b.formatting.pg_format,
 
    -- Lua
    b.formatting.stylua,
@@ -25,7 +21,7 @@ local M = {}
 
 M.setup = function()
    null_ls.setup {
-      debug = false,
+      debug = true,
       sources = sources,
       debounce = 100,
       -- format on save

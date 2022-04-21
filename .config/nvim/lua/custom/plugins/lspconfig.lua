@@ -2,23 +2,16 @@ local M = {}
 
 M.setup_lsp = function(attach, capabilities)
    local lspconfig = require "lspconfig"
-   lspconfig.gopls.setup {
-      on_attach = attach,
-      capabilities = capabilities,
-      flags = {
-         debounce_text_changes = 100,
-      },
-   }
 
    -- lspservers with default config
-   local servers = { "html", "cssls", "bashls", "clangd", "emmet_ls" }
+   local servers = { "gopls", "html", "cssls", "bashls", "clangd", "emmet_ls" }
 
    for _, lsp in ipairs(servers) do
       lspconfig[lsp].setup {
          on_attach = attach,
          capabilities = capabilities,
          flags = {
-            debounce_text_changes = 150,
+            debounce_text_changes = 100,
          },
       }
    end

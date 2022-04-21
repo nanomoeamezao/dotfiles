@@ -21,10 +21,8 @@ M.treesitter = {
    textobjects = {
       select = {
          enable = true,
-
          -- Automatically jump forward to textobj, similar to targets.vim
          lookahead = true,
-
          keymaps = {
             -- You can use the capture groups defined in textobjects.scm
             ["af"] = "@function.outer",
@@ -35,6 +33,13 @@ M.treesitter = {
             ["ia"] = "@parameter.inner",
          },
       },
+   },
+   rainbow = {
+      enable = true,
+      extended_mode = true,
+   },
+   autotag = {
+      enable = true,
    },
 }
 

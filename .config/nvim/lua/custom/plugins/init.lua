@@ -53,6 +53,7 @@ return {
       end,
    },
    { "nvim-treesitter/nvim-treesitter-textobjects" },
+   { "p00f/nvim-ts-rainbow" },
    {
       "windwp/nvim-ts-autotag",
       ft = { "html", "javascriptreact" },
@@ -61,6 +62,19 @@ return {
          require("nvim-ts-autotag").setup()
       end,
    },
-   { "justinmk/vim-sneak" },
+   {
+      "ggandor/lightspeed.nvim",
+      config = function()
+         require("lightspeed").setup {
+            ignore_case = true,
+         }
+      end,
+   },
+   { "folke/twilight.nvim" },
    { "vim-scripts/ReplaceWithRegister" },
+   {
+      "github/copilot.vim",
+      after = "nvim-lspconfig",
+      run = "Copilot setup",
+   },
 }

@@ -22,6 +22,7 @@ M.mappings = {
    plugins = {
       lspconfig = {
          references = "gR",
+         -- code_action = "",
       },
    },
 }
