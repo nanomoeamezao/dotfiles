@@ -31,4 +31,12 @@ M.ui = {
    theme = "onedark",
 }
 
+M.options = {
+   tabstop = 4,
+   laststatus = 3,
+   nvChad = {
+      insert_nav = false,
+   },
+}
+
 return M

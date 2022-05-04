@@ -70,11 +70,66 @@ return {
          }
       end,
    },
-   { "folke/twilight.nvim" },
+   {
+      "folke/twilight.nvim",
+      config = function()
+         require("twilight").setup {
+            context = 10,
+            treesitter = true,
+            expand = {
+               "function",
+               "method",
+               "table",
+               "if_statement",
+            },
+         }
+      end,
+   },
    { "vim-scripts/ReplaceWithRegister" },
    {
       "github/copilot.vim",
-      after = "nvim-lspconfig",
       run = "Copilot setup",
+      config = function()
+         vim.cmd [[
+         imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+        let g:copilot_no_tab_map = v:true
+        ]]
+      end,
+   },
+   {
+      "hrsh7th/cmp-copilot",
+      after = "nvim-cmp",
+   },
+   {
+      "mfussenegger/nvim-dap",
+      config = function() end,
+   },
+   {
+      "leoluz/nvim-dap-go",
+      config = function()
+         require("dap-go").setup()
+         local dap = require "dap"
+         table.insert(dap.configurations.go, {
+            type = "go",
+            request = "attach",
+            name = "scanner debug",
+            program = "/home/neo/code/scanner/cmd/scanner-server/",
+            args = "config=/home/neo/code/scanner/configs/scanner/localhost/config.json",
+         })
+      end,
+   },
+   {
+      "rcarriga/nvim-dap-ui",
+      config = function()
+         require("dapui").setup()
+      end,
+      requires = { "mfussenegger/nvim-dap" },
+   },
+   {
+      "theHamsta/nvim-dap-virtual-text",
+      config = function()
+         require("nvim-dap-virtual-text").setup()
+      end,
+      requires = { "mfussenegger/nvim-dap" },
    },
 }

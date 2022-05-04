@@ -13,6 +13,14 @@ M.setup_lsp = function(attach, capabilities)
          flags = {
             debounce_text_changes = 100,
          },
+         settings = {
+            gopls = {
+               directoryFilters = { "-gen" },
+            },
+         },
+         init_options = {
+            usePlaceholders = true,
+         },
       }
    end
 
@@ -35,7 +43,9 @@ M.setup_lsp = function(attach, capabilities)
                globals = { "vim" },
             },
             workspace = {
-               library = {},
+               library = {
+                  vim.api.nvim_get_runtime_file("", true),
+               },
                maxPreload = 100000,
                preloadFileSize = 10000,
             },

@@ -16,4 +16,7 @@ require("true-zen").setup {
          auto_padding = false,
       },
    },
+   integrations = {
+      twilight = true,
+   },
 }
