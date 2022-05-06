@@ -1,5 +1,4 @@
 local M = {}
-
 M.setup_lsp = function(attach, capabilities)
    local lspconfig = require "lspconfig"
 
@@ -19,7 +18,7 @@ M.setup_lsp = function(attach, capabilities)
             },
          },
          init_options = {
-            usePlaceholders = true,
+            usePlaceholders = false,
          },
       }
    end

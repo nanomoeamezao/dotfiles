@@ -3,7 +3,6 @@ require "custom.autochad_cmds"
 
 vim.opt.relativenumber = true
 vim.opt.swapfile = false
-vim.o.completeopt = "menuone,noinsert,noselect"
 vim.opt.laststatus = 3
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true, noremap = true })
@@ -34,14 +33,3 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
    dapui.close()
 end
-
-vim.cmd [[
-let g:lightspeed_last_motion = ''
-    augroup lightspeed_last_motion
-    autocmd!
-    autocmd User LightspeedSxEnter let g:lightspeed_last_motion = 'sx'
-    autocmd User LightspeedFtEnter let g:lightspeed_last_motion = 'ft'
-    augroup end
-    map <expr> ; g:lightspeed_last_motion == 'sx' ? "<Plug>Lightspeed_;_sx" : "<Plug>Lightspeed_;_ft"
-    map <expr> , g:lightspeed_last_motion == 'sx' ? "<Plug>Lightspeed_,_sx" : "<Plug>Lightspeed_,_ft"
-]]

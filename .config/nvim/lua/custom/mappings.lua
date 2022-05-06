@@ -1,16 +1,21 @@
 local map = require("core.utils").map
 local gs = require "gitsigns"
 local ts = require "telescope.builtin"
-
--- telescope
-map("n", "<leader>fp", ":Telescope media_files <CR>")
-map("n", "<leader>te", ":Telescope <CR>")
-
+local git = require "neogit"
 -- truezen
 map("n", "<leader>ta", ":TZAtaraxis <CR>")
 map("n", "<leader>tm", ":TZMinimalist <CR>")
 map("n", "<leader>tf", ":TZFocus <CR>")
 map("n", "<leader>tt", ":Twilight <CR>")
+map("n", "gR", "<Plug>ReplaceWithRegisterOperator")
+
+map("n", "ge", function()
+   vim.diagnostic.open_float()
+end)
+
+map("n", "<leader>gg", function()
+   git.open()
+end)
 
 local function bandaid_map(mode, l, r, opts)
    opts = opts or {}
@@ -41,7 +46,6 @@ end, { expr = true })
 bandaid_map("n", "<leader>hp", gs.preview_hunk)
 bandaid_map("n", "<leader>fr", ts.lsp_references)
 vim.keymap.set("n", "<leader>fd", ts.diagnostics)
--- map("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>")
 local dap = require "dap"
 local dapgo = require "dap-go"
 local dapui = require "dapui"

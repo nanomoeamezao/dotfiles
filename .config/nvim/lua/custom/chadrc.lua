@@ -1,5 +1,6 @@
 local M = {}
 
+local map = require("core.utils").map
 local plugin_conf = require "custom.plugins.configs"
 local userPlugins = require "custom.plugins"
 M.plugins = {
@@ -12,20 +13,13 @@ M.plugins = {
       },
    },
 
-   install = userPlugins,
-   default_plugin_config_replace = {
-      nvim_treesitter = plugin_conf.treesitter,
+   user = userPlugins,
+   override = {
+      ["nvim-treesitter/nvim-treesitter"] = plugin_conf.treesitter,
    },
 }
 
-M.mappings = {
-   plugins = {
-      lspconfig = {
-         references = "gR",
-         -- code_action = "",
-      },
-   },
-}
+M.mappings = {}
 
 M.ui = {
    theme = "onedark",
@@ -33,7 +27,6 @@ M.ui = {
 
 M.options = {
    tabstop = 4,
-   laststatus = 3,
    nvChad = {
       insert_nav = false,
    },
