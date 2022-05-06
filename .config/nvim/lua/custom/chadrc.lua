@@ -22,14 +22,14 @@ M.plugins = {
 M.mappings = {}
 
 M.ui = {
-   theme = "onedark",
-}
-
-M.options = {
-   tabstop = 4,
-   nvChad = {
-      insert_nav = false,
+   theme = "chadracula",
+   hl_override = {
+      DiffText = {
+         bg = "#FF5555",
+      },
    },
 }
+
+M.options = {}
 
 return M

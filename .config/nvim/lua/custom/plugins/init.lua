@@ -100,9 +100,16 @@ return {
          require("nvim-dap-virtual-text").setup()
       end,
    },
-   ["TimUntersberger/neogit"] = {
+   -- ["TimUntersberger/neogit"] = {
+   --    config = function()
+   --       require("neogit").setup {}
+   --    end,
+   -- },
+   ["sindrets/diffview.nvim"] = {
       config = function()
-         require("neogit").setup {}
+         require("diffview").setup {
+            enhanced_diff_hl = true,
+         }
       end,
    },
 }

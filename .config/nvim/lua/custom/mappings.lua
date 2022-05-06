@@ -1,7 +1,6 @@
 local map = require("core.utils").map
 local gs = require "gitsigns"
 local ts = require "telescope.builtin"
-local git = require "neogit"
 -- truezen
 map("n", "<leader>ta", ":TZAtaraxis <CR>")
 map("n", "<leader>tm", ":TZMinimalist <CR>")
@@ -13,10 +12,15 @@ map("n", "ge", function()
    vim.diagnostic.open_float()
 end)
 
-map("n", "<leader>gg", function()
-   git.open()
+map("n", "]d", function()
+   vim.diagnostic.goto_next()
 end)
 
+-- local git = require "neogit"
+-- map("n", "<leader>gg", function()
+--    git.open()
+-- end)
+--
 local function bandaid_map(mode, l, r, opts)
    opts = opts or {}
    opts.buffer = bufnr
