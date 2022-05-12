@@ -74,32 +74,32 @@ return {
    ["hrsh7th/cmp-copilot"] = {
       after = "nvim-cmp",
    },
-   ["mfussenegger/nvim-dap"] = {
-      config = function() end,
-   },
-   ["leoluz/nvim-dap-go"] = {
-      config = function()
-         require("dap-go").setup()
-         local dap = require "dap"
-         table.insert(dap.configurations.go, {
-            type = "go",
-            request = "attach",
-            name = "scanner debug",
-            program = "/home/neo/code/scanner/cmd/scanner-server/",
-            args = "config=/home/neo/code/scanner/configs/scanner/localhost/config.json",
-         })
-      end,
-   },
-   ["rcarriga/nvim-dap-ui"] = {
-      config = function()
-         require("dapui").setup()
-      end,
-   },
-   ["theHamsta/nvim-dap-virtual-text"] = {
-      config = function()
-         require("nvim-dap-virtual-text").setup()
-      end,
-   },
+   -- ["mfussenegger/nvim-dap"] = {
+   --    config = function() end,
+   -- },
+   -- ["leoluz/nvim-dap-go"] = {
+   --    config = function()
+   --       require("dap-go").setup()
+   --       local dap = require "dap"
+   --       table.insert(dap.configurations.go, {
+   --          type = "go",
+   --          request = "attach",
+   --          name = "scanner debug",
+   --          program = "/home/neo/code/scanner/cmd/scanner-server/",
+   --          args = "config=/home/neo/code/scanner/configs/scanner/localhost/config.json",
+   --       })
+   --    end,
+   -- },
+   -- ["rcarriga/nvim-dap-ui"] = {
+   --    config = function()
+   --       require("dapui").setup()
+   --    end,
+   -- },
+   -- ["theHamsta/nvim-dap-virtual-text"] = {
+   --    config = function()
+   --       require("nvim-dap-virtual-text").setup()
+   --    end,
+   -- },
    -- ["TimUntersberger/neogit"] = {
    --    config = function()
    --       require("neogit").setup {}
@@ -112,4 +112,14 @@ return {
          }
       end,
    },
+   -- ["karb94/neoscroll.nvim"] = {
+   --    config = function()
+   --       require("neoscroll").setup()
+   --    end,
+   --
+   --    -- lazy loading
+   --    setup = function()
+   --       nvchad.packer_lazy_load "neoscroll.nvim"
+   --    end,
+   -- },
 }

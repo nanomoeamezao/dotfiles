@@ -1,4 +1,4 @@
-local map = require("core.utils").map
+local map = nvchad.map
 local gs = require "gitsigns"
 local ts = require "telescope.builtin"
 -- truezen
@@ -50,14 +50,21 @@ end, { expr = true })
 bandaid_map("n", "<leader>hp", gs.preview_hunk)
 bandaid_map("n", "<leader>fr", ts.lsp_references)
 vim.keymap.set("n", "<leader>fd", ts.diagnostics)
-local dap = require "dap"
-local dapgo = require "dap-go"
-local dapui = require "dapui"
-bandaid_map("n", "<F10>", dap.continue)
-bandaid_map("n", "<F9>", dap.step_over)
-bandaid_map("n", "<F8>", dap.step_into)
-bandaid_map("n", "<F7>", dap.toggle_breakpoint)
-bandaid_map("n", "<F6>", dapgo.debug_test)
-bandaid_map("n", "<F7>", dap.toggle_breakpoint)
-bandaid_map("n", "<leader>dt", dapui.toggle)
-bandaid_map("n", "<leader>de", dapui.eval)
+
+-- local dap = require "dap"
+-- local dapgo = require "dap-go"
+-- local dapui = require "dapui"
+-- bandaid_map("n", "<F10>", dap.continue)
+-- bandaid_map("n", "<F9>", dap.step_over)
+-- bandaid_map("n", "<F8>", dap.step_into)
+-- bandaid_map("n", "<F7>", dap.toggle_breakpoint)
+-- bandaid_map("n", "<F6>", dapgo.debug_test)
+-- bandaid_map("n", "<F7>", dap.toggle_breakpoint)
+-- bandaid_map("n", "<leader>dt", dapui.toggle)
+-- bandaid_map("n", "<leader>de", dapui.eval)
+--
+local term = require "nvterm.terminal"
+map("n", "<F5>", function()
+   term.toggle "float"
+   term.send("make build GO_BUILD_TAGS=rest,static_ui,noauth && make run", "float")
+end)
