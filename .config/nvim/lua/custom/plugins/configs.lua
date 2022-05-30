@@ -50,9 +50,4 @@ M.nvimtree = {
    },
 }
 
-local cmp = require "cmp"
-M.nvim_cmp = {
-   preselect = cmp.PreselectMode.None,
-}
-
 return M

@@ -1,12 +1,13 @@
 local M = {}
 
-local map = nvchad.map
 local plugin_conf = require "custom.plugins.configs"
 local userPlugins = require "custom.plugins"
+local cmp = require "cmp"
+
 M.plugins = {
-   status = {
-      colorizer = true,
-   },
+   -- status = {
+   --    colorizer = true,
+   -- },
    options = {
       lspconfig = {
          setup_lspconf = "custom.plugins.lspconfig",
@@ -16,20 +17,44 @@ M.plugins = {
    user = userPlugins,
    override = {
       ["nvim-treesitter/nvim-treesitter"] = plugin_conf.treesitter,
-   },
-}
-
-M.mappings = {}
-
-M.ui = {
-   theme = "chadracula",
-   hl_override = {
-      DiffText = {
-         bg = "#FF5555",
+      ["hrsh7th/nvim-cmp"] = {
+         preselect = cmp.PreselectMode.None,
+         sources = {
+            { name = "copilot" },
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+            { name = "buffer" },
+            { name = "nvim_lua" },
+            { name = "path" },
+         },
+      },
+      ["nvim-telescope/telescope.nvim"] = {
+         extensions = {
+            fzf = {
+               fuzzy = true,
+               override_generic_sorter = true, -- override the generic sorter
+               override_file_sorter = true, -- override the file sorter
+            },
+         },
       },
    },
 }
 
-M.options = {}
+M.mappings = require "custom.mappings"
+
+M.ui = {
+   theme = "onenord",
+   -- hl_override = {
+   --    DiffText = {
+   --       bg = "#FF5555",
+   --    },
+   -- },
+}
+
+M.options = {
+   user = function()
+      vim.opt.tabstop = 4
+   end,
+}
 
 return M

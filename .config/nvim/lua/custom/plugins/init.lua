@@ -8,6 +8,9 @@ return {
    ["nvim-telescope/telescope-fzf-native.nvim"] = {
       after = "telescope.nvim",
       run = "make",
+      config = function()
+         require("telescope").load_extension "fzf"
+      end,
    },
 
    ["Pocco81/TrueZen.nvim"] = {
@@ -44,11 +47,12 @@ return {
             ignore_case = true,
          }
       end,
+      requires = { "tpope/vim-repeat" },
    },
    ["folke/twilight.nvim"] = {
       config = function()
          require("twilight").setup {
-            context = 10,
+            context = 20,
             treesitter = true,
             expand = {
                "function",
@@ -66,7 +70,6 @@ return {
       run = "Copilot setup",
       config = function()
          vim.cmd [[
-         imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
         let g:copilot_no_tab_map = v:true
         ]]
       end,
@@ -74,32 +77,40 @@ return {
    ["hrsh7th/cmp-copilot"] = {
       after = "nvim-cmp",
    },
-   -- ["mfussenegger/nvim-dap"] = {
-   --    config = function() end,
-   -- },
-   -- ["leoluz/nvim-dap-go"] = {
-   --    config = function()
-   --       require("dap-go").setup()
-   --       local dap = require "dap"
-   --       table.insert(dap.configurations.go, {
-   --          type = "go",
-   --          request = "attach",
-   --          name = "scanner debug",
-   --          program = "/home/neo/code/scanner/cmd/scanner-server/",
-   --          args = "config=/home/neo/code/scanner/configs/scanner/localhost/config.json",
-   --       })
-   --    end,
-   -- },
-   -- ["rcarriga/nvim-dap-ui"] = {
-   --    config = function()
-   --       require("dapui").setup()
-   --    end,
-   -- },
-   -- ["theHamsta/nvim-dap-virtual-text"] = {
-   --    config = function()
-   --       require("nvim-dap-virtual-text").setup()
-   --    end,
-   -- },
+   ["mfussenegger/nvim-dap"] = {
+      config = function() end,
+   },
+   ["leoluz/nvim-dap-go"] = {
+      config = function()
+         require("dap-go").setup()
+         local dap = require "dap"
+         table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            showLog = true,
+            name = "scanner debug",
+            program = "/home/neo/code/scanner/cmd/scanner-server/",
+            buildFlags = "-tags static_ui",
+         })
+         table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            showLog = true,
+            name = "netscan debug",
+            program = "/home/neo/code/scanner/netscan-service/cmd/netscan-service/",
+         })
+      end,
+   },
+   ["rcarriga/nvim-dap-ui"] = {
+      config = function()
+         require("dapui").setup()
+      end,
+   },
+   ["theHamsta/nvim-dap-virtual-text"] = {
+      config = function()
+         require("nvim-dap-virtual-text").setup()
+      end,
+   },
    -- ["TimUntersberger/neogit"] = {
    --    config = function()
    --       require("neogit").setup {}
@@ -107,9 +118,7 @@ return {
    -- },
    ["sindrets/diffview.nvim"] = {
       config = function()
-         require("diffview").setup {
-            enhanced_diff_hl = true,
-         }
+         require("diffview").setup {}
       end,
    },
    -- ["karb94/neoscroll.nvim"] = {
@@ -122,4 +131,9 @@ return {
    --       nvchad.packer_lazy_load "neoscroll.nvim"
    --    end,
    -- },
+   ["folke/todo-comments.nvim"] = {
+      config = function()
+         require("todo-comments").setup()
+      end,
+   },
 }
