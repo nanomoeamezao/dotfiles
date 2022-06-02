@@ -43,34 +43,32 @@ M.lsp = {
          end,
          " telescope lsp diagnostics",
       },
+      ["[d"] = {
+         function()
+            vim.lsp.diagnostic.goto_prev()
+         end,
+         "lsp next diagnostic",
+      },
+      ["]d"] = {
+         function()
+            vim.lsp.diagnostic.goto_next()
+         end,
+         "lsp next diagnostic",
+      },
+      ["<leader>m"]= {
+        function()
+          vim.lsp.stop_client(vim.lsp.get_active_clients())
+        end,
+        "stop all lsp clients",
+      }
+   },
+   v = {
+      ["<leader>ca"] = { "<cmd> '<,'> lua vim.lsp.buf.range_code_action()<CR>", "range code actions" },
    },
 }
 
 M.git = {
    n = {
-      ["]c"] = {
-         function()
-            if vim.wo.diff then
-               return "]c"
-            end
-            vim.schedule(function()
-               gs.next_hunk()
-            end)
-            return "<Ignore>"
-         end,
-         "next hunk",
-      },
-      ["[c"] = {
-         function()
-            if vim.wo.diff then
-               return "[c"
-            end
-            vim.schedule(function()
-               gs.prev_hunk()
-            end)
-            return "<Ignore>"
-         end,
-      },
       ["<leader>hp"] = {
          function()
             gs.preview_hunk()
@@ -80,6 +78,25 @@ M.git = {
    },
 }
 
+vim.keymap.set("n", "]c", function()
+   if vim.wo.diff then
+      return "]c"
+   end
+   vim.schedule(function()
+      gs.next_hunk()
+   end)
+   return "<Ignore>"
+end, { expr = true })
+
+vim.keymap.set("n", "[c", function()
+   if vim.wo.diff then
+      return "[c"
+   end
+   vim.schedule(function()
+      gs.prev_hunk()
+   end)
+   return "<Ignore>"
+end, { expr = true })
 local dap = require "dap"
 local dapgo = require "dap-go"
 local dapui = require "dapui"
@@ -130,10 +147,18 @@ M.dap = {
       },
    },
 }
+
+M.general = {
+   n = {
+      ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
+   },
+}
+
 M.disabled = {
    n = {
       ["<S-b>"] = "",
       ["gr"] = "",
+      ["v"] = "",
    },
 }
 local term = require "nvterm.terminal"

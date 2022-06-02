@@ -37,6 +37,7 @@ M.plugins = {
             },
          },
       },
+      ["folke/which-key.nvim"] = plugin_conf.whichkey,
    },
 }
 
@@ -54,6 +55,7 @@ M.ui = {
 M.options = {
    user = function()
       vim.opt.tabstop = 4
+      vim.opt.timeoutlen = 400
    end,
 }
 

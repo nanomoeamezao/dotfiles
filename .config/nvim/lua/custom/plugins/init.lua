@@ -22,6 +22,7 @@ return {
       config = function()
          require "custom.plugins.truezen"
       end,
+      disable = true,
    },
    ["ur4ltz/surround.nvim"] = {
       config = function()
@@ -62,6 +63,7 @@ return {
             },
          }
       end,
+      disable = true,
    },
    ["vim-scripts/ReplaceWithRegister"] = {
       after = "nvim-treesitter",
@@ -111,29 +113,16 @@ return {
          require("nvim-dap-virtual-text").setup()
       end,
    },
-   -- ["TimUntersberger/neogit"] = {
-   --    config = function()
-   --       require("neogit").setup {}
-   --    end,
-   -- },
    ["sindrets/diffview.nvim"] = {
       config = function()
          require("diffview").setup {}
       end,
+      commit = "08e4340f690d0b611a393eafb633b2fb62f78601",
    },
-   -- ["karb94/neoscroll.nvim"] = {
-   --    config = function()
-   --       require("neoscroll").setup()
-   --    end,
-   --
-   --    -- lazy loading
-   --    setup = function()
-   --       nvchad.packer_lazy_load "neoscroll.nvim"
-   --    end,
-   -- },
    ["folke/todo-comments.nvim"] = {
       config = function()
          require("todo-comments").setup()
       end,
    },
+   ["nvim-telescope/telescope-ui-select.nvim"] = {},
 }

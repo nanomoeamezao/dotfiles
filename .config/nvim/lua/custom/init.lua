@@ -34,3 +34,5 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
    dapui.close()
 end
+
+require("telescope").load_extension "ui-select"
