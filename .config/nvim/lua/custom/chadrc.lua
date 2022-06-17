@@ -2,12 +2,8 @@ local M = {}
 
 local plugin_conf = require "custom.plugins.configs"
 local userPlugins = require "custom.plugins"
-local cmp = require "cmp"
 
 M.plugins = {
-   -- status = {
-   --    colorizer = true,
-   -- },
    options = {
       lspconfig = {
          setup_lspconf = "custom.plugins.lspconfig",
@@ -18,7 +14,6 @@ M.plugins = {
    override = {
       ["nvim-treesitter/nvim-treesitter"] = plugin_conf.treesitter,
       ["hrsh7th/nvim-cmp"] = {
-         preselect = cmp.PreselectMode.None,
          sources = {
             { name = "copilot" },
             { name = "nvim_lsp" },
@@ -54,6 +49,7 @@ M.ui = {
 
 M.options = {
    user = function()
+      vim.opt.completeopt = "menu,menuone,noselect"
       vim.opt.tabstop = 4
       vim.opt.timeoutlen = 400
    end,

@@ -65,27 +65,26 @@ return {
       end,
       disable = true,
    },
-   ["vim-scripts/ReplaceWithRegister"] = {
-      after = "nvim-treesitter",
-   },
+   ["vim-scripts/ReplaceWithRegister"] = {},
    ["github/copilot.vim"] = {
-      run = "Copilot setup",
       config = function()
          vim.cmd [[
         let g:copilot_no_tab_map = v:true
         ]]
       end,
+      -- commit = "042543ffc2e77a819da0415da1af6b1842a0f9c2",
    },
    ["hrsh7th/cmp-copilot"] = {
       after = "nvim-cmp",
    },
-   ["mfussenegger/nvim-dap"] = {
-      config = function() end,
-   },
+   ["mfussenegger/nvim-dap"] = {},
    ["leoluz/nvim-dap-go"] = {
+      after = "nvim-dap",
       config = function()
          require("dap-go").setup()
          local dap = require "dap"
+
+
          table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
@@ -104,11 +103,23 @@ return {
       end,
    },
    ["rcarriga/nvim-dap-ui"] = {
+      after = "nvim-dap",
       config = function()
          require("dapui").setup()
+         local dap, dapui = require "dap", require "dapui"
+         dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+         end
+         dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close()
+         end
+         dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close()
+         end
       end,
    },
    ["theHamsta/nvim-dap-virtual-text"] = {
+      after = "nvim-dap",
       config = function()
          require("nvim-dap-virtual-text").setup()
       end,
@@ -117,12 +128,17 @@ return {
       config = function()
          require("diffview").setup {}
       end,
-      commit = "08e4340f690d0b611a393eafb633b2fb62f78601",
    },
    ["folke/todo-comments.nvim"] = {
       config = function()
          require("todo-comments").setup()
       end,
+      disable = true,
    },
-   ["nvim-telescope/telescope-ui-select.nvim"] = {},
+   ["nvim-telescope/telescope-ui-select.nvim"] = {
+      after = "telescope.nvim",
+      config = function()
+         require("telescope").load_extension "ui-select"
+      end,
+   },
 }

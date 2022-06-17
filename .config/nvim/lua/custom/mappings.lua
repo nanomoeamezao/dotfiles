@@ -1,6 +1,4 @@
 local M = {}
-local gs = require "gitsigns"
-local ts = require "telescope.builtin"
 -- truezen
 M.truezen = {
    n = {
@@ -33,13 +31,13 @@ M.lsp = {
       },
       ["<leader>fr"] = {
          function()
-            ts.lsp_references()
+            require("telescope.builtin").lsp_references()
          end,
          "telescope lsp references",
       },
       ["<leader>fd"] = {
          function()
-            ts.diagnostics()
+            require("telescope.builtin").diagnostics()
          end,
          " telescope lsp diagnostics",
       },
@@ -55,12 +53,18 @@ M.lsp = {
          end,
          "lsp next diagnostic",
       },
-      ["<leader>m"]= {
-        function()
-          vim.lsp.stop_client(vim.lsp.get_active_clients())
-        end,
-        "stop all lsp clients",
-      }
+      ["<leader>m"] = {
+         function()
+            vim.lsp.stop_client(vim.lsp.get_active_clients())
+         end,
+         "stop all lsp clients",
+      },
+      ["<leader>ca"] = {
+         function()
+            vim.lsp.buf.code_action()
+         end,
+         "code action",
+      },
    },
    v = {
       ["<leader>ca"] = { "<cmd> '<,'> lua vim.lsp.buf.range_code_action()<CR>", "range code actions" },
@@ -71,7 +75,7 @@ M.git = {
    n = {
       ["<leader>hp"] = {
          function()
-            gs.preview_hunk()
+            require("gitsigns").preview_hunk()
          end,
          "preview hunk",
       },
@@ -83,7 +87,7 @@ vim.keymap.set("n", "]c", function()
       return "]c"
    end
    vim.schedule(function()
-      gs.next_hunk()
+      require("gitsigns").next_hunk()
    end)
    return "<Ignore>"
 end, { expr = true })
@@ -93,55 +97,52 @@ vim.keymap.set("n", "[c", function()
       return "[c"
    end
    vim.schedule(function()
-      gs.prev_hunk()
+      require("gitsigns").prev_hunk()
    end)
    return "<Ignore>"
 end, { expr = true })
-local dap = require "dap"
-local dapgo = require "dap-go"
-local dapui = require "dapui"
 
 M.dap = {
    n = {
       ["<F10>"] = {
          function()
-            dap.continue()
+            require("dap").continue()
          end,
          "dap continue",
       },
       ["<F9>"] = {
          function()
-            dap.step_over()
+            require("dap").step_over()
          end,
          "dap step over",
       },
       ["<F8>"] = {
          function()
-            dap.step_into()
+            require("dap").step_into()
          end,
          "dap step into",
       },
       ["<F7>"] = {
          function()
-            dap.toggle_breakpoint()
+            require("dap").toggle_breakpoint()
          end,
          "dap toggle breakpoint",
       },
       ["<F6>"] = {
          function()
-            dapgo.debug_test()
+            require("dap-go").debug_test()
          end,
          "dap debug test",
       },
       ["<leader>de"] = {
          function()
-            dapui.eval()
+            require("dapui").eval()
          end,
          "eval under cursor",
       },
       ["<leader>dt"] = {
          function()
-            dapui.toggle()
+            require("dapui").toggle()
          end,
          "toggle dap ui",
       },
@@ -161,10 +162,9 @@ M.disabled = {
       ["v"] = "",
    },
 }
-local term = require "nvterm.terminal"
 vim.keymap.set("n", "<F5>", function()
-   term.toggle "float"
-   term.send("make build GO_BUILD_TAGS=rest,static_ui,noauth && make run", "float")
+   require("nvterm.terminal").toggle "float"
+   require("nvterm.terminal").send("make build GO_BUILD_TAGS=rest,static_ui,noauth && make run", "float")
 end)
 
 return M
