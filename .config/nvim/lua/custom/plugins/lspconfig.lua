@@ -3,7 +3,7 @@ M.setup_lsp = function(attach, capabilities)
    local lspconfig = require "lspconfig"
 
    -- lspservers with default config
-   local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua" }
+   local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls" }
 
    local runtime_path = vim.split(package.path, ";")
    table.insert(runtime_path, "lua/?.lua")
@@ -11,15 +11,15 @@ M.setup_lsp = function(attach, capabilities)
    for _, lsp in ipairs(servers) do
       lspconfig[lsp].setup {
          on_attach = function(client)
-            if lsp == "sumneko_lua" then
-               client.resolved_capabilities.document_formatting = false
-               client.resolved_capabilities.document_range_formatting = false
-            end
+            attach(client, bufnr)
             if lsp == "gopls" then
                client.resolved_capabilities.document_formatting = true
                client.resolved_capabilities.document_range_formatting = true
             end
-            attach(client, bufnr)
+            if lsp == "sumneko_lua" then
+               client.resolved_capabilities.document_formatting = false
+               client.resolved_capabilities.document_range_formatting = false
+            end
          end,
          capabilities = capabilities,
          flags = {
@@ -41,9 +41,7 @@ M.setup_lsp = function(attach, capabilities)
                   globals = { "vim" },
                },
                workspace = {
-                  library = {
-                     vim.api.nvim_get_runtime_file("", true),
-                  },
+                  library = vim.api.nvim_get_runtime_file("", true),
                   maxPreload = 100000,
                   preloadFileSize = 10000,
                },

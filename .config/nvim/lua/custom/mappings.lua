@@ -65,6 +65,18 @@ M.lsp = {
          end,
          "code action",
       },
+      ["<leader>cs"] = {
+         function()
+            require("telescope").extensions.luasnip.luasnip {}
+         end,
+         "list snippets",
+      },
+      ["gd"] = {
+         function()
+            require("telescope.builtin").lsp_definitions {}
+         end,
+         "lsp definition",
+      },
    },
    v = {
       ["<leader>ca"] = { "<cmd> '<,'> lua vim.lsp.buf.range_code_action()<CR>", "range code actions" },
@@ -145,6 +157,18 @@ M.dap = {
             require("dapui").toggle()
          end,
          "toggle dap ui",
+      },
+      ["<leader>db"] = {
+         function()
+            require("telescope").extensions.dap.list_breakpoints {}
+         end,
+         "list breakpoints",
+      },
+      ["<leader>dv"] = {
+         function()
+            require("telescope").extensions.dap.variables {}
+         end,
+         "list variables",
       },
    },
 }

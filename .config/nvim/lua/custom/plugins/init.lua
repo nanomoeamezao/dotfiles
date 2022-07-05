@@ -13,17 +13,6 @@ return {
       end,
    },
 
-   ["Pocco81/TrueZen.nvim"] = {
-      cmd = {
-         "TZAtaraxis",
-         "TZMinimalist",
-         "TZFocus",
-      },
-      config = function()
-         require "custom.plugins.truezen"
-      end,
-      disable = true,
-   },
    ["ur4ltz/surround.nvim"] = {
       config = function()
          require("surround").setup { mappings_style = "surround" }
@@ -50,33 +39,21 @@ return {
       end,
       requires = { "tpope/vim-repeat" },
    },
-   ["folke/twilight.nvim"] = {
-      config = function()
-         require("twilight").setup {
-            context = 20,
-            treesitter = true,
-            expand = {
-               "function",
-               "method",
-               "table",
-               "if_statement",
-            },
-         }
-      end,
-      disable = true,
-   },
    ["vim-scripts/ReplaceWithRegister"] = {},
-   ["github/copilot.vim"] = {
+   ["zbirenbaum/copilot.lua"] = {
+      after = "nvim-lspconfig",
       config = function()
-         vim.cmd [[
-        let g:copilot_no_tab_map = v:true
-        ]]
+         vim.defer_fn(function()
+            require("copilot").setup {
+               cmp = {
+                  enabled = true,
+                  method = "getCompletionsCycling",
+               },
+            }
+         end, 100)
       end,
-      -- commit = "042543ffc2e77a819da0415da1af6b1842a0f9c2",
    },
-   ["hrsh7th/cmp-copilot"] = {
-      after = "nvim-cmp",
-   },
+   ["zbirenbaum/copilot-cmp"] = {},
    ["mfussenegger/nvim-dap"] = {},
    ["leoluz/nvim-dap-go"] = {
       after = "nvim-dap",
@@ -84,14 +61,12 @@ return {
          require("dap-go").setup()
          local dap = require "dap"
 
-
          table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
             showLog = true,
             name = "scanner debug",
             program = "/home/neo/code/scanner/cmd/scanner-server/",
-            buildFlags = "-tags static_ui",
          })
          table.insert(dap.configurations.go, {
             type = "go",
@@ -124,16 +99,23 @@ return {
          require("nvim-dap-virtual-text").setup()
       end,
    },
+   ["nvim-telescope/telescope-dap.nvim"] = {
+      after = { "nvim-dap", "telescope.nvim" },
+      config = function()
+         require("telescope").load_extension "dap"
+      end,
+   },
    ["sindrets/diffview.nvim"] = {
+      requires = "plenary",
       config = function()
          require("diffview").setup {}
       end,
+      cmd = { "DiffviewOpen" },
    },
    ["folke/todo-comments.nvim"] = {
       config = function()
          require("todo-comments").setup()
       end,
-      disable = true,
    },
    ["nvim-telescope/telescope-ui-select.nvim"] = {
       after = "telescope.nvim",
@@ -141,4 +123,18 @@ return {
          require("telescope").load_extension "ui-select"
       end,
    },
+   ["benfowler/telescope-luasnip.nvim"] = {
+      after = "telescope.nvim",
+      config = function()
+         require("telescope").load_extension "luasnip"
+      end,
+      module = "telescope._extensions.luasnip", -- if you wish to lazy-load
+   },
+   ["kelly-lin/telescope-ag"] = {
+      after = "telescope.nvim",
+      config = function()
+         require("telescope").load_extension "ag"
+      end,
+   },
+   ["wgwoods/vim-systemd-syntax"] = { ft = { "systemd" } },
 }
