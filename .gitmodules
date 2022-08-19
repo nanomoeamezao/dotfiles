@@ -4,3 +4,6 @@
 [submodule ".zsh-plugins/completions"]
 	path = .zsh-plugins/completions
 	url = git://github.com/zsh-users/zsh-completions.git
+[submodule ".config/awesome/lain"]
+	path = .config/awesome/lain
+	url = https://github.com/lcpz/lain.git

@@ -3,7 +3,8 @@ local b = null_ls.builtins
 
 local sources = {
    b.diagnostics.buf.with { args = { "lint" } },
-   b.formatting.buf,
+   -- b.formatting.buf,
+   -- b.formatting.goimports,
    b.diagnostics.yamllint,
    b.diagnostics.checkmake,
    b.formatting.prettierd.with { filetypes = { "yaml", "toml" } },
