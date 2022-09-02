@@ -4,7 +4,7 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 local lspconfig = require "lspconfig"
 
 -- lspservers with default config
-local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls" }
+local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls", "sqls" }
 
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")

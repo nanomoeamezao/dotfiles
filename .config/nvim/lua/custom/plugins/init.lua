@@ -42,6 +42,9 @@ return {
     end,
   },
   ["vim-scripts/ReplaceWithRegister"] = {},
+  ["github/copilot.vim"] = {
+    disable = true,
+  },
   ["zbirenbaum/copilot.lua"] = {
     after = "nvim-lspconfig",
     config = function()
@@ -54,13 +57,14 @@ return {
         }
       end, 100)
     end,
+    -- disable = true,
   },
   ["zbirenbaum/copilot-cmp"] = {},
   ["mfussenegger/nvim-dap"] = {
     keys = "F10",
     cmd = { "DapContinue", "DapToggleBreakpoint" },
   },
-  ["leoluz/nvim-dap-go"] = {
+  ["xuxinx/nvim-dap-go"] = {
     after = "nvim-dap",
     config = function()
       require("dap-go").setup()
@@ -171,9 +175,7 @@ return {
     module = "telescope._extensions.luasnip", -- if you wish to lazy-load
   },
   ["wgwoods/vim-systemd-syntax"] = { ft = { "systemd" } },
-  ["tpope/vim-fugitive"] = {
-    disable = true,
-  },
+  ["tpope/vim-fugitive"] = {},
   ["https://git.sr.ht/~whynothugo/lsp_lines.nvim"] = {
     after = "nvim-lspconfig",
     config = function()
@@ -205,7 +207,6 @@ return {
         auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
       }
     end,
-    disable = true,
   },
   ["nvim-treesitter/nvim-treesitter-context"] = {
     after = "nvim-treesitter",
@@ -264,6 +265,43 @@ return {
         enable_fold_end_virt_text = false,
         close_fold_kinds = {},
         preview = {},
+      }
+    end,
+    disable = true,
+  },
+  ["tpope/vim-git"] = {},
+  ["abenz1267/nvim-databasehelper"] = {
+    config = function()
+      require("nvim-databasehelper").setup {
+        lsp = {
+          sqls = {}, -- config you'd pass to lspconfig["sqls"].setup(). Omit the connections!
+        },
+        docker = {
+          enabled = true,
+          must_contain = { "postgres" }, -- only show Docker containers that contain one of the given strings
+          defaults = { -- when selecting a Docker container you'll be prompted for various parameters, you can define default values here
+            postgresql = {
+              user = "postgres",
+              password = "postgres",
+              initial_database = "scanner-asset",
+            },
+          },
+        },
+        dadbod = {
+          enabled = true,
+          var = "postgres://postgres:postgres@localhost:5432/scanner-asset", -- global Vim variable to use for dadbod ":DB g:<thisvariable> ..."
+        },
+        connections = {
+          system = {
+            initial_database = "scanner-asset",
+            driver = "postgresql",
+            host = "127.0.0.1",
+            port = "5432",
+            user = "postgres",
+            password = "postgres",
+          },
+        },
+        initial_window_height = 10,
       }
     end,
     disable = true,

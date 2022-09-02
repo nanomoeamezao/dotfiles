@@ -16,6 +16,11 @@ M.treesitter = {
     "c",
     "bash",
     "regex",
+    "gitignore",
+    "dockerfile",
+    "comment",
+    "yaml",
+    "sql",
   },
   highlight = {
     enable = true,
@@ -67,10 +72,10 @@ M.cmp = function()
     preselect = cmp.PreselectMode.None,
     sources = {
       { name = "copilot" },
-      { name = "luasnip" },
       { name = "nvim_lsp" },
-      { name = "buffer" },
       { name = "nvim_lua" },
+      { name = "luasnip" },
+      { name = "buffer" },
       { name = "path" },
     },
     formatting = {
@@ -89,8 +94,8 @@ M.cmp = function()
       priority_weight = 2,
       comparators = {
         cmp.config.compare.exact,
-        require("copilot_cmp.comparators").prioritize,
-        require("copilot_cmp.comparators").score,
+        -- require("copilot_cmp.comparators").prioritize,
+        -- require("copilot_cmp.comparators").score,
 
         -- Below is the default comparitor list and order for nvim-cmp
         cmp.config.compare.offset,

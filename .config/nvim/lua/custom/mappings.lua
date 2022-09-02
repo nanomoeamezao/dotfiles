@@ -205,6 +205,7 @@ M.dap = {
 M.general = {
   n = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
+    ["<C-ы>"] = { "<cmd> w <CR>" },
   },
 }
 
