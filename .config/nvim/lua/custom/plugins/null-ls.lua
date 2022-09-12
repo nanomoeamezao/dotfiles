@@ -23,7 +23,10 @@ local sources = {
   -- b.diagnostics.shellcheck.with { diagnostics_format = "#{m} [#{c}]" },
   b.diagnostics.shellcheck,
 
-  b.diagnostics.golangci_lint.with { extra_args = { "-c", "~/code/testing_images/.golangci.yml" } },
+  b.diagnostics.golangci_lint.with {
+    args = { "run", "--fix=false", "--out-format=json", "$DIRNAME", "--path-prefix", "$ROOT" },
+    extra_args = { "-c", "~/code/testing_images/.golangci.yml" },
+  },
 
   b.code_actions.gitsigns,
 }

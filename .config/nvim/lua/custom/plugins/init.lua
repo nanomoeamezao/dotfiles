@@ -61,7 +61,6 @@ return {
   },
   ["zbirenbaum/copilot-cmp"] = {},
   ["mfussenegger/nvim-dap"] = {
-    keys = "F10",
     cmd = { "DapContinue", "DapToggleBreakpoint" },
   },
   ["xuxinx/nvim-dap-go"] = {
@@ -161,12 +160,7 @@ return {
       require("todo-comments").setup()
     end,
   },
-  ["nvim-telescope/telescope-ui-select.nvim"] = {
-    after = "telescope.nvim",
-    config = function()
-      require("telescope").load_extension "ui-select"
-    end,
-  },
+
   ["benfowler/telescope-luasnip.nvim"] = {
     after = { "telescope.nvim" },
     config = function()
@@ -175,7 +169,27 @@ return {
     module = "telescope._extensions.luasnip", -- if you wish to lazy-load
   },
   ["wgwoods/vim-systemd-syntax"] = { ft = { "systemd" } },
-  ["tpope/vim-fugitive"] = {},
+  ["tpope/vim-fugitive"] = {
+    cmd = {
+      "G",
+      "Git",
+      "Gdiffsplit",
+      "Gread",
+      "Gwrite",
+      "Ggrep",
+      "GMove",
+      "GDelete",
+      "GBrowse",
+      "GRemove",
+      "GRename",
+      "Glgrep",
+      "Gedit",
+      "Gvimgrep",
+      "Gstatus",
+      "Gwrite",
+      "Gw",
+    },
+  },
   ["https://git.sr.ht/~whynothugo/lsp_lines.nvim"] = {
     after = "nvim-lspconfig",
     config = function()
@@ -246,14 +260,13 @@ return {
     config = function()
       require("fidget").setup()
     end,
-    disable = true,
   },
   ["kevinhwang91/nvim-ufo"] = {
     requires = {
       "kevinhwang91/promise-async",
     },
     config = function()
-      vim.o.foldcolumn = "1"
+      vim.o.foldcolumn = "0"
       vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
@@ -262,48 +275,72 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
           return { "treesitter", "indent" }
         end,
-        enable_fold_end_virt_text = false,
+        enable_fold_end_virt_text = true,
         close_fold_kinds = {},
         preview = {},
       }
     end,
-    disable = true,
   },
   ["tpope/vim-git"] = {},
-  ["abenz1267/nvim-databasehelper"] = {
+  ["nvim-neotest/neotest"] = {
+    after = "nvim-treesitter",
+    ft = { "go" },
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/neotest-go",
+    },
     config = function()
-      require("nvim-databasehelper").setup {
-        lsp = {
-          sqls = {}, -- config you'd pass to lspconfig["sqls"].setup(). Omit the connections!
-        },
-        docker = {
-          enabled = true,
-          must_contain = { "postgres" }, -- only show Docker containers that contain one of the given strings
-          defaults = { -- when selecting a Docker container you'll be prompted for various parameters, you can define default values here
-            postgresql = {
-              user = "postgres",
-              password = "postgres",
-              initial_database = "scanner-asset",
+      require("neotest").setup {
+        adapters = {
+          require "neotest-go" {
+            experimental = {
+              test_table = true,
             },
           },
         },
-        dadbod = {
-          enabled = true,
-          var = "postgres://postgres:postgres@localhost:5432/scanner-asset", -- global Vim variable to use for dadbod ":DB g:<thisvariable> ..."
-        },
-        connections = {
-          system = {
-            initial_database = "scanner-asset",
-            driver = "postgresql",
-            host = "127.0.0.1",
-            port = "5432",
-            user = "postgres",
-            password = "postgres",
-          },
-        },
-        initial_window_height = 10,
+      }
+    end,
+  },
+  ["folke/lua-dev.nvim"] = {
+    ft = { "lua" },
+    config = function()
+      require("lua-dev").setup {}
+    end,
+  },
+  ["ray-x/go.nvim"] = {
+    ft = { "go" },
+    config = function()
+      require("go").setup {
+        disable_defaults = true,
+      }
+    end,
+  },
+  ["nvim-telescope/telescope-ui-select.nvim"] = {
+    after = { "telescope.nvim", "go.nvim" },
+    config = function()
+      require("telescope").load_extension "ui-select"
+    end,
+  },
+  ["monkoose/matchparen.nvim"] = {
+    config = function()
+      require("matchparen").setup()
+    end,
+  },
+  ["m-demare/hlargs.nvim"] = {
+    after = { "nvim-treesitter" },
+    config = function()
+      require("hlargs").setup {
+        color = "#ef9062",
+        hl_priority = 90000,
+        highlight = { "IncSearch" },
       }
     end,
     disable = true,
+  },
+  ["rcarriga/nvim-notify"] = {},
+  ["nanotee/sqls.nvim"] = {
+    ft = { "sql" },
   },
 }

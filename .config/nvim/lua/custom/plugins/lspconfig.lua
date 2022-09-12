@@ -11,8 +11,7 @@ table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
-    on_attach = function(client)
-      on_attach(client, bufnr)
+    on_attach = function(client, bufnr)
       if lsp == "gopls" then
         client.resolved_capabilities.document_formatting = true
         client.resolved_capabilities.document_range_formatting = true
@@ -21,6 +20,12 @@ for _, lsp in ipairs(servers) do
         client.resolved_capabilities.document_formatting = false
         client.resolved_capabilities.document_range_formatting = false
       end
+      if lsp == "sqls" then
+        require("sqls").on_attach(client, bufnr)
+        on_attach(client, bufnr)
+        return
+      end
+      on_attach(client, bufnr)
     end,
     capabilities = capabilities,
     flags = {

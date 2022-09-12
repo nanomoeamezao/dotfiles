@@ -338,9 +338,9 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "k", function()
 		awful.client.focus.byidx(-1)
 	end, { description = "focus previous by index", group = "client" }),
-	awful.key({ modkey }, "w", function()
-		mymainmenu:show()
-	end, { description = "show main menu", group = "awesome" }),
+	-- awful.key({ modkey }, "w", function()
+	-- 	mymainmenu:show()
+	-- end, { description = "show main menu", group = "awesome" }),
 
 	-- Layout manipulation
 	awful.key({ modkey, "Shift" }, "j", function()
@@ -370,6 +370,12 @@ globalkeys = gears.table.join(
 	awful.key({ modkey, "Shift" }, "b", function()
 		awful.spawn("/usr/bin/rofi-rbw")
 	end, { description = "open rofi-rbw", group = "launcher" }),
+	awful.key({ modkey }, "w", function()
+		awful.spawn("/usr/bin/rofi -show window -filter nvim")
+	end, { description = "open rofi nvim window switcher", group = "launcher" }),
+	awful.key({ modkey, "Shift" }, "w", function()
+		awful.spawn("/usr/bin/rofi -show window")
+	end, { description = "open rofi window switcher", group = "launcher" }),
 	awful.key({ modkey, "Control" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 	awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
 
@@ -391,8 +397,8 @@ globalkeys = gears.table.join(
 	awful.key({ modkey, "Control" }, "l", function()
 		awful.tag.incncol(-1, nil, true)
 	end, { description = "decrease the number of columns", group = "layout" }),
-	awful.key({ modkey, Shift }, "b", function()
-		awful.spawn("/usr/bin/chromium")
+	awful.key({ modkey }, "b", function()
+		awful.spawn(browser)
 	end, { description = "launch Browser", group = "launcher" }),
 	awful.key({ modkey }, "r", function()
 		awful.spawn("/usr/bin/rofi -show drun -modi drun")

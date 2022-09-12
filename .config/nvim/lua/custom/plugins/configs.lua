@@ -71,12 +71,18 @@ M.cmp = function()
     },
     preselect = cmp.PreselectMode.None,
     sources = {
-      { name = "copilot" },
-      { name = "nvim_lsp" },
-      { name = "nvim_lua" },
-      { name = "luasnip" },
-      { name = "buffer" },
-      { name = "path" },
+      { name = "copilot", group_index = 2 },
+      { name = "nvim_lsp", group_index = 2 },
+      { name = "nvim_lua", group_index = 2 },
+      { name = "luasnip", group_index = 2 },
+      { name = "buffer", group_index = 2 },
+      { name = "path", group_index = 2 },
+    },
+    mappings = {
+      ["<CR>"] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = false,
+      },
     },
     formatting = {
       format = function(entry, vim_item)
@@ -93,12 +99,13 @@ M.cmp = function()
     sorting = {
       priority_weight = 2,
       comparators = {
+
+        require("copilot_cmp.comparators").prioritize,
+        require("copilot_cmp.comparators").score,
         cmp.config.compare.exact,
-        -- require("copilot_cmp.comparators").prioritize,
-        -- require("copilot_cmp.comparators").score,
 
         -- Below is the default comparitor list and order for nvim-cmp
-        cmp.config.compare.offset,
+        -- cmp.config.compare.offset,
         cmp.config.compare.score,
         cmp.config.compare.recently_used,
         cmp.config.compare.locality,
