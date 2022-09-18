@@ -1,51 +1,8 @@
 local M = {}
 
-local plugin_conf = require "custom.plugins.configs"
 local userPlugins = require "custom.plugins"
 
-M.plugins = {
-  user = userPlugins,
-  override = {
-    ["nvim-treesitter/nvim-treesitter"] = plugin_conf.treesitter,
-
-    ["hrsh7th/nvim-cmp"] = plugin_conf.cmp,
-
-    ["nvim-telescope/telescope.nvim"] = {
-      extensions = {
-        fzf = {
-          fuzzy = true,
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true, -- override the file sorter
-        },
-      },
-    },
-    ["windwp/nvim-autopairs"] = {
-      check_ts = true,
-    },
-
-    ["williamboman/mason.nvim"] = {
-      ensure_installed = {
-        "lua-language-server",
-        "stylua",
-        "shfmt",
-        "shellcheck",
-        "marksman",
-      },
-    },
-
-    ["NvChad/ui"] = {
-      statusline = {
-        overriden_modules = function()
-          return {
-            LSP_progress = function()
-              return ""
-            end,
-          }
-        end,
-      },
-    },
-  },
-}
+M.plugins = userPlugins
 
 M.mappings = require "custom.mappings"
 

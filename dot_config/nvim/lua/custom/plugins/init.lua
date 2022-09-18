@@ -1,4 +1,50 @@
+local plugin_conf = require "custom.plugins.configs"
 return {
+  -- OVERRIDES
+  ["nvim-treesitter/nvim-treesitter"] = { override_options = plugin_conf.treesitter },
+
+  ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
+
+  ["nvim-telescope/telescope.nvim"] = {
+    override_options = {
+      extensions = {
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true, -- override the generic sorter
+          override_file_sorter = true, -- override the file sorter
+        },
+      },
+    },
+  },
+  ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
+
+  ["williamboman/mason.nvim"] = {
+    override_options = {
+      ensure_installed = {
+        "lua-language-server",
+        "stylua",
+        "shfmt",
+        "shellcheck",
+        "marksman",
+      },
+    },
+  },
+
+  ["NvChad/ui"] = {
+    override_options = {
+      statusline = {
+        overriden_modules = function()
+          return {
+            LSP_progress = function()
+              return ""
+            end,
+          }
+        end,
+      },
+    },
+  },
+
+  -- CUSTOM PLUGINS
   ["neovim/nvim-lspconfig"] = {
     config = function()
       require "plugins.configs.lspconfig"
