@@ -1,0 +1,4 @@
+--smart-case
+--glob=!gen/
+--glob=!docs/
+--glob=!models/

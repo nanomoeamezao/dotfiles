@@ -1,0 +1,14 @@
+#! /bin/bash
+
+set -x
+scrdir=~/.config/mpv/scripts
+
+mkdir -p ~/.config/mpv/scripts
+curl https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager.lua -o $scrdir/playlistmanager.lua
+curl https://raw.githubusercontent.com/cyl0/ModernX/main/modernx.lua -o $scrdir/modernx.lua
+curl https://raw.githubusercontent.com/christoph-heinrich/mpv-quality-menu/master/quality-menu.lua -o $scrdir/quality-menu.lua
+curl https://raw.githubusercontent.com/4e6/mpv-reload/master/reload.lua -o $scrdir/reload.lua
+curl https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua -o $scrdir/autoload.lua
+curl https://raw.githubusercontent.com/CrendKing/mpv-twitch-chat/master/main.lua -o $scrdir/twitch-chat.lua
+curl https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager-save-interactive.lua -o $scrdir/playlistmanager-save-interactive.lua
+#// vim: set filetype=sh:

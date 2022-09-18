@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+set -o rematchpcre
+
+url=""
+if [ -z ${WAYLAND_DISPLAY+x} ]; then
+  url=$(xclip -o);
+else
+  url=$(wl-paste);
+fi
+
+if [[ $url =~ twitch\.tv\/(?!video) ]]; then
+  streamlink "$url" 720p60 
+  return
+fi
+
+mpv --no-terminal --really-quiet --keep-open=yes "$url"
