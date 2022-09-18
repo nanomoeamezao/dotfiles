@@ -1,4 +1,50 @@
+local plugin_conf = require "custom.plugins.configs"
 return {
+  -- OVERRIDES
+  ["nvim-treesitter/nvim-treesitter"] = { override_options = plugin_conf.treesitter },
+
+  ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
+
+  ["nvim-telescope/telescope.nvim"] = {
+    override_options = {
+      extensions = {
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true, -- override the generic sorter
+          override_file_sorter = true, -- override the file sorter
+        },
+      },
+    },
+  },
+  ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
+
+  ["williamboman/mason.nvim"] = {
+    override_options = {
+      ensure_installed = {
+        "lua-language-server",
+        "stylua",
+        "shfmt",
+        "shellcheck",
+        "marksman",
+      },
+    },
+  },
+
+  ["NvChad/ui"] = {
+    override_options = {
+      statusline = {
+        overriden_modules = function()
+          return {
+            LSP_progress = function()
+              return ""
+            end,
+          }
+        end,
+      },
+    },
+  },
+
+  -- CUSTOM PLUGINS
   ["neovim/nvim-lspconfig"] = {
     config = function()
       require "plugins.configs.lspconfig"
@@ -46,20 +92,19 @@ return {
     disable = true,
   },
   ["zbirenbaum/copilot.lua"] = {
-    after = "nvim-lspconfig",
     config = function()
       vim.defer_fn(function()
-        require("copilot").setup {
-          cmp = {
-            enabled = true,
-            method = "getCompletionsCycling",
-          },
-        }
+        require("copilot").setup {}
       end, 100)
     end,
     -- disable = true,
   },
-  ["zbirenbaum/copilot-cmp"] = {},
+  ["zbirenbaum/copilot-cmp"] = {
+    after = "copilot.lua",
+    config = function()
+      require("copilot_cmp").setup {}
+    end,
+  },
   ["mfussenegger/nvim-dap"] = {
     cmd = { "DapContinue", "DapToggleBreakpoint" },
   },
@@ -275,7 +320,7 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
           return { "treesitter", "indent" }
         end,
-        enable_fold_end_virt_text = true,
+        enable_get_fold_virt_text = true,
         close_fold_kinds = {},
         preview = {},
       }
@@ -305,6 +350,7 @@ return {
   },
   ["folke/lua-dev.nvim"] = {
     ft = { "lua" },
+    after = "nvim-lspconfig",
     config = function()
       require("lua-dev").setup {}
     end,
@@ -331,16 +377,20 @@ return {
   ["m-demare/hlargs.nvim"] = {
     after = { "nvim-treesitter" },
     config = function()
-      require("hlargs").setup {
-        color = "#ef9062",
-        hl_priority = 90000,
-        highlight = { "IncSearch" },
-      }
+      require("hlargs").setup {}
     end,
-    disable = true,
+    disable = false,
   },
   ["rcarriga/nvim-notify"] = {},
   ["nanotee/sqls.nvim"] = {
     ft = { "sql" },
+  },
+  ["akinsho/git-conflict.nvim"] = {
+    tag = "*",
+    config = function()
+      require("git-conflict").setup {
+        default_mappings = false,
+      }
+    end,
   },
 }

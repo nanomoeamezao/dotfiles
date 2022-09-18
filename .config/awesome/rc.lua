@@ -300,6 +300,7 @@ awful.screen.connect_for_each_screen(function(s)
 				size = 25,
 				widget_type = "arc",
 				mixer_cmd = "pavucontrol",
+        device = "default"
 			}),
 			seperator,
 			mykeyboardlayout,
@@ -319,9 +320,9 @@ root.buttons(gears.table.join(
 	end),
 	awful.button({}, 3, function()
 		mymainmenu:toggle()
-	end),
-	awful.button({}, 4, awful.tag.viewnext),
-	awful.button({}, 5, awful.tag.viewprev)
+	end)
+	-- awful.button({}, 4, awful.tag.viewnext),
+	-- awful.button({}, 5, awful.tag.viewprev)
 ))
 -- }}}
 
