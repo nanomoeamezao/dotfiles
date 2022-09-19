@@ -13,9 +13,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Freedesktop menu
 local freedesktop = require("freedesktop")
--- Enable VIM help for hotkeys widget when client with matching name is opened:
-require("awful.hotkeys_popup.keys.vim")
-
+local scripts = "~/scripts/"
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -489,7 +487,10 @@ clientkeys = gears.table.join(
 	end, { description = "vol +", group = "sound" }),
 	awful.key({}, "XF86AudioLowerVolume", function()
 		awful.spawn("/usr/bin/amixer -D pulse sset Master 5%-")
-	end, { description = "vol -", group = "sound" })
+	end, { description = "vol -", group = "sound" }),
+	awful.key({ modkey }, "p", function()
+		awful.spawn.with_shell("mpv_url")
+	end, { description = "run url from clip in mpv", group = "media" })
 )
 
 -- Bind all key numbers to tags.
