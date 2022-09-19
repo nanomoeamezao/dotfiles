@@ -348,13 +348,6 @@ return {
       }
     end,
   },
-  ["folke/lua-dev.nvim"] = {
-    ft = { "lua" },
-    after = "nvim-lspconfig",
-    config = function()
-      require("lua-dev").setup {}
-    end,
-  },
   ["ray-x/go.nvim"] = {
     ft = { "go" },
     config = function()

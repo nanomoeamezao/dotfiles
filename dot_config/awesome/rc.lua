@@ -191,12 +191,6 @@ local taglist_buttons = gears.table.join(
 		if client.focus then
 			client.focus:toggle_tag(t)
 		end
-	end),
-	awful.button({}, 4, function(t)
-		awful.tag.viewnext(t.screen)
-	end),
-	awful.button({}, 5, function(t)
-		awful.tag.viewprev(t.screen)
 	end)
 )
 --[[
@@ -279,6 +273,37 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Create the wibox
 	s.mywibox = awful.wibar({ position = "top", screen = s })
 
+	local hostname = os.getenv("HOST")
+	local bat_widget = {
+		layout = wibox.layout.fixed.horizontal,
+	}
+	if hostname == "homeneo" then
+		bat_widget = {
+			require("awesome-wm-widgets.battery-widget.battery"),
+		}
+	end
+
+	local right_widgets = {
+		layout = wibox.layout.fixed.horizontal,
+		tray,
+		volume_widget({
+			main_color = "#af13f7",
+			mute_color = "#ff0000",
+			thickness = 5,
+			size = 25,
+			widget_type = "arc",
+			mixer_cmd = "pavucontrol",
+			device = "default",
+		}),
+		bat_widget,
+		seperator,
+		mykeyboardlayout,
+		seperator,
+		mytextclock,
+		seperator,
+		s.mylayoutbox,
+	}
+
 	-- Add widgets to the wibox
 	s.mywibox:setup({
 		layout = wibox.layout.align.horizontal,
@@ -288,27 +313,7 @@ awful.screen.connect_for_each_screen(function(s)
 			s.mypromptbox,
 		},
 		s.mytasklist, -- Middle widget
-		{ -- Right widgets
-			layout = wibox.layout.fixed.horizontal,
-			seperator,
-			tray,
-			seperator,
-			volume_widget({
-				main_color = "#af13f7",
-				mute_color = "#ff0000",
-				thickness = 5,
-				size = 25,
-				widget_type = "arc",
-				mixer_cmd = "pavucontrol",
-        device = "default"
-			}),
-			seperator,
-			mykeyboardlayout,
-			seperator,
-			mytextclock,
-			seperator,
-			s.mylayoutbox,
-		},
+		right_widgets,
 	})
 end)
 -- }}}
