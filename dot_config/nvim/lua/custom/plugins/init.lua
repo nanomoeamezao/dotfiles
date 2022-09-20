@@ -120,19 +120,19 @@ return {
         request = "launch",
         name = "vuln debug",
         showLog = true,
-        program = "/home/neo/code/scanner/vuln-service/cmd/vuln-service/",
+        program = vim.fn.getenv "GOPATH" .. "/scanner/vuln-service/cmd/vuln-service/",
       })
       table.insert(dap.configurations.go, {
         type = "go",
         request = "launch",
         name = "scanner debug",
-        program = "/home/neo/code/scanner/cmd/scanner-server/",
+        program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
       })
       table.insert(dap.configurations.go, {
         type = "go",
         request = "launch",
         name = "netscan debug",
-        program = "/home/neo/code/scanner/netscan-service/cmd/netscan-service/",
+        program = vim.fn.getenv "GOPATH" .. "/scanner/netscan-service/cmd/netscan-service/",
       })
       table.insert(dap.configurations.go, {
         type = "go",

@@ -19,7 +19,7 @@ local sources = {
   b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "postgres" } },
 
   -- Shell
-  -- b.formatting.shfmt,
+  b.formatting.shfmt,
   -- b.diagnostics.shellcheck.with { diagnostics_format = "#{m} [#{c}]" },
   b.diagnostics.shellcheck,
 

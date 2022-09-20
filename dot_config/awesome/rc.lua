@@ -14,6 +14,7 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Freedesktop menu
 local freedesktop = require("freedesktop")
 local scripts = "~/scripts/"
+awful.util.shell = "/bin/zsh"
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -423,6 +424,10 @@ globalkeys = gears.table.join(
 		awful.spawn("/usr/bin/flameshot gui")
 	end, { description = "capture a screenshot of selection", group = "screenshot" }),
 
+	awful.key({ modkey }, "p", function()
+		awful.spawn.easy_async_with_shell("mpv_url", function(out) end)
+	end, { description = "run url from clip in mpv", group = "media" }),
+
 	awful.key({ modkey, "Control" }, "n", function()
 		local c = awful.client.restore()
 		-- Focus restored client
@@ -487,10 +492,7 @@ clientkeys = gears.table.join(
 	end, { description = "vol +", group = "sound" }),
 	awful.key({}, "XF86AudioLowerVolume", function()
 		awful.spawn("/usr/bin/amixer -D pulse sset Master 5%-")
-	end, { description = "vol -", group = "sound" }),
-	awful.key({ modkey }, "p", function()
-		awful.spawn.with_shell("mpv_url")
-	end, { description = "run url from clip in mpv", group = "media" })
+	end, { description = "vol -", group = "sound" })
 )
 
 -- Bind all key numbers to tags.
