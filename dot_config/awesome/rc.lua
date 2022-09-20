@@ -47,19 +47,19 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/cesious/theme.lua")
-beautiful.notification_font = "Noto Sans Mono Regular 14"
+beautiful.notification_font = "NotoSansMono Nerd Font Regular 14"
 beautiful.notification_max_width = 600
 beautiful.notification_max_height = 200
 beautiful.notification_icon_size = 50
 beautiful.systray_icon_spacing = 3
 -- hotkeys_popup
-beautiful.hotkeys_font = "Noto Sans Mono Regular 12"
-beautiful.hotkeys_description_font = "Noto Sans Mono Regular 12"
+beautiful.hotkeys_font = "NotoSansMono Nerd Font Regular 12"
+beautiful.hotkeys_description_font = "NotoSansMono Nerd Font Regular 12"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "kitty"
 browser = "firefox"
-filemanager = "thunar"
+filemanager = "pcmanfm"
 editor = terminal .. "-e nvim"
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.

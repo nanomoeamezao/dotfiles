@@ -1,6 +1,5 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
-
 # Make prompt a single line instead of two lines
 [line_break]
 disabled = true
@@ -16,14 +15,31 @@ disabled = true
 # [└─>](bold green) """
 [package]
 disabled = true
+
 [golang]
 disabled = true
+
 [status]
 disabled = false
+
 [cmd_duration]
 disabled = true
+
 [buf]
 disabled = true
-[custom.wip]
-command = 'work_in_progress'
-shell = ["zsh", "-"]
+
+[lua]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[directory]
+read_only = " "
+
+[docker_context]
+symbol = " "
+
+[git_branch]
+symbol = " "
+
