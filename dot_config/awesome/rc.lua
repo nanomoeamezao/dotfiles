@@ -55,6 +55,7 @@ beautiful.systray_icon_spacing = 3
 -- hotkeys_popup
 beautiful.hotkeys_font = "NotoSansMono Nerd Font Regular 12"
 beautiful.hotkeys_description_font = "NotoSansMono Nerd Font Regular 12"
+beautiful.hotkeys_modifiers_fg = "#cc0052"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "kitty"
