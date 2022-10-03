@@ -234,6 +234,7 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
+local hostname = os.getenv("HOSTNAME")
 awful.screen.connect_for_each_screen(function(s)
 	-- Wallpaper
 	set_wallpaper(s)
@@ -273,36 +274,31 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Create the wibox
 	s.mywibox = awful.wibar({ position = "top", screen = s })
 
-	local hostname = os.getenv("HOST")
-	local bat_widget = {
-		layout = wibox.layout.fixed.horizontal,
-	}
-	if hostname == "homeneo" then
-		bat_widget = {
-			require("awesome-wm-widgets.battery-widget.battery"),
-		}
+	local right_widgets = wibox.layout.fixed.horizontal()
+	right_widgets:add(tray)
+	right_widgets:add(volume_widget({
+		main_color = "#af13f7",
+		mute_color = "#ff0000",
+		thickness = 5,
+		size = 25,
+		widget_type = "arc",
+		mixer_cmd = "pavucontrol",
+		device = "default",
+	}))
+	right_widgets:add(seperator)
+	if hostname == "neotop" then
+		local battery_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
+		right_widgets:add(battery_widget({
+      size = 22,
+      show_current_level = true,
+    }))
+		right_widgets:add(seperator)
 	end
-
-	local right_widgets = {
-		layout = wibox.layout.fixed.horizontal,
-		tray,
-		volume_widget({
-			main_color = "#af13f7",
-			mute_color = "#ff0000",
-			thickness = 5,
-			size = 25,
-			widget_type = "arc",
-			mixer_cmd = "pavucontrol",
-			device = "default",
-		}),
-		bat_widget,
-		seperator,
-		mykeyboardlayout,
-		seperator,
-		mytextclock,
-		seperator,
-		s.mylayoutbox,
-	}
+	right_widgets:add(mykeyboardlayout)
+	right_widgets:add(seperator)
+	right_widgets:add(mytextclock)
+	right_widgets:add(seperator)
+	right_widgets:add(s.mylayoutbox)
 
 	-- Add widgets to the wibox
 	s.mywibox:setup({
