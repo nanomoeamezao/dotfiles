@@ -4,11 +4,7 @@ if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
 fi
 fpath=(/usr/share/zsh/site-functions/ $fpath)
 fpath=(~/.zsh $fpath)
-# Use manjaro zsh prompt
-#if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
-#  source /usr/share/zsh/manjaro-zsh-prompt
-#fi
-#
+
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
