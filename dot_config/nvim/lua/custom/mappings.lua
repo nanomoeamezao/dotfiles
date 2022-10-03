@@ -107,14 +107,14 @@ M.git = {
       end,
       "preview hunk",
     },
-    ["do"] = {
-      "<cmd> diffget //2 <CR>",
-      "get diff from left (local)",
-    },
-    ["dO"] = {
-      "<cmd> diffget //3 <CR>",
-      "get diff from right (remote)",
-    },
+    -- ["do"] = {
+    --   "<cmd> diffget //2 <CR>",
+    --   "get diff from left (local)",
+    -- },
+    -- ["dO"] = {
+    --   "<cmd> diffget //3 <CR>",
+    --   "get diff from right (remote)",
+    -- },
   },
 }
 

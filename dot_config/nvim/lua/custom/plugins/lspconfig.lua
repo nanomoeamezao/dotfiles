@@ -13,12 +13,12 @@ for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = function(client, bufnr)
       if lsp == "gopls" then
-        client.resolved_capabilities.document_formatting = true
-        client.resolved_capabilities.document_range_formatting = true
+        client.server_capabilities.document_formatting = true
+        client.server_capabilities.document_range_formatting = true
       end
       if lsp == "sumneko_lua" then
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+        client.server_capabilities.document_formatting = false
+        client.server_capabilities.document_range_formatting = false
       end
       if lsp == "sqls" then
         require("sqls").on_attach(client, bufnr)

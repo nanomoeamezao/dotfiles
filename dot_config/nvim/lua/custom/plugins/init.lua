@@ -88,9 +88,6 @@ return {
     end,
   },
   ["vim-scripts/ReplaceWithRegister"] = {},
-  ["github/copilot.vim"] = {
-    disable = true,
-  },
   ["zbirenbaum/copilot.lua"] = {
     config = function()
       vim.defer_fn(function()
