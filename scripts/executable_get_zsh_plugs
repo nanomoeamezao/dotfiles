@@ -1,0 +1,5 @@
+#! /usr/bin/bash
+
+wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/docker/docker.plugin.zsh -O ${HOME}/.zsh/docker.plugin.zsh
+wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/docker-compose/docker-compose.plugin.zsh -O ${HOME}/.zsh/docker-compose.plugin.zsh
+wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh -O ${HOME}/.zsh/git.plugin.zsh
