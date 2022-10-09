@@ -21,6 +21,7 @@ M.treesitter = {
     "comment",
     "yaml",
     "sql",
+    "norg",
   },
   highlight = {
     enable = true,

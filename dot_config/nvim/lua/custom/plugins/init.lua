@@ -6,6 +6,7 @@ return {
   ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
 
   ["nvim-telescope/telescope.nvim"] = {
+    module = "telescope",
     override_options = {
       extensions = {
         fzf = {
@@ -15,6 +16,16 @@ return {
         },
       },
     },
+    requires = {
+      "nvim-lua/popup.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require "plugins.configs.telescope"
+    end,
+    setup = function()
+      require("core.utils").load_mappings "telescope"
+    end,
   },
   ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
 
@@ -41,6 +52,11 @@ return {
           }
         end,
       },
+    },
+  },
+  ["lukas-reineke/indent-blankline.nvim"] = {
+    override_options = {
+      show_current_context_start = false,
     },
   },
 
@@ -231,6 +247,16 @@ return {
       "Gwrite",
       "Gw",
     },
+    config = function()
+      local cmp = require "cmp"
+      cmp.setup.filetype("gitcommit", {
+        sources = cmp.config.sources {
+          { name = "cmp_git" },
+          { name = "buffer" },
+          { name = "path" },
+        },
+      })
+    end,
   },
   ["https://git.sr.ht/~whynothugo/lsp_lines.nvim"] = {
     after = "nvim-lspconfig",
@@ -385,10 +411,50 @@ return {
   },
   ["rmagatti/session-lens"] = {
     requires = { "rmagatti/auto-session", "nvim-telescope/telescope.nvim" },
+    cmd = "SearchSession",
     after = "telescope.nvim",
     config = function()
       require("session-lens").setup {}
       require("telescope").load_extension "session-lens"
+    end,
+  },
+  ["nvim-neorg/neorg"] = {
+    ft = "norg",
+    run = ":Neorg sync-parsers", -- This is the important bit!
+    requires = "nvim-neorg/neorg-telescope",
+    after = { "nvim-treesitter", "telescope.nvim" },
+    config = function()
+      local cmp = require "cmp"
+      require "telescope"
+      cmp.setup.filetype("norg", {
+        sources = cmp.config.sources {
+          { name = "neorg" },
+          { name = "buffer" },
+          { name = "path" },
+          { name = "luasnip" },
+        },
+      })
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},
+          ["core.ui"] = {},
+          ["core.norg.concealer"] = {},
+          ["core.norg.completion"] = {
+            config = {
+              engine = "nvim-cmp",
+            },
+          },
+          ["core.integrations.nvim-cmp"] = {},
+          ["core.integrations.telescope"] = {},
+          ["core.norg.dirman"] = {
+            config = {
+              workspaces = {
+                notes = "~/notes",
+              },
+            },
+          },
+        },
+      }
     end,
   },
 }

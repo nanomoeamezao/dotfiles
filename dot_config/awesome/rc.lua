@@ -289,9 +289,9 @@ awful.screen.connect_for_each_screen(function(s)
 	if hostname == "neotop" then
 		local battery_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 		right_widgets:add(battery_widget({
-      size = 22,
-      show_current_level = true,
-    }))
+			size = 22,
+			show_current_level = true,
+		}))
 		right_widgets:add(seperator)
 	end
 	right_widgets:add(mykeyboardlayout)
@@ -424,6 +424,10 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "p", function()
 		awful.spawn.easy_async_with_shell("mpv_url", function(out) end)
 	end, { description = "run url from clip in mpv", group = "media" }),
+
+	awful.key({ "Control", "Mod1" }, "l", function()
+		awful.spawn.easy_async_with_shell("dm-tool lock", function() end)
+	end, { description = "lock session", group = "session" }),
 
 	awful.key({ modkey, "Control" }, "n", function()
 		local c = awful.client.restore()

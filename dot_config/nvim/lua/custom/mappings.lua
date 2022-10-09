@@ -19,6 +19,8 @@ M.telescope = {
     ["<leader>gb"] = { "<cmd> Telescope git_branches <CR>", "list git branches" },
     ["<leader>gf"] = { "<cmd> Telescope git_files <CR>", "list git files" },
     ["<leader>ft"] = { "<cmd> TodoTelescope <CR>", "telescope for todo items" },
+    ["<leader>fn"] = { "<cmd> Telescope neorg find_linkable<cr>" },
+    ["<leader>fN"] = { "<cmd> Telescope neorg search_headings<cr>" },
   },
 }
 M.lsp = {
