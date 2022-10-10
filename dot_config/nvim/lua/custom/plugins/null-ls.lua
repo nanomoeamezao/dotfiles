@@ -2,13 +2,16 @@ local null_ls = require "null-ls"
 local b = null_ls.builtins
 
 local sources = {
+  -- Proto
   b.diagnostics.buf.with { args = { "lint" } },
   -- b.formatting.buf,
 
+  -- Yaml\json
   b.formatting.prettierd.with { filetypes = { "yaml", "toml", "json" } },
   b.diagnostics.yamllint,
-  b.diagnostics.checkmake,
   b.diagnostics.jsonlint,
+
+  b.diagnostics.checkmake,
 
   -- b.formatting.pg_format,
   b.formatting.sqlfluff.with { extra_args = { "--dialect", "postgres" } },
@@ -23,11 +26,14 @@ local sources = {
   -- b.diagnostics.shellcheck.with { diagnostics_format = "#{m} [#{c}]" },
   b.diagnostics.shellcheck,
 
+  -- Go
+  b.formatting.gofumpt,
   b.diagnostics.golangci_lint.with {
     args = { "run", "--fix=false", "--out-format=json", "$DIRNAME", "--path-prefix", "$ROOT" },
     extra_args = { "-c", "~/code/testing_images/.golangci.yml" },
   },
 
+  -- Git
   b.code_actions.gitsigns,
 }
 

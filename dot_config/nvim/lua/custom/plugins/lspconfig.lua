@@ -4,30 +4,31 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 local lspconfig = require "lspconfig"
 
 -- lspservers with default config
-local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls", "sqls" }
+local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "bashls", "sqls" }
+-- local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls", "sqls" }
 
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
+    capabilities = capabilities,
     on_attach = function(client, bufnr)
       if lsp == "gopls" then
-        client.server_capabilities.document_formatting = true
-        client.server_capabilities.document_range_formatting = true
+        on_attach(client, bufnr)
+        return
       end
       if lsp == "sumneko_lua" then
-        client.server_capabilities.document_formatting = false
-        client.server_capabilities.document_range_formatting = false
+        on_attach(client, bufnr)
+        return
       end
       if lsp == "sqls" then
-        require("sqls").on_attach(client, bufnr)
         on_attach(client, bufnr)
+        require("sqls").on_attach(client, bufnr)
         return
       end
       on_attach(client, bufnr)
     end,
-    capabilities = capabilities,
     flags = {
       debounce_text_changes = 100,
     },
@@ -35,7 +36,7 @@ for _, lsp in ipairs(servers) do
       gopls = {
         gofumpt = true,
         directoryFilters = { "-gen" },
-        codelenses = { gc_details = true },
+        codelenses = { gc_details = false },
       },
       Lua = {
         runtime = {
@@ -49,6 +50,7 @@ for _, lsp in ipairs(servers) do
         },
         workspace = {
           library = vim.api.nvim_get_runtime_file("", true),
+          checkThirdParty = false,
           maxPreload = 100000,
           preloadFileSize = 10000,
         },

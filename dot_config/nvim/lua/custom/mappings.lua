@@ -109,6 +109,12 @@ M.git = {
       end,
       "preview hunk",
     },
+    -- ["<leader>cm"] = {
+    --   function()
+    --     require("custom.misc").delta_commits()
+    --   end,
+    --   "delta git commits",
+    -- },
     -- ["do"] = {
     --   "<cmd> diffget //2 <CR>",
     --   "get diff from left (local)",
