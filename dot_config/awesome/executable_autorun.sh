@@ -15,7 +15,7 @@ fi
 run nm-applet
 run picom -b
 #run lxpolkit
-run batterymon
 if [ "$HOST" = "neotop" ]; then
 	run blueman-applet
+  run qbittorrent
 fi

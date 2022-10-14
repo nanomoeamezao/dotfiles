@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-set -ex
 set -o rematchpcre
 
 url="$(xclip -o)"

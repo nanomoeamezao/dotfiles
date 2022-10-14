@@ -1,7 +1,28 @@
-# Source manjaro-zsh-configuration
-if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
-  source /usr/share/zsh/manjaro-zsh-config
-fi
+## Options section
+setopt extendedglob                                             # Extended globbing. Allows using regular expressions with *
+setopt nocaseglob                                               # Case insensitive globbing
+setopt rcexpandparam                                            # Array expension with parameters
+setopt nocheckjobs                                              # Don't warn about running processes when exiting
+setopt numericglobsort                                          # Sort filenames numerically when it makes sense
+setopt nobeep                                                   # No beep
+setopt CORRECT                  # command auto-correction
+setopt COMPLETE_ALIASES
+setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt AUTOPARAMSLASH            # tab completing directory appends a slash
+setopt SHARE_HISTORY             # Share your history across all your terminal windows
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits
+setopt autocd                                                   # if only directory path is entered, cd there.
+
+zmodload zsh/datetime
+
 # completion
 fpath=(/usr/share/zsh/site-functions/ $fpath)
 
@@ -14,18 +35,135 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 source /usr/share/doc/git-extras/git-extras-completion.zsh
 
-source ~/.zsh/git.plugin.zsh 
-
-source ~/.zsh/docker.plugin.zsh
-source ~/.zsh/docker-compose.plugin.zsh
-
 source ~/.zsh/auto-notify.plugin.zsh
 
 source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh
 
+
 autoload -U compinit colors zcalc
 compinit -d
 colors
+
+setopt ALWAYS_TO_END
+setopt AUTO_MENU
+setopt LIST_PACKED
+
+source ~/.zsh/git.plugin.zsh 
+source ~/.zsh/docker.plugin.zsh
+source ~/.zsh/docker-compose.plugin.zsh
+
+if [[ "$TERM" == "xterm-kitty" ]]; then
+  kitty + complete setup zsh | source /dev/stdin
+fi
+
+
+# Colorize completions using default `ls` colors.
+zstyle ':completion:*' list-colors ''
+
+# Enable keyboard navigation of completions in menu
+# (not just tab/shift-tab but cursor keys as well):
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+zstyle ':completion:*' rehash true                              # automatically find new executables in path 
+# Speed up completions
+zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# Categorize completion suggestions with headings:
+zstyle ':completion:*' group-name ''
+# Style the group names
+zstyle ':completion:*' format %F{yellow}%B%U%{$__DOTS[ITALIC_ON]%}%d%{$__DOTS[ITALIC_OFF]%}%b%u%f
+
+# Added by running `compinstall`
+zstyle ':completion:*' expand suffix
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' list-suffixes true
+# End of lines added by compinstall
+
+# Make completion:
+# (stolen from Wincent)
+# - Try exact (case-sensitive) match first.
+# - Then fall back to case-insensitive.
+# - Accept abbreviations after . or _ or - (ie. f.b -> foo.bar).
+# - Substring complete (ie. bar -> foobar).
+zstyle ':completion:*' matcher-list '' \
+  '+m:{[:lower:]}={[:upper:]}' \
+  '+m:{[:upper:]}={[:lower:]}' \
+  '+m:{_-}={-_}' \
+  'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+HISTFILE=~/.zhistory
+HISTSIZE=10000
+SAVEHIST=10000
+WORDCHARS=${WORDCHARS//\/[&.;]}                                 # Don't consider certain characters part of the word
+
+## Keybindings section
+bindkey -e
+bindkey '^[[7~' beginning-of-line                               # Home key
+bindkey '^[[H' beginning-of-line                                # Home key
+if [[ "${terminfo[khome]}" != "" ]]; then
+  bindkey "${terminfo[khome]}" beginning-of-line                # [Home] - Go to beginning of line
+fi
+bindkey '^[[8~' end-of-line                                     # End key
+bindkey '^[[F' end-of-line                                     # End key
+if [[ "${terminfo[kend]}" != "" ]]; then
+  bindkey "${terminfo[kend]}" end-of-line                       # [End] - Go to end of line
+fi
+bindkey '^[[3~' delete-char                                     # Delete key
+bindkey '^[[C'  forward-char                                    # Right key
+bindkey '^[[D'  backward-char                                   # Left key
+bindkey '^[[5~' history-beginning-search-backward               # Page up key
+bindkey '^[[6~' history-beginning-search-forward                # Page down key
+
+# Navigate words with ctrl+arrow keys
+bindkey '^[Oc' forward-word                                     #
+bindkey '^[Od' backward-word                                    #
+bindkey '^[[1;5D' backward-word                                 #
+bindkey '^[[1;5C' forward-word                                  #
+bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
+bindkey '^[[Z' undo                                             # Shift+tab undo last action
+
+## Alias section 
+alias cp="cp -i"                                                # Confirm before overwriting something
+alias df='df -h'                                                # Human-readable sizes
+alias free='free -m'                                            # Show sizes in MB
+alias gitu='git add . && git commit && git push'
+
+# Color man pages
+export LESS_TERMCAP_mb=$'\E[01;32m'
+export LESS_TERMCAP_md=$'\E[01;32m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;47;34m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;36m'
+export LESS=-R
+
+
+## Plugins section: Enable fish style features
+# Use syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Use history substring search
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+# bind UP and DOWN arrow keys to history substring search
+zmodload zsh/terminfo
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey '^[[A' history-substring-search-up			
+bindkey '^[[B' history-substring-search-down
+
+
+# File and Dir colors for ls and other outputs
+export LS_OPTIONS='--color=auto'
+eval "$(dircolors -b)"
+alias ls='ls $LS_OPTIONS'
+
+
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
@@ -75,3 +213,5 @@ alias dockerpostlogs='sudo docker exec -w /var/lib/postgresql/data/pg_log postgr
 alias dockercppostconf='sudo docker cp ${HOME}/code/testing_images/postgres/postgresql.conf postgres:/var/lib/postgresql/data/postgresql.conf && sudo docker restart postgres'
 alias gco='fzf-git-checkout'
 
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/bitcomplete bit
