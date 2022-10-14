@@ -1,3 +1,13 @@
-#!/bin/bash
+#!/bin/zsh
 
-mpv --no-terminal --really-quiet --keep-open=yes "$(xclip -o)"
+set -ex
+set -o rematchpcre
+
+url="$(xclip -o)"
+
+if [[ $url =~ twitch\.tv\/(?!video) ]]; then
+  streamlink "$url" 720p60 
+  return
+fi
+
+mpv --no-terminal --really-quiet --keep-open=yes "$url"

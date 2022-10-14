@@ -1,5 +1,14 @@
 #! /usr/bin/bash
 
+set -ex
+
 wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/docker/docker.plugin.zsh -O ${HOME}/.zsh/docker.plugin.zsh
 wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/docker-compose/docker-compose.plugin.zsh -O ${HOME}/.zsh/docker-compose.plugin.zsh
+
 wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh -O ${HOME}/.zsh/git.plugin.zsh
+
+wget https://raw.githubusercontent.com/MichaelAquilina/zsh-auto-notify/30c3c60939030b846a24af217686b29377516b5f/auto-notify.plugin.zsh -O ${HOME}/.zsh/auto-notify.plugin.zsh
+
+cp /usr/share/git/completion/git-completion.zsh ~/.zsh/_git
+
+echo "DONE!"

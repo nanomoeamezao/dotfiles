@@ -2,15 +2,27 @@
 if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
   source /usr/share/zsh/manjaro-zsh-config
 fi
+# completion
 fpath=(/usr/share/zsh/site-functions/ $fpath)
+
 fpath=(~/.zsh $fpath)
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+source /usr/share/doc/git-extras/git-extras-completion.zsh
+
 source ~/.zsh/git.plugin.zsh 
+
 source ~/.zsh/docker.plugin.zsh
 source ~/.zsh/docker-compose.plugin.zsh
+
+source ~/.zsh/auto-notify.plugin.zsh
+
+source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh
+
 autoload -U compinit colors zcalc
 compinit -d
 colors

@@ -243,6 +243,12 @@ M.general = {
   n = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
     ["<C-ы>"] = { "<cmd> w <CR>" },
+    ["<leader>dl"] = {
+      function()
+        local nvim_docker = require "nvim-docker"
+        nvim_docker.containers.list_containers()
+      end,
+    },
   },
 }
 

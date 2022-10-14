@@ -37,6 +37,7 @@ for _, lsp in ipairs(servers) do
         gofumpt = true,
         directoryFilters = { "-gen" },
         codelenses = { gc_details = false },
+        buildFlags = { "-tags", "winsoftrule,vault,winbuild,dictionary_test,unpacker" },
       },
       Lua = {
         runtime = {

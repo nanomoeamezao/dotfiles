@@ -115,17 +115,13 @@ return {
   ["zbirenbaum/copilot-cmp"] = {
     after = "copilot.lua",
     config = function()
-      require("copilot_cmp").setup {
-        formatters = {
-          insert_text = require("copilot_cmp.format").remove_existing,
-        },
-      }
+      require("copilot_cmp").setup {}
     end,
   },
   ["mfussenegger/nvim-dap"] = {
     cmd = { "DapContinue", "DapToggleBreakpoint" },
   },
-  ["xuxinx/nvim-dap-go"] = {
+  ["leoluz/nvim-dap-go"] = {
     after = "nvim-dap",
     config = function()
       require("dap-go").setup()
@@ -185,6 +181,12 @@ return {
             size = 0.25, -- 25% of total lines
             position = "bottom",
           },
+        },
+        controls = {
+          -- Requires Neovim nightly (or 0.8 when released)
+          enabled = true,
+          -- Display controls in this element
+          element = "repl",
         },
       }
       local dap, dapui = require "dap", require "dapui"
@@ -355,8 +357,7 @@ return {
   },
   ["tpope/vim-git"] = {},
   ["nvim-neotest/neotest"] = {
-    after = "nvim-treesitter",
-    ft = { "go" },
+    module = "neotest",
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -364,12 +365,25 @@ return {
       "nvim-neotest/neotest-go",
     },
     config = function()
+      -- get neotest namespace (api call creates or returns namespace)
+      local neotest_ns = vim.api.nvim_create_namespace "neotest"
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+            return message
+          end,
+        },
+      }, neotest_ns)
+
       require("neotest").setup {
         adapters = {
           require "neotest-go" {
             experimental = {
               test_table = true,
             },
+            -- args = { "-count=1", "-timeout=60s" },
+            args = { "-timeout=60s" },
           },
         },
       }
@@ -409,7 +423,12 @@ return {
     tag = "*",
     config = function()
       require("git-conflict").setup {
-        default_mappings = false,
+        default_mappings = true,
+        disable_diagnostics = true, -- This will disable the diagnostics in a buffer whilst it is conflicted
+        highlights = { -- They must have background color, otherwise the default color will be used
+          incoming = "DiffText",
+          current = "DiffAdd",
+        },
       }
     end,
   },
@@ -424,12 +443,11 @@ return {
   },
   ["nvim-neorg/neorg"] = {
     ft = "norg",
+    cmd = { "Neorg", "Telescome neorg" },
     run = ":Neorg sync-parsers", -- This is the important bit!
     requires = "nvim-neorg/neorg-telescope",
-    after = { "nvim-treesitter", "telescope.nvim" },
     config = function()
       local cmp = require "cmp"
-      require "telescope"
       cmp.setup.filetype("norg", {
         sources = cmp.config.sources {
           { name = "neorg" },
@@ -460,5 +478,17 @@ return {
         },
       }
     end,
+  },
+  ["miversen33/netman.nvim"] = {
+    branch = "issue-28-libuv-shenanigans",
+    config = function()
+      require "netman"
+    end,
+  },
+  ["dgrbrady/nvim-docker"] = {
+    module = "nvim-docker",
+    requires = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    rocks = "reactivex", -- ReactiveX Lua implementation
+    disable = true,
   },
 }

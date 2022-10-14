@@ -1,4 +1,8 @@
-local null_ls = require "null-ls"
+local present, null_ls = pcall(require, "null-ls")
+
+if not present then
+  return
+end
 local b = null_ls.builtins
 
 local sources = {
@@ -30,7 +34,7 @@ local sources = {
   b.formatting.gofumpt,
   b.diagnostics.golangci_lint.with {
     args = { "run", "--fix=false", "--out-format=json", "$DIRNAME", "--path-prefix", "$ROOT" },
-    extra_args = { "-c", "~/code/testing_images/.golangci.yml" },
+    extra_args = { "-c", vim.fn.getenv "GOPATH" .. "/utils/.golangci.yml" },
   },
 
   -- Git
@@ -39,7 +43,7 @@ local sources = {
 
 local M = {}
 
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+local augroup = vim.api.nvim_create_augroup("NullLspFormatting", {})
 
 local on_attach = function(client, bufnr)
   if client.supports_method "textDocument/formatting" then
