@@ -6,7 +6,6 @@ return {
   ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
 
   ["nvim-telescope/telescope.nvim"] = {
-    module = "telescope",
     override_options = {
       extensions = {
         fzf = {
@@ -28,19 +27,6 @@ return {
     end,
   },
   ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
-
-  ["williamboman/mason.nvim"] = {
-    override_options = {
-      ensure_installed = {
-        "lua-language-server",
-        "stylua",
-        "shfmt",
-        "shellcheck",
-        "marksman",
-      },
-    },
-  },
-
   ["NvChad/ui"] = {
     override_options = {
       statusline = {
@@ -91,13 +77,6 @@ return {
   ["p00f/nvim-ts-rainbow"] = {
     after = "nvim-treesitter",
   },
-  ["windwp/nvim-ts-autotag"] = {
-    ft = { "html", "javascriptreact" },
-    after = "nvim-treesitter",
-    config = function()
-      require("nvim-ts-autotag").setup()
-    end,
-  },
   ["ggandor/leap.nvim"] = {
     config = function()
       require("leap").set_default_keymaps()
@@ -110,7 +89,6 @@ return {
         require("copilot").setup {}
       end, 100)
     end,
-    -- disable = true,
   },
   ["zbirenbaum/copilot-cmp"] = {
     after = "copilot.lua",
@@ -224,7 +202,6 @@ return {
       require("todo-comments").setup()
     end,
   },
-
   ["benfowler/telescope-luasnip.nvim"] = {
     after = { "telescope.nvim" },
     config = function()
@@ -264,36 +241,11 @@ return {
       })
     end,
   },
-  ["https://git.sr.ht/~whynothugo/lsp_lines.nvim"] = {
-    after = "nvim-lspconfig",
-    config = function()
-      require("lsp_lines").setup()
-      vim.diagnostic.config {
-        virtual_text = false,
-        virtual_lines = true,
-      }
-    end,
-    disable = true,
-  },
   ["folke/trouble.nvim"] = {
     after = "nvim-lspconfig",
     requires = "kyazdani42/nvim-web-devicons",
     config = function()
       require("trouble").setup()
-    end,
-  },
-  ["TimUntersberger/neogit"] = {
-    cmd = "Neogit",
-    config = function()
-      require("neogit").setup()
-    end,
-  },
-  ["rmagatti/auto-session"] = {
-    config = function()
-      require("auto-session").setup {
-        log_level = "error",
-        auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-      }
     end,
   },
   ["nvim-treesitter/nvim-treesitter-context"] = {
@@ -306,6 +258,7 @@ return {
   },
   ["bennypowers/nvim-regexplainer"] = {
     after = "nvim-treesitter",
+    disable = true,
     requires = {
       "MunifTanjim/nui.nvim",
     },
@@ -327,7 +280,6 @@ return {
         mappings = {},
       }
     end,
-    disable = true,
   },
   ["j-hui/fidget.nvim"] = {
     after = "nvim-lspconfig",
@@ -349,8 +301,6 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
           return { "treesitter", "indent" }
         end,
-        enable_get_fold_virt_text = true,
-        close_fold_kinds = {},
         preview = {},
       }
     end,
@@ -413,7 +363,6 @@ return {
     config = function()
       require("hlargs").setup {}
     end,
-    disable = false,
   },
   ["rcarriga/nvim-notify"] = {},
   ["nanotee/sqls.nvim"] = {
@@ -430,15 +379,6 @@ return {
           current = "DiffAdd",
         },
       }
-    end,
-  },
-  ["rmagatti/session-lens"] = {
-    requires = { "rmagatti/auto-session", "nvim-telescope/telescope.nvim" },
-    cmd = "SearchSession",
-    after = "telescope.nvim",
-    config = function()
-      require("session-lens").setup {}
-      require("telescope").load_extension "session-lens"
     end,
   },
   ["nvim-neorg/neorg"] = {
@@ -480,15 +420,17 @@ return {
     end,
   },
   ["miversen33/netman.nvim"] = {
+    disable = true,
     branch = "issue-28-libuv-shenanigans",
     config = function()
       require "netman"
     end,
   },
-  ["dgrbrady/nvim-docker"] = {
-    module = "nvim-docker",
-    requires = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-    rocks = "reactivex", -- ReactiveX Lua implementation
-    disable = true,
+
+  ["stevearc/aerial.nvim"] = {
+    module = "aerial",
+    config = function()
+      require("aerial").setup()
+    end,
   },
 }

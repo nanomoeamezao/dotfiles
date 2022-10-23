@@ -33,8 +33,6 @@ source /usr/share/fzf/completion.zsh
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-source /usr/share/doc/git-extras/git-extras-completion.zsh
-
 source ~/.zsh/auto-notify.plugin.zsh
 
 source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh

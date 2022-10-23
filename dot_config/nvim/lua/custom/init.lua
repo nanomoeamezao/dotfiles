@@ -6,9 +6,6 @@ opt.termguicolors = true
 -- opt.tabstop = 4
 opt.timeoutlen = 400
 
-opt.foldlevel = 20
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
 g.markdown_folding = 1
 
 g.neovide_cursor_animation_length = 0

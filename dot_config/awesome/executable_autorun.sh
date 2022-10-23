@@ -14,8 +14,9 @@ fi
 
 run nm-applet
 run picom -b
+run udiskie
 #run lxpolkit
-if [ "$HOST" = "neotop" ]; then
+if [ "$HOSTNAME" = "neotop" ]; then
 	run blueman-applet
-  run qbittorrent
+	run qbittorrent
 fi

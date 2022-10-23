@@ -6,6 +6,7 @@ require("awful.autofocus")
 local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
+local dpi = require("beautiful").xresources.apply_dpi
 local lain = require("lain")
 -- Notification library
 local naughty = require("naughty")
@@ -193,32 +194,7 @@ local taglist_buttons = gears.table.join(
 		end
 	end)
 )
---[[
-local tasklist_buttons = gears.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  -- Without this, the following
-                                                  -- :isvisible() makes no sense
-                                                  c.minimized = false
-                                                  if not c:isvisible() and c.first_tag then
-                                                      c.first_tag:view_only()
-                                                  end
-                                                  -- This will also un-minimize
-                                                  -- the client, if needed
-                                                  client.focus = c
-                                                  c:raise()
-                                              end
-                                          end),
-                     awful.button({ }, 3, client_menu_toggle_fn()),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
---]]
+
 local function set_wallpaper(s)
 	-- Wallpaper
 	if beautiful.wallpaper then
@@ -266,7 +242,8 @@ awful.screen.connect_for_each_screen(function(s)
 
 	beautiful.useless_gap = 4
 	-- Create a tasklist widget
-	--    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+	s.mytasklist = require("tasklist")(s)
+
 	-- vol widget
 	local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
 
@@ -308,7 +285,11 @@ awful.screen.connect_for_each_screen(function(s)
 			s.mytaglist,
 			s.mypromptbox,
 		},
-		s.mytasklist, -- Middle widget
+		{
+			left = 600,
+			layout = wibox.container.margin,
+			s.mytasklist, -- Middle widget
+		},
 		right_widgets,
 	})
 end)
@@ -409,7 +390,7 @@ globalkeys = gears.table.join(
 		awful.spawn("/usr/bin/thunar")
 	end, { description = "launch thunar", group = "launcher" }),
 	awful.key({ modkey, "Shift" }, "e", function()
-		awful.spawn(terminal .. " -e ranger")
+		awful.spawn.with_shell(terminal .. " -e ranger")
 	end, { description = "launch ranger", group = "launcher" }),
 	awful.key({ modkey, "Shift" }, "space", function()
 		awful.layout.inc(-1)

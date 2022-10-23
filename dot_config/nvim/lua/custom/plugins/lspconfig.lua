@@ -4,7 +4,7 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 local lspconfig = require "lspconfig"
 
 -- lspservers with default config
-local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "bashls", "sqls" }
+local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "bashls", "sqls", "pylsp" }
 -- local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls", "sqls" }
 
 local runtime_path = vim.split(package.path, ";")
@@ -14,14 +14,6 @@ for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-      if lsp == "gopls" then
-        on_attach(client, bufnr)
-        return
-      end
-      if lsp == "sumneko_lua" then
-        on_attach(client, bufnr)
-        return
-      end
       if lsp == "sqls" then
         on_attach(client, bufnr)
         require("sqls").on_attach(client, bufnr)
@@ -37,7 +29,7 @@ for _, lsp in ipairs(servers) do
         gofumpt = true,
         directoryFilters = { "-gen" },
         codelenses = { gc_details = false },
-        buildFlags = { "-tags", "winsoftrule,vault,winbuild,dictionary_test,unpacker" },
+        buildFlags = { "-tags", "vault,dbtest" },
       },
       Lua = {
         runtime = {
