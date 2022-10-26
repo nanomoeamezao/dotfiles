@@ -27,7 +27,7 @@ for _, lsp in ipairs(servers) do
     settings = {
       gopls = {
         gofumpt = true,
-        directoryFilters = { "-gen" },
+        directoryFilters = { "-gen", "-docs", "-dist", "-tools" },
         codelenses = { gc_details = false },
         buildFlags = { "-tags", "vault,dbtest" },
       },

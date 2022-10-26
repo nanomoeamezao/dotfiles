@@ -7,7 +7,7 @@ M.plugins = userPlugins
 M.mappings = require "custom.mappings"
 
 M.ui = {
-  theme = "onenord",
+  theme = "monochrome",
   hl_override = {
     IndentBlanklineContextChar = { fg = "purple" },
     -- IndentBlanklineContextStart = { bg = "purple" },

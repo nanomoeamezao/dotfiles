@@ -92,9 +92,14 @@ M.lsp = {
       end,
       "lsp type definitions",
     },
-    ["<leader>cA"] = {
+    ["<leader>la"] = {
+      "<cmd> AerialToggle <cr>",
+    },
+  },
+  v = {
+    ["<leader>ca"] = {
       function()
-        vim.lsp.buf.range_code_action()
+        vim.lsp.buf.code_action()
       end,
       "range code actions",
     },

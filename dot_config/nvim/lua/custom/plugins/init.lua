@@ -27,6 +27,18 @@ return {
     end,
   },
   ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
+  ["NvChad/base46"] = false,
+  ["nanomoeamezao/base46"] = {
+    branch = "monochrome",
+    config = function()
+      local ok, base46 = pcall(require, "base46")
+
+      if ok then
+        base46.load_theme()
+      end
+    end,
+  },
+
   ["NvChad/ui"] = {
     override_options = {
       statusline = {
@@ -193,7 +205,14 @@ return {
   },
   ["sindrets/diffview.nvim"] = {
     config = function()
-      require("diffview").setup {}
+      require("diffview").setup {
+        view = {
+          merge_tool = {
+            layout = "diff1_plain",
+            disable_diagnostics = true, -- Temporarily disable diagnostics for conflict buffers while in the view.
+          },
+        },
+      }
     end,
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
   },
@@ -426,11 +445,15 @@ return {
       require "netman"
     end,
   },
-
   ["stevearc/aerial.nvim"] = {
-    module = "aerial",
+    after = "nvim-lspconfig",
     config = function()
       require("aerial").setup()
+    end,
+  },
+  ["ibhagwan/smartyank.nvim"] = {
+    config = function()
+      require("smartyank").setup()
     end,
   },
 }

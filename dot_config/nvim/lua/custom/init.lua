@@ -5,6 +5,7 @@ opt.termguicolors = true
 
 -- opt.tabstop = 4
 opt.timeoutlen = 400
+opt.clipboard = ""
 
 g.markdown_folding = 1
 
@@ -22,16 +23,6 @@ opt.relativenumber = true
 opt.langmap =
   "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
 vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
-
--- HIGHLIGHT ON YANK
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-  callback = function()
-    vim.highlight.on_yank {
-      higroup = "IncSearch",
-      timeout = 300,
-    }
-  end,
-})
 
 -- HIGHLIGHT LSP SYMBOL
 -- vim.api.nvim_create_augroup("dochl", { clear = true })
