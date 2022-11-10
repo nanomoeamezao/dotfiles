@@ -7,6 +7,9 @@ opt.termguicolors = true
 opt.timeoutlen = 400
 opt.clipboard = ""
 
+opt.cmdheight = 0
+vim.cmd "set diffopt+=linematch:50"
+
 g.markdown_folding = 1
 
 g.neovide_cursor_animation_length = 0

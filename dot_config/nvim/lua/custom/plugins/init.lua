@@ -3,9 +3,9 @@ return {
   -- OVERRIDES
   ["nvim-treesitter/nvim-treesitter"] = { override_options = plugin_conf.treesitter },
 
-  ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
-
+  -- ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
   ["nvim-telescope/telescope.nvim"] = {
+    commit = "f174a0367b4fc7cb17710d867e25ea792311c418",
     override_options = {
       extensions = {
         fzf = {
@@ -78,9 +78,10 @@ return {
       require("telescope").load_extension "fzf"
     end,
   },
-  ["ur4ltz/surround.nvim"] = {
+  ["kylechui/nvim-surround"] = {
+    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
     config = function()
-      require("surround").setup { mappings_style = "surround" }
+      require("nvim-surround").setup {}
     end,
   },
   ["nvim-treesitter/nvim-treesitter-textobjects"] = {
@@ -101,8 +102,10 @@ return {
         require("copilot").setup {}
       end, 100)
     end,
+    disable = true,
   },
   ["zbirenbaum/copilot-cmp"] = {
+    disable = true,
     after = "copilot.lua",
     config = function()
       require("copilot_cmp").setup {}
@@ -136,6 +139,13 @@ return {
         request = "launch",
         name = "netscan debug",
         program = vim.fn.getenv "GOPATH" .. "/scanner/netscan-service/cmd/netscan-service/",
+      })
+      table.insert(dap.configurations.go, {
+        type = "go",
+        request = "launch",
+        name = "installer debug",
+        program = vim.fn.getenv "GOPATH" .. "/scanner-installer/cmd/installer/",
+        args = { "install" },
       })
       table.insert(dap.configurations.go, {
         type = "go",
@@ -278,9 +288,6 @@ return {
   ["bennypowers/nvim-regexplainer"] = {
     after = "nvim-treesitter",
     disable = true,
-    requires = {
-      "MunifTanjim/nui.nvim",
-    },
     config = function()
       require("regexplainer").setup {
         filetypes = {
@@ -383,10 +390,6 @@ return {
       require("hlargs").setup {}
     end,
   },
-  ["rcarriga/nvim-notify"] = {},
-  ["nanotee/sqls.nvim"] = {
-    ft = { "sql" },
-  },
   ["akinsho/git-conflict.nvim"] = {
     tag = "*",
     config = function()
@@ -440,7 +443,6 @@ return {
   },
   ["miversen33/netman.nvim"] = {
     disable = true,
-    branch = "issue-28-libuv-shenanigans",
     config = function()
       require "netman"
     end,
@@ -454,6 +456,127 @@ return {
   ["ibhagwan/smartyank.nvim"] = {
     config = function()
       require("smartyank").setup()
+    end,
+  },
+  ["kevinhwang91/nvim-hlslens"] = {
+    config = function()
+      require("hlslens").setup {}
+    end,
+  },
+  ["petertriho/nvim-scrollbar"] = {
+    after = "gitsigns.nvim",
+    config = function()
+      require("scrollbar").setup {
+        marks = {
+          Search = {
+            text = { "-", "=" },
+            priority = 0,
+            color = nil,
+            cterm = nil,
+            highlight = "Search",
+          },
+          Error = {
+            text = { "-", "=" },
+            priority = 1,
+            color = nil,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextError",
+          },
+          Warn = {
+            text = { "-", "=" },
+            priority = 2,
+            color = nil,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextWarn",
+          },
+          Info = {
+            text = { "-", "=" },
+            priority = 3,
+            color = nil,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextInfo",
+          },
+          Hint = {
+            text = { "-", "=" },
+            priority = 4,
+            color = nil,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextHint",
+          },
+          Misc = {
+            text = { "-", "=" },
+            priority = 5,
+            color = nil,
+            cterm = nil,
+            highlight = "Normal",
+          },
+          GitAdd = {
+            text = { "█" },
+            priority = 5,
+            cterm = nil,
+            highlight = "GitSignsAddNr",
+          },
+          GitDelete = {
+            text = { "█" },
+            priority = 5,
+            cterm = nil,
+            highlight = "GitSignsDeleteNr",
+          },
+          GitChange = {
+            text = { "█" },
+            priority = 5,
+            cterm = nil,
+            highlight = "GitSignsChangeNr",
+          },
+        },
+      }
+      require("scrollbar.handlers.search").setup()
+      local gitsign = require "gitsigns"
+      local gitsign_hunks = require "gitsigns.hunks"
+
+      require("scrollbar.handlers").register("git", function(bufnr)
+        local nb_lines = vim.api.nvim_buf_line_count(bufnr)
+        -- NOTE: change to corresponding marks from scrollbar setup
+        local colors_type = {
+          add = "GitAdd",
+          delete = "GitDelete",
+          change = "GitChange",
+          changedelete = "GitChange",
+        }
+
+        local lines = {}
+        local hunks = gitsign.get_hunks(bufnr)
+        if hunks then
+          for _, hunk in ipairs(hunks) do
+            hunk.vend = math.min(hunk.added.start, hunk.removed.start) + hunk.added.count + hunk.removed.count
+            local signs = gitsign_hunks.calc_signs(hunk, 0, nb_lines)
+            for _, sign in ipairs(signs) do
+              table.insert(lines, {
+                line = sign.lnum,
+                type = colors_type[sign.type],
+              })
+            end
+          end
+        end
+        return lines
+      end)
+    end,
+  },
+  -- ["MunifTanjim/nui.nvim"] = {},
+  ["folke/noice.nvim"] = {
+    disable = true,
+    after = { "nvim-lspconfig", "ui" },
+    requires = {
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup {
+        lsp = {
+          progress = {
+            enabled = false,
+          },
+        },
+      }
     end,
   },
 }

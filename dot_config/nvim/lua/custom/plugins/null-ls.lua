@@ -29,6 +29,7 @@ local sources = {
 
   -- Go
   b.formatting.gofumpt,
+  b.formatting.goimports,
   b.diagnostics.golangci_lint.with {
     args = { "run", "--fix=false", "--out-format=json", "$DIRNAME", "--path-prefix", "$ROOT" },
     extra_args = { "-c", vim.fn.getenv "GOPATH" .. "/utils/.golangci.yml" },
@@ -36,6 +37,7 @@ local sources = {
 
   -- Git
   b.code_actions.gitsigns,
+  -- b.diagnostics.commitlint,
 }
 
 local M = {}
