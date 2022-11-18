@@ -5,7 +5,6 @@ return {
 
   -- ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
   ["nvim-telescope/telescope.nvim"] = {
-    commit = "f174a0367b4fc7cb17710d867e25ea792311c418",
     override_options = {
       extensions = {
         fzf = {
@@ -27,16 +26,8 @@ return {
     end,
   },
   ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
-  ["NvChad/base46"] = false,
-  ["nanomoeamezao/base46"] = {
-    branch = "monochrome",
-    config = function()
-      local ok, base46 = pcall(require, "base46")
-
-      if ok then
-        base46.load_theme()
-      end
-    end,
+  ["NvChad/base46"] = {
+    branch = "dev",
   },
 
   ["NvChad/ui"] = {
@@ -162,7 +153,7 @@ return {
         render = {
           max_type_length = 1000,
         },
-        expand_lines = vim.fn.has "nvim-0.7",
+        expand_lines = true,
         layouts = {
           {
             elements = {
@@ -448,7 +439,7 @@ return {
     end,
   },
   ["stevearc/aerial.nvim"] = {
-    after = "nvim-lspconfig",
+    cmd = "AerialToggle",
     config = function()
       require("aerial").setup()
     end,
@@ -466,105 +457,13 @@ return {
   ["petertriho/nvim-scrollbar"] = {
     after = "gitsigns.nvim",
     config = function()
-      require("scrollbar").setup {
-        marks = {
-          Search = {
-            text = { "-", "=" },
-            priority = 0,
-            color = nil,
-            cterm = nil,
-            highlight = "Search",
-          },
-          Error = {
-            text = { "-", "=" },
-            priority = 1,
-            color = nil,
-            cterm = nil,
-            highlight = "DiagnosticVirtualTextError",
-          },
-          Warn = {
-            text = { "-", "=" },
-            priority = 2,
-            color = nil,
-            cterm = nil,
-            highlight = "DiagnosticVirtualTextWarn",
-          },
-          Info = {
-            text = { "-", "=" },
-            priority = 3,
-            color = nil,
-            cterm = nil,
-            highlight = "DiagnosticVirtualTextInfo",
-          },
-          Hint = {
-            text = { "-", "=" },
-            priority = 4,
-            color = nil,
-            cterm = nil,
-            highlight = "DiagnosticVirtualTextHint",
-          },
-          Misc = {
-            text = { "-", "=" },
-            priority = 5,
-            color = nil,
-            cterm = nil,
-            highlight = "Normal",
-          },
-          GitAdd = {
-            text = { "█" },
-            priority = 5,
-            cterm = nil,
-            highlight = "GitSignsAddNr",
-          },
-          GitDelete = {
-            text = { "█" },
-            priority = 5,
-            cterm = nil,
-            highlight = "GitSignsDeleteNr",
-          },
-          GitChange = {
-            text = { "█" },
-            priority = 5,
-            cterm = nil,
-            highlight = "GitSignsChangeNr",
-          },
-        },
-      }
+      require("scrollbar").setup {}
       require("scrollbar.handlers.search").setup()
-      local gitsign = require "gitsigns"
-      local gitsign_hunks = require "gitsigns.hunks"
-
-      require("scrollbar.handlers").register("git", function(bufnr)
-        local nb_lines = vim.api.nvim_buf_line_count(bufnr)
-        -- NOTE: change to corresponding marks from scrollbar setup
-        local colors_type = {
-          add = "GitAdd",
-          delete = "GitDelete",
-          change = "GitChange",
-          changedelete = "GitChange",
-        }
-
-        local lines = {}
-        local hunks = gitsign.get_hunks(bufnr)
-        if hunks then
-          for _, hunk in ipairs(hunks) do
-            hunk.vend = math.min(hunk.added.start, hunk.removed.start) + hunk.added.count + hunk.removed.count
-            local signs = gitsign_hunks.calc_signs(hunk, 0, nb_lines)
-            for _, sign in ipairs(signs) do
-              table.insert(lines, {
-                line = sign.lnum,
-                type = colors_type[sign.type],
-              })
-            end
-          end
-        end
-        return lines
-      end)
+      require("scrollbar.handlers.gitsigns").setup()
     end,
   },
-  -- ["MunifTanjim/nui.nvim"] = {},
+  ["MunifTanjim/nui.nvim"] = {},
   ["folke/noice.nvim"] = {
-    disable = true,
     after = { "nvim-lspconfig", "ui" },
     requires = {
       "rcarriga/nvim-notify",

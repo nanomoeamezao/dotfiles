@@ -58,7 +58,7 @@
   (setq company-show-quick-access t))
 
 
-(company-tng-configure-default)
+(company-tng-mode)
 
 (add-to-list 'company-backends #'company-files)
 (setq +lsp-company-backends '(company-capf
@@ -75,25 +75,9 @@
 (setq evil-replace-with-register-key (kbd "gr"))
 (evil-replace-with-register-install)
 
-(require 'dap-go)
-(setq dap-print-io t)
-(setq dap-auto-configure-features '(sessions locals controls tooltip))
 (add-hook 'dap-stopped-hook
           (lambda (arg) (call-interactively #'dap-hydra)))
-(after! lsp-mode (flycheck-golangci-lint-setup))
 
-;; Add buffer local Flycheck checkers after LSP for different major modes.
-(defvar-local my-flycheck-local-cache nil)
-(defun my-flycheck-local-checker-get (fn checker property)
-  ;; Only check the buffer local cache for the LSP checker, otherwise we get
-  ;; infinite loops.
-  (if (eq checker 'lsp)
-      (or (alist-get property my-flycheck-local-cache)
-          (funcall fn checker property))
-    (funcall fn checker property)))
-(advice-add 'flycheck-checker-get
-            :around 'my-flycheck-local-checker-get)
-(add-hook 'lsp-managed-mode-hook
-            (lambda ()
-              (when (derived-mode-p 'go-mode)
-                (setq my-flycheck-local-cache '((next-checkers . (golangci-lint)))))))
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]gen\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]dist\\'"))

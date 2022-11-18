@@ -392,6 +392,9 @@ globalkeys = gears.table.join(
 	awful.key({ modkey, "Shift" }, "e", function()
 		awful.spawn.with_shell(terminal .. " -e ranger")
 	end, { description = "launch ranger", group = "launcher" }),
+	awful.key({ modkey }, "v", function()
+		awful.spawn.with_shell("~/scripts/rofi-vpn")
+	end, { description = "rofi vpn", group = "launcher" }),
 	awful.key({ modkey, "Shift" }, "space", function()
 		awful.layout.inc(-1)
 	end, { description = "select previous", group = "layout" }),

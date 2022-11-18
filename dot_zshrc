@@ -5,7 +5,6 @@ setopt rcexpandparam                                            # Array expensio
 setopt nocheckjobs                                              # Don't warn about running processes when exiting
 setopt numericglobsort                                          # Sort filenames numerically when it makes sense
 setopt nobeep                                                   # No beep
-setopt CORRECT                  # command auto-correction
 setopt COMPLETE_ALIASES
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
@@ -21,13 +20,17 @@ setopt SHARE_HISTORY             # Share your history across all your terminal w
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits
 setopt autocd                                                   # if only directory path is entered, cd there.
 
+setopt ALWAYS_TO_END
+setopt AUTO_MENU
+setopt LIST_PACKED
+
 zmodload zsh/datetime
 
 # completion
 fpath=(/usr/share/zsh/site-functions/ $fpath)
 
 fpath=(~/.zsh $fpath)
-
+CASE_SENSITIVE="false"
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 
@@ -35,16 +38,22 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 source ~/.zsh/auto-notify.plugin.zsh
 
-source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh
+# source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh
 
+# completion cache path setup
+typeset -g comppath="$HOME/.cache"
+typeset -g compfile="$comppath/.zcompdump"
 
-autoload -U compinit colors zcalc
-compinit -d
+if [[ -d "$comppath" ]]; then
+	[[ -w "$compfile" ]] || rm -rf "$compfile" >/dev/null 2>&1
+else
+	mkdir -p "$comppath"
+fi
+
+autoload -U compinit colors zcalc 
+compinit -u -d "$compfile"
 colors
 
-setopt ALWAYS_TO_END
-setopt AUTO_MENU
-setopt LIST_PACKED
 
 source ~/.zsh/git.plugin.zsh 
 source ~/.zsh/docker.plugin.zsh
@@ -55,6 +64,14 @@ if [[ "$TERM" == "xterm-kitty" ]]; then
 fi
 
 
+
+# ---| Correction  and Autocompletion |--- #
+zstyle ':completion:*:correct:*' original true
+zstyle ':completion:*:correct:*' insert-unambiguous true
+zstyle ':completion:*:approximate:*' max-errors 'reply=($(( ($#PREFIX + $#SUFFIX) / 3 )) numeric)'
+
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
 # Colorize completions using default `ls` colors.
 zstyle ':completion:*' list-colors ''
 
@@ -63,18 +80,27 @@ zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
 zstyle ':completion:*' rehash true                              # automatically find new executables in path 
-# Speed up completions
+zstyle ':completion:*' verbose true
+zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' accept-exact '*(N)'
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion::complete:*' gain-privileges 1
+zstyle ':completion:*:manuals.*' insert-sections true
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*' completer _complete _match _approximate _ignored
+zstyle ':completion:*:match:*' original only
 
 # Categorize completion suggestions with headings:
 zstyle ':completion:*' group-name ''
-# Style the group names
-zstyle ':completion:*' format %F{yellow}%B%U%{$__DOTS[ITALIC_ON]%}%d%{$__DOTS[ITALIC_OFF]%}%b%u%f
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' format ' %F{green}->%F{yellow} %d%f'
+zstyle ':completion:*:messages' format ' %F{green}->%F{purple} %d%f'
+zstyle ':completion:*:descriptions' format ' %F{green}->%F{yellow} %d%f'
+zstyle ':completion:*:warnings' format ' %F{green}->%F{red} no matches%f'
+zstyle ':completion:*:corrections' format ' %F{green}->%F{green} %d: %e%f'
 
 # Added by running `compinstall`
 zstyle ':completion:*' expand suffix
@@ -210,6 +236,3 @@ alias gdsp="git diff origin/sprint -- . ':^gen' ':^server/models'"
 alias dockerpostlogs='sudo docker exec -w /var/lib/postgresql/data/pg_log postgres sh -c "ls -1r | head -n 1 | xargs tail -f -n 200"'
 alias dockercppostconf='sudo docker cp ${HOME}/code/testing_images/postgres/postgresql.conf postgres:/var/lib/postgresql/data/postgresql.conf && sudo docker restart postgres'
 alias gco='fzf-git-checkout'
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/bin/bitcomplete bit
