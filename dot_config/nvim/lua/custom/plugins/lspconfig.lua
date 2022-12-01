@@ -2,7 +2,6 @@ local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
-
 -- lspservers with default config
 local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "bashls", "pylsp" }
 -- local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "sumneko_lua", "bashls", "sqls" }
@@ -19,6 +18,10 @@ for _, lsp in ipairs(servers) do
         require("sqls").on_attach(client, bufnr)
         return
       end
+      if lsp == "gopls" then
+        on_attach(client, bufnr)
+        return
+      end
       on_attach(client, bufnr)
     end,
     flags = {
@@ -30,6 +33,15 @@ for _, lsp in ipairs(servers) do
         directoryFilters = { "-gen", "-docs", "-dist", "-tools" },
         codelenses = { gc_details = false },
         buildFlags = { "-tags", "vault,dbtest" },
+        hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          functionTypeParameters = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+        },
       },
       Lua = {
         runtime = {

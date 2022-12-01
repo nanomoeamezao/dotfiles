@@ -127,8 +127,8 @@ M.cmp = function()
       priority_weight = 2,
       comparators = {
 
-        -- require("copilot_cmp.comparators").prioritize,
-        -- require("copilot_cmp.comparators").score,
+        require("copilot_cmp.comparators").prioritize,
+        require("copilot_cmp.comparators").score,
         cmp.config.compare.exact,
 
         -- Below is the default comparitor list and order for nvim-cmp

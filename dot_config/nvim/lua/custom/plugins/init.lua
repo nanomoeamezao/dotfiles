@@ -13,6 +13,9 @@ return {
           override_file_sorter = true, -- override the file sorter
         },
       },
+      pickers = {
+        lsp_references = { show_line = false },
+      },
     },
     requires = {
       "nvim-lua/popup.nvim",
@@ -26,10 +29,6 @@ return {
     end,
   },
   ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
-  ["NvChad/base46"] = {
-    branch = "dev",
-  },
-
   ["NvChad/ui"] = {
     override_options = {
       statusline = {
@@ -88,12 +87,12 @@ return {
   },
   ["vim-scripts/ReplaceWithRegister"] = {},
   ["zbirenbaum/copilot.lua"] = {
+    disable = true,
     config = function()
       vim.defer_fn(function()
         require("copilot").setup {}
       end, 100)
     end,
-    disable = true,
   },
   ["zbirenbaum/copilot-cmp"] = {
     disable = true,
@@ -250,16 +249,6 @@ return {
       "Gwrite",
       "Gw",
     },
-    config = function()
-      local cmp = require "cmp"
-      cmp.setup.filetype("gitcommit", {
-        sources = cmp.config.sources {
-          { name = "cmp_git" },
-          { name = "buffer" },
-          { name = "path" },
-        },
-      })
-    end,
   },
   ["folke/trouble.nvim"] = {
     after = "nvim-lspconfig",
@@ -305,6 +294,7 @@ return {
     end,
   },
   ["kevinhwang91/nvim-ufo"] = {
+    disable = true,
     requires = {
       "kevinhwang91/promise-async",
     },
@@ -365,7 +355,8 @@ return {
     end,
   },
   ["nvim-telescope/telescope-ui-select.nvim"] = {
-    after = { "telescope.nvim", "go.nvim" },
+    -- after = { "telescope.nvim", "go.nvim" },
+    after = { "telescope.nvim" },
     config = function()
       require("telescope").load_extension "ui-select"
     end,
@@ -455,23 +446,29 @@ return {
     end,
   },
   ["petertriho/nvim-scrollbar"] = {
-    after = "gitsigns.nvim",
+    after = { "gitsigns.nvim", "nvim-hlslens" },
     config = function()
       require("scrollbar").setup {}
       require("scrollbar.handlers.search").setup()
       require("scrollbar.handlers.gitsigns").setup()
     end,
   },
-  ["MunifTanjim/nui.nvim"] = {},
   ["folke/noice.nvim"] = {
-    after = { "nvim-lspconfig", "ui" },
+    after = { "nvim-lspconfig", "ui", "nvim-treesitter" },
     requires = {
       "rcarriga/nvim-notify",
+      "MunifTanjim/nui.nvim",
     },
     config = function()
       require("noice").setup {
+        messages = {
+          enabled = false,
+        },
         lsp = {
           progress = {
+            enabled = false,
+          },
+          hover = {
             enabled = false,
           },
         },

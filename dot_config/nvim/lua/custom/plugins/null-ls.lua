@@ -8,7 +8,7 @@ local sources = {
   -- b.formatting.buf,
 
   -- Yaml\json
-  b.formatting.prettierd.with { filetypes = { "yaml", "toml", "json" } },
+  b.formatting.prettierd,
   b.diagnostics.yamllint,
   b.diagnostics.jsonlint,
 
