@@ -150,7 +150,8 @@ return {
     config = function()
       require("dapui").setup {
         render = {
-          max_type_length = 1000,
+          max_type_length = nil,
+          max_value_line = nil,
         },
         expand_lines = true,
         layouts = {
@@ -265,28 +266,6 @@ return {
       }
     end,
   },
-  ["bennypowers/nvim-regexplainer"] = {
-    after = "nvim-treesitter",
-    disable = true,
-    config = function()
-      require("regexplainer").setup {
-        filetypes = {
-          "html",
-          "js",
-          "cjs",
-          "mjs",
-          "ts",
-          "jsx",
-          "tsx",
-          "cjsx",
-          "mjsx",
-          "go",
-          "sh",
-        },
-        mappings = {},
-      }
-    end,
-  },
   ["j-hui/fidget.nvim"] = {
     after = "nvim-lspconfig",
     config = function()
@@ -294,7 +273,6 @@ return {
     end,
   },
   ["kevinhwang91/nvim-ufo"] = {
-    disable = true,
     requires = {
       "kevinhwang91/promise-async",
     },
@@ -339,8 +317,6 @@ return {
             experimental = {
               test_table = true,
             },
-            -- args = { "-count=1", "-timeout=60s" },
-            args = { "-timeout=60s" },
           },
         },
       }
@@ -454,6 +430,7 @@ return {
     end,
   },
   ["folke/noice.nvim"] = {
+    disable = true,
     after = { "nvim-lspconfig", "ui", "nvim-treesitter" },
     requires = {
       "rcarriga/nvim-notify",
@@ -471,8 +448,34 @@ return {
           hover = {
             enabled = false,
           },
+          signature = {
+            enabled = false,
+          },
         },
       }
+    end,
+  },
+  ["lvimuser/lsp-inlayhints.nvim"] = {
+    after = { "nvim-lspconfig" },
+    config = function()
+      require("lsp-inlayhints").setup {
+        inlay_hints = {
+          highlight = "Comment",
+        },
+      }
+      vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = "LspAttach_inlayhints",
+        callback = function(args)
+          if not (args.data and args.data.client_id) then
+            return
+          end
+
+          local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          require("lsp-inlayhints").on_attach(client, bufnr)
+        end,
+      })
     end,
   },
 }

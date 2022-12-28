@@ -18,5 +18,6 @@ run udiskie
 #run lxpolkit
 if [ "$HOSTNAME" = "neotop" ]; then
 	run blueman-applet
-	run qbittorrent
+	run easyeffects --gapplication-service
+	# run qbittorrent
 fi

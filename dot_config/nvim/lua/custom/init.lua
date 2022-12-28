@@ -6,6 +6,7 @@ opt.termguicolors = true
 -- opt.tabstop = 4
 opt.timeoutlen = 400
 opt.clipboard = ""
+opt.title = true
 
 vim.cmd "set diffopt+=linematch:50"
 

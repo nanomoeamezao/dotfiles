@@ -1,5 +1,7 @@
 local M = {}
-
+local function ts_disable(_, bufnr)
+  return vim.api.nvim_buf_line_count(bufnr) > 3000
+end
 -- overriding default plugin configs!
 M.treesitter = {
   ensure_installed = {
@@ -27,6 +29,9 @@ M.treesitter = {
   },
   highlight = {
     enable = true,
+    disable = function(lang, bufnr)
+      return ts_disable(lang, bufnr)
+    end,
   },
   textobjects = {
     select = {
@@ -53,16 +58,6 @@ M.treesitter = {
   },
   indent = {
     enable = true,
-  },
-}
-
-M.whichkey = {
-  operators = { gr = "replace with register" },
-  triggers_blacklist = {
-    -- list of mode / prefixes that should never be hooked by WhichKey
-    i = { "j", "k", "v" },
-    v = { "j", "k", "v" },
-    n = { "v", "<S-v>", "<A-v>" },
   },
 }
 

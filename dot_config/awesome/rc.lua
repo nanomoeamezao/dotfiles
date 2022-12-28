@@ -384,7 +384,7 @@ globalkeys = gears.table.join(
 		awful.spawn(browser)
 	end, { description = "launch Browser", group = "launcher" }),
 	awful.key({ modkey }, "r", function()
-		awful.spawn("/usr/bin/rofi -show drun -modi drun")
+		awful.spawn.with_shell("/usr/bin/rofi -show drun -modi drun")
 	end, { description = "launch rofi", group = "launcher" }),
 	awful.key({ modkey }, "e", function()
 		awful.spawn("/usr/bin/thunar")
