@@ -236,3 +236,4 @@ alias gdsp="git diff origin/sprint -- . ':^gen' ':^server/models'"
 alias dockerpostlogs='sudo docker exec -w /var/lib/postgresql/data/pg_log postgres sh -c "ls -1r | head -n 1 | xargs tail -f -n 200"'
 alias dockercppostconf='sudo docker cp ${HOME}/code/testing_images/postgres/postgresql.conf postgres:/var/lib/postgresql/data/postgresql.conf && sudo docker restart postgres'
 alias gco='fzf-git-checkout'
+alias upd='sudo pacman -Sy && sudo powerpill -Su && paru -Su'
