@@ -1,18 +1,40 @@
 local plugin_conf = require "custom.plugins.configs"
+local cmp_config = require "custom.plugins.cmp"
 return {
   -- OVERRIDES
   ["nvim-treesitter/nvim-treesitter"] = { override_options = plugin_conf.treesitter },
+  ["L3MON4D3/LuaSnip"] = {
+    config = function()
+      require("luasnip.loaders.from_lua").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.luasnippets_path or "" }
+      require("luasnip.loaders.from_snipmate").lazy_load()
+    end,
+    event = "InsertEnter",
+    requires = {
+      "rafamadriz/friendly-snippets",
+    },
+  },
+  ["lewis6991/gitsigns.nvim"] = {
+    override_options = {
+      signs = {
+        delete = { hl = "DiffDelete", text = "│", numhl = "GitSignsDeleteNr" },
+      },
+    },
+  },
 
-  -- ["hrsh7th/nvim-cmp"] = { override_options = plugin_conf.cmp },
+  ["hrsh7th/nvim-cmp"] = {
+    override_options = { cmp_config.config },
+  },
+  ["williamboman/mason.nvim"] = false,
   ["nvim-telescope/telescope.nvim"] = {
     override_options = {
-      extensions = {
-        fzf = {
-          fuzzy = true,
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true, -- override the file sorter
-        },
-      },
+      -- extensions = {
+      --   -- fzf = {
+      --   --   fuzzy = true,
+      --   --   override_generic_sorter = true, -- override the generic sorter
+      --   --   override_file_sorter = true, -- override the file sorter
+      --   -- },
+      -- },
       pickers = {
         lsp_references = { show_line = false },
       },
@@ -23,6 +45,7 @@ return {
     },
     config = function()
       require "plugins.configs.telescope"
+      require("telescope").load_extension "fzy_native"
     end,
     setup = function()
       require("core.utils").load_mappings "telescope"
@@ -51,6 +74,7 @@ return {
   -- CUSTOM PLUGINS
   ["neovim/nvim-lspconfig"] = {
     config = function()
+      require("neodev").setup()
       require "plugins.configs.lspconfig"
       require "custom.plugins.lspconfig"
     end,
@@ -61,13 +85,14 @@ return {
       require("custom.plugins.null-ls").setup()
     end,
   },
-  ["nvim-telescope/telescope-fzf-native.nvim"] = {
-    after = "telescope.nvim",
-    run = "make",
-    config = function()
-      require("telescope").load_extension "fzf"
-    end,
-  },
+  -- ["nvim-telescope/telescope-fzf-native.nvim"] = {
+  --   after = "telescope.nvim",
+  --   run = "make",
+  --   config = function()
+  --     require("telescope").load_extension "fzf"
+  --   end,
+  -- },
+  ["nvim-telescope/telescope-fzy-native.nvim"] = {},
   ["kylechui/nvim-surround"] = {
     tag = "*", -- Use for stability; omit to use `main` branch for the latest features
     config = function()
@@ -77,7 +102,7 @@ return {
   ["nvim-treesitter/nvim-treesitter-textobjects"] = {
     after = "nvim-treesitter",
   },
-  ["p00f/nvim-ts-rainbow"] = {
+  ["mrjones2014/nvim-ts-rainbow"] = {
     after = "nvim-treesitter",
   },
   ["ggandor/leap.nvim"] = {
@@ -323,6 +348,7 @@ return {
     end,
   },
   ["ray-x/go.nvim"] = {
+    requires = { "ray-x/guihua.lua" },
     ft = { "go" },
     config = function()
       require("go").setup {
@@ -477,5 +503,15 @@ return {
         end,
       })
     end,
+  },
+  ["danielfalk/smart-open.nvim"] = {
+    after = "telescope.nvim",
+    config = function()
+      require("telescope").load_extension "smart_open"
+    end,
+    requires = { "kkharji/sqlite.lua" },
+  },
+  ["folke/neodev.nvim"] = {
+    config = function() end,
   },
 }

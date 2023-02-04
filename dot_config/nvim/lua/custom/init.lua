@@ -15,7 +15,10 @@ g.markdown_folding = 1
 g.neovide_cursor_animation_length = 0
 g.neovide_cursor_trail_length = 0
 g.neovide_refresh_rate = 60
-opt.guifont = "UbuntuMono Nerd Font:h11"
+opt.guifont = "JetBrainsMono Nerd Font:h9"
+
+-- opt.numberwidth = 3
+-- opt.statuscolumn = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
 
 opt.spelllang = "en,ru"
 

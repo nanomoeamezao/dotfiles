@@ -59,11 +59,6 @@ source ~/.zsh/git.plugin.zsh
 source ~/.zsh/docker.plugin.zsh
 source ~/.zsh/docker-compose.plugin.zsh
 
-if [[ "$TERM" == "xterm-kitty" ]]; then
-  kitty + complete setup zsh | source /dev/stdin
-fi
-
-
 
 # ---| Correction  and Autocompletion |--- #
 zstyle ':completion:*:correct:*' original true
@@ -221,6 +216,7 @@ fzf-git-checkout() {
         git checkout $branch;
     fi
 }
+source ~/.zshaliases
 
 alias sc='sudo systemctl'
 alias scs='sudo systemctl start'

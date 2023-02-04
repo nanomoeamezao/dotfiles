@@ -1,5 +1,5 @@
 export GOPATH=${HOME}/code
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:${GOPATH}/bin:${HOME}/.krew/bin:${HOME}/scripts
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:${GOPATH}/bin:${HOME}/.krew/bin:${HOME}/scripts:${HOME}/.local/depot_tools
 export EDITOR=nvim
 export VISUAL=nvim
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"

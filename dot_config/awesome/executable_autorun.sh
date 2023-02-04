@@ -19,5 +19,6 @@ run udiskie
 if [ "$HOSTNAME" = "neotop" ]; then
 	run blueman-applet
 	run easyeffects --gapplication-service
+	run plex-mpv-shim
 	# run qbittorrent
 fi

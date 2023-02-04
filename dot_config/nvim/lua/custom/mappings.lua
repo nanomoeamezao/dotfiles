@@ -21,6 +21,7 @@ M.telescope = {
     ["<leader>ft"] = { "<cmd> TodoTelescope <CR>", "telescope for todo items" },
     ["<leader>fn"] = { "<cmd> Telescope neorg find_linkable<cr>" },
     ["<leader>fN"] = { "<cmd> Telescope neorg search_headings<cr>" },
+    ["<leader>fo"] = { "<cmd> Telescope smart_open<cr>" },
   },
 }
 M.lsp = {
@@ -114,12 +115,6 @@ M.git = {
       end,
       "preview hunk",
     },
-    -- ["<leader>cm"] = {
-    --   function()
-    --     require("custom.misc").delta_commits()
-    --   end,
-    --   "delta git commits",
-    -- },
     -- ["do"] = {
     --   "<cmd> diffget //2 <CR>",
     --   "get diff from left (local)",
@@ -248,12 +243,7 @@ M.general = {
   n = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
     ["<C-ы>"] = { "<cmd> w <CR>" },
-    ["<leader>dl"] = {
-      function()
-        local nvim_docker = require "nvim-docker"
-        nvim_docker.containers.list_containers()
-      end,
-    },
+    ["<C-в>"] = { "<C-d>" },
   },
 }
 
@@ -264,9 +254,5 @@ M.disabled = {
     ["v"] = "",
   },
 }
-vim.keymap.set("n", "<F5>", function()
-  require("nvterm.terminal").toggle "float"
-  require("nvterm.terminal").send("make build GO_BUILD_TAGS=rest,static_ui,noauth && make run", "float")
-end)
 
 return M
