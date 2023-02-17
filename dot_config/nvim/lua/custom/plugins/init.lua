@@ -6,13 +6,13 @@ return {
   ["L3MON4D3/LuaSnip"] = {
     config = function()
       require("luasnip.loaders.from_lua").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.luasnippets_path or "" }
-      require("luasnip.loaders.from_snipmate").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load()
     end,
-    event = "InsertEnter",
     requires = {
       "rafamadriz/friendly-snippets",
     },
+    run = "make install_jsregexp",
+    tag = "v1.*",
   },
   ["lewis6991/gitsigns.nvim"] = {
     override_options = {
@@ -42,10 +42,12 @@ return {
     requires = {
       "nvim-lua/popup.nvim",
       "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-live-grep-args.nvim",
     },
     config = function()
       require "plugins.configs.telescope"
       require("telescope").load_extension "fzy_native"
+      require("telescope").load_extension "live_grep_args"
     end,
     setup = function()
       require("core.utils").load_mappings "telescope"
@@ -161,6 +163,30 @@ return {
         name = "installer debug",
         program = vim.fn.getenv "GOPATH" .. "/scanner-installer/cmd/installer/",
         args = { "install" },
+      })
+      table.insert(dap.configurations.go, {
+        type = "go",
+        request = "launch",
+        name = "datacoll debug",
+        program = vim.fn.getenv "GOPATH" .. "/data-collector/cmd/data-collector/",
+        args = {
+          "-c",
+          "configs/config.yaml",
+          "-r",
+          "configs/resources/nvd.yaml",
+          "-r",
+          "configs/resources/redhat.yaml",
+          "-r",
+          "configs/resources/debian.yaml",
+          "-r",
+          "configs/resources/ubuntu.yaml",
+          "-r",
+          "configs/resources/bdu.yaml",
+          "-r",
+          "configs/resources/arch.yaml",
+          "-r",
+          "configs/resources/exploitdb.yaml",
+        },
       })
       table.insert(dap.configurations.go, {
         type = "go",
@@ -283,14 +309,6 @@ return {
       require("trouble").setup()
     end,
   },
-  ["nvim-treesitter/nvim-treesitter-context"] = {
-    after = "nvim-treesitter",
-    config = function()
-      require("treesitter-context").setup {
-        enable = true,
-      }
-    end,
-  },
   ["j-hui/fidget.nvim"] = {
     after = "nvim-lspconfig",
     config = function()
@@ -302,10 +320,11 @@ return {
       "kevinhwang91/promise-async",
     },
     config = function()
-      vim.o.foldcolumn = "0"
+      -- vim.o.foldcolumn = "1"
       vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
+      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:/]]
 
       require("ufo").setup {
         provider_selector = function(bufnr, filetype, buftype)
@@ -425,12 +444,6 @@ return {
       }
     end,
   },
-  ["miversen33/netman.nvim"] = {
-    disable = true,
-    config = function()
-      require "netman"
-    end,
-  },
   ["stevearc/aerial.nvim"] = {
     cmd = "AerialToggle",
     config = function()
@@ -453,32 +466,6 @@ return {
       require("scrollbar").setup {}
       require("scrollbar.handlers.search").setup()
       require("scrollbar.handlers.gitsigns").setup()
-    end,
-  },
-  ["folke/noice.nvim"] = {
-    disable = true,
-    after = { "nvim-lspconfig", "ui", "nvim-treesitter" },
-    requires = {
-      "rcarriga/nvim-notify",
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require("noice").setup {
-        messages = {
-          enabled = false,
-        },
-        lsp = {
-          progress = {
-            enabled = false,
-          },
-          hover = {
-            enabled = false,
-          },
-          signature = {
-            enabled = false,
-          },
-        },
-      }
     end,
   },
   ["lvimuser/lsp-inlayhints.nvim"] = {
@@ -513,5 +500,28 @@ return {
   },
   ["folke/neodev.nvim"] = {
     config = function() end,
+  },
+  ["luukvbaal/statuscol.nvim"] = {
+    after = "nvim-ufo",
+    config = function()
+      vim.o.foldcolumn = "1"
+      vim.cmd [[highlight! link CursorLine Visual]]
+      require("statuscol").setup {
+        setopt = true,
+        ft_ignore = { "NvimTree" },
+        foldfunc = "builtin",
+      }
+    end,
+  },
+  ["utilyre/barbecue.nvim"] = {
+    tag = "*",
+    requires = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    after = "nvim-web-devicons", -- keep this if you're using NvChad
+    config = function()
+      require("barbecue").setup()
+    end,
   },
 }

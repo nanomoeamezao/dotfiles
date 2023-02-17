@@ -10,6 +10,8 @@ opt.title = true
 
 vim.cmd "set diffopt+=linematch:50"
 
+vim.o.completeopt = { "menuone", "noselect" }
+
 g.markdown_folding = 1
 
 g.neovide_cursor_animation_length = 0

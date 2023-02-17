@@ -1,0 +1,4 @@
+--ignore-file migrations
+--ignore-file pkg/update/models
+--ignore-file server/models
+--ignore-file vuln-service/pkg/models

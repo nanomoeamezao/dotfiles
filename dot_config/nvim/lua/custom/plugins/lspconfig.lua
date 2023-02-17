@@ -3,7 +3,8 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
 -- lspservers with default config
-local servers = { "gopls", "html", "cssls", "clangd", "emmet_ls", "pylsp", "sumneko_lua" }
+local servers =
+  { "gopls", "html", "cssls", "clangd", "emmet_ls", "pylsp", "lua_ls", "docker_compose_language_service", "dockerls" }
 
 local gopls_caps = function()
   local caps = require("cmp_nvim_lsp").default_capabilities()
@@ -50,6 +51,11 @@ for _, lsp in ipairs(servers) do
       if lsp == "gopls" then
         on_attach_lspconfig(client, bufnr)
         return
+      elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then
+        on_attach_lspconfig(client, bufnr)
+        client.server_capabilities.documentFormattingProvider = true
+        client.server_capabilities.documentRangeFormattingProvider = true
+        return
       end
       on_attach_lspconfig(client, bufnr)
     end,
@@ -59,7 +65,7 @@ for _, lsp in ipairs(servers) do
     settings = {
       gopls = {
         gofumpt = true,
-        directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output" },
+        directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = { gc_details = false },
         buildFlags = { "-tags", "vault,dbtest" },
         hints = {

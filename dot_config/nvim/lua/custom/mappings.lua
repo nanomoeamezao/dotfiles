@@ -22,6 +22,8 @@ M.telescope = {
     ["<leader>fn"] = { "<cmd> Telescope neorg find_linkable<cr>" },
     ["<leader>fN"] = { "<cmd> Telescope neorg search_headings<cr>" },
     ["<leader>fo"] = { "<cmd> Telescope smart_open<cr>" },
+    ["<leader>fg"] = { ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>" },
+    ["<leader>f."] = { "<cmd> Telescope resume<cr>" },
   },
 }
 M.lsp = {
