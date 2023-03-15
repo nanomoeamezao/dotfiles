@@ -1,33 +1,24 @@
-local plugin_conf = require "custom.plugins.configs"
-local cmp_config = require "custom.plugins.cmp"
 return {
-  -- OVERRIDES
-  ["nvim-treesitter/nvim-treesitter"] = { override_options = plugin_conf.treesitter },
-  ["L3MON4D3/LuaSnip"] = {
-    config = function()
-      require("luasnip.loaders.from_lua").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end,
-    requires = {
-      "rafamadriz/friendly-snippets",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = require "custom.configs.treesitter",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      "mrjones2014/nvim-ts-rainbow",
     },
-    run = "make install_jsregexp",
-    tag = "v1.*",
   },
-  ["lewis6991/gitsigns.nvim"] = {
-    override_options = {
+  {
+    "lewis6991/gitsigns.nvim",
+    opts = {
       signs = {
         delete = { hl = "DiffDelete", text = "│", numhl = "GitSignsDeleteNr" },
       },
     },
   },
-
-  ["hrsh7th/nvim-cmp"] = {
-    override_options = { cmp_config.config },
-  },
-  ["williamboman/mason.nvim"] = false,
-  ["nvim-telescope/telescope.nvim"] = {
-    override_options = {
+  { "williamboman/mason.nvim", enabled = false },
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = {
       -- extensions = {
       --   -- fzf = {
       --   --   fuzzy = true,
@@ -39,103 +30,96 @@ return {
         lsp_references = { show_line = false },
       },
     },
-    requires = {
-      "nvim-lua/popup.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-live-grep-args.nvim",
-    },
+  },
+  {
+    "nvim-telescope/telescope-live-grep-args.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
-      require "plugins.configs.telescope"
-      require("telescope").load_extension "fzy_native"
       require("telescope").load_extension "live_grep_args"
     end,
-    setup = function()
-      require("core.utils").load_mappings "telescope"
-    end,
   },
-  ["windwp/nvim-autopairs"] = { override_options = { check_ts = true } },
-  ["NvChad/ui"] = {
-    override_options = {
-      statusline = {
-        overriden_modules = function()
-          return {
-            LSP_progress = function()
-              return ""
-            end,
-          }
+  { "windwp/nvim-autopairs", opts = { check_ts = true } },
+  { "lukas-reineke/indent-blankline.nvim", opts = {
+    show_current_context_start = false,
+  } },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      {
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function()
+          require("custom.configs.null-ls").setup()
         end,
       },
+      {
+        "j-hui/fidget.nvim",
+        config = function()
+          require("fidget").setup()
+        end,
+      },
+      {
+        "utilyre/barbecue.nvim",
+        version = "*",
+        name = "barbecue",
+        dependencies = {
+          "SmiteshP/nvim-navic",
+        },
+        opts = {
+          exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
+        },
+      },
+      { "folke/neodev.nvim" },
     },
-  },
-  ["lukas-reineke/indent-blankline.nvim"] = {
-    override_options = {
-      show_current_context_start = false,
-    },
-  },
-
-  -- CUSTOM PLUGINS
-  ["neovim/nvim-lspconfig"] = {
     config = function()
       require("neodev").setup()
       require "plugins.configs.lspconfig"
-      require "custom.plugins.lspconfig"
+      require "custom.configs.lspconfig"
       vim.cmd [[
-hi @lsp.type.parameter  guifg=Orange
+      hi @lsp.type.parameter  guifg=Orange
       ]]
     end,
   },
-  ["jose-elias-alvarez/null-ls.nvim"] = {
-    after = "nvim-lspconfig",
+  {
+    "nvim-telescope/telescope-fzy-native.nvim",
     config = function()
-      require("custom.plugins.null-ls").setup()
+      require("telescope").load_extension "fzy_native"
     end,
   },
-  -- ["nvim-telescope/telescope-fzf-native.nvim"] = {
-  --   after = "telescope.nvim",
-  --   run = "make",
-  --   config = function()
-  --     require("telescope").load_extension "fzf"
-  --   end,
-  -- },
-  ["nvim-telescope/telescope-fzy-native.nvim"] = {},
-  ["kylechui/nvim-surround"] = {
-    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
     config = function()
       require("nvim-surround").setup {}
     end,
+    lazy = false,
   },
-  ["nvim-treesitter/nvim-treesitter-textobjects"] = {
-    after = "nvim-treesitter",
-  },
-  ["mrjones2014/nvim-ts-rainbow"] = {
-    after = "nvim-treesitter",
-  },
-  ["ggandor/leap.nvim"] = {
+  {
+    "ggandor/leap.nvim",
     config = function()
       require("leap").set_default_keymaps()
     end,
+    lazy = false,
   },
-  ["vim-scripts/ReplaceWithRegister"] = {},
-  ["zbirenbaum/copilot.lua"] = {
-    disable = true,
+  { "vim-scripts/ReplaceWithRegister", lazy = false },
+  {
+    "zbirenbaum/copilot.lua",
+    enabled = false,
     config = function()
       vim.defer_fn(function()
         require("copilot").setup {}
       end, 100)
     end,
   },
-  ["zbirenbaum/copilot-cmp"] = {
-    disable = true,
-    after = "copilot.lua",
+  {
+    "zbirenbaum/copilot-cmp",
+    enabled = false,
     config = function()
       require("copilot_cmp").setup {}
     end,
   },
-  ["mfussenegger/nvim-dap"] = {
-    cmd = { "DapContinue", "DapToggleBreakpoint" },
-  },
-  ["leoluz/nvim-dap-go"] = {
-    after = "nvim-dap",
+  { "mfussenegger/nvim-dap", cmd = { "DapContinue", "DapToggleBreakpoint" } },
+  {
+    "leoluz/nvim-dap-go",
     config = function()
       require("dap-go").setup()
       local dap = require "dap"
@@ -199,8 +183,8 @@ hi @lsp.type.parameter  guifg=Orange
       })
     end,
   },
-  ["rcarriga/nvim-dap-ui"] = {
-    after = "nvim-dap",
+  {
+    "rcarriga/nvim-dap-ui",
     config = function()
       require("dapui").setup {
         render = {
@@ -228,7 +212,7 @@ hi @lsp.type.parameter  guifg=Orange
           },
         },
         controls = {
-          -- Requires Neovim nightly (or 0.8 when released)
+          -- dependencies Neovim nightly (or 0.8 when released)
           enabled = true,
           -- Display controls in this element
           element = "repl",
@@ -246,19 +230,20 @@ hi @lsp.type.parameter  guifg=Orange
       end
     end,
   },
-  ["theHamsta/nvim-dap-virtual-text"] = {
-    after = "nvim-dap",
+  {
+    "theHamsta/nvim-dap-virtual-text",
     config = function()
       require("nvim-dap-virtual-text").setup {}
     end,
   },
-  ["nvim-telescope/telescope-dap.nvim"] = {
-    after = { "nvim-dap", "telescope.nvim" },
+  {
+    "nvim-telescope/telescope-dap.nvim",
     config = function()
       require("telescope").load_extension "dap"
     end,
   },
-  ["sindrets/diffview.nvim"] = {
+  {
+    "sindrets/diffview.nvim",
     config = function()
       require("diffview").setup {
         view = {
@@ -271,20 +256,21 @@ hi @lsp.type.parameter  guifg=Orange
     end,
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
   },
-  ["folke/todo-comments.nvim"] = {
+  {
+    "folke/todo-comments.nvim",
     config = function()
       require("todo-comments").setup()
     end,
   },
-  ["benfowler/telescope-luasnip.nvim"] = {
-    after = { "telescope.nvim" },
+  {
+    "benfowler/telescope-luasnip.nvim",
     config = function()
       require("telescope").load_extension "luasnip"
     end,
-    module = "telescope._extensions.luasnip", -- if you wish to lazy-load
   },
-  ["wgwoods/vim-systemd-syntax"] = { ft = { "systemd" } },
-  ["tpope/vim-fugitive"] = {
+  { "wgwoods/vim-systemd-syntax", ft = { "systemd" } },
+  {
+    "tpope/vim-fugitive",
     cmd = {
       "G",
       "Git",
@@ -305,22 +291,17 @@ hi @lsp.type.parameter  guifg=Orange
       "Gw",
     },
   },
-  ["folke/trouble.nvim"] = {
-    after = "nvim-lspconfig",
-    requires = "kyazdani42/nvim-web-devicons",
+  {
+    "folke/trouble.nvim",
     config = function()
       require("trouble").setup()
     end,
   },
-  ["j-hui/fidget.nvim"] = {
-    after = "nvim-lspconfig",
-    config = function()
-      require("fidget").setup()
-    end,
-  },
-  ["kevinhwang91/nvim-ufo"] = {
-    requires = {
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = {
       "kevinhwang91/promise-async",
+      "nvim-treesitter/nvim-treesitter",
     },
     config = function()
       -- vim.o.foldcolumn = "1"
@@ -337,10 +318,10 @@ hi @lsp.type.parameter  guifg=Orange
       }
     end,
   },
-  ["tpope/vim-git"] = {},
-  ["nvim-neotest/neotest"] = {
-    module = "neotest",
-    requires = {
+  { "tpope/vim-git", lazy = false },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "antoinemadec/FixCursorHold.nvim",
@@ -369,8 +350,9 @@ hi @lsp.type.parameter  guifg=Orange
       }
     end,
   },
-  ["ray-x/go.nvim"] = {
-    requires = { "ray-x/guihua.lua" },
+  {
+    "ray-x/go.nvim",
+    dependencies = { "ray-x/guihua.lua" },
     ft = { "go" },
     config = function()
       require("go").setup {
@@ -378,27 +360,24 @@ hi @lsp.type.parameter  guifg=Orange
       }
     end,
   },
-  ["nvim-telescope/telescope-ui-select.nvim"] = {
-    -- after = { "telescope.nvim", "go.nvim" },
-    after = { "telescope.nvim" },
+  {
+    "nvim-telescope/telescope-ui-select.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
       require("telescope").load_extension "ui-select"
     end,
   },
-  ["monkoose/matchparen.nvim"] = {
+  {
+    "monkoose/matchparen.nvim",
+    lazy = false,
     config = function()
       require("matchparen").setup()
     end,
   },
-  ["m-demare/hlargs.nvim"] = {
-    disable = true,
-    after = { "nvim-treesitter" },
-    config = function()
-      require("hlargs").setup {}
-    end,
-  },
-  ["akinsho/git-conflict.nvim"] = {
-    tag = "*",
+  {
+    "akinsho/git-conflict.nvim",
+    lazy = false,
+    version = "*",
     config = function()
       require("git-conflict").setup {
         default_mappings = true,
@@ -410,11 +389,12 @@ hi @lsp.type.parameter  guifg=Orange
       }
     end,
   },
-  ["nvim-neorg/neorg"] = {
+  {
+    "nvim-neorg/neorg",
     ft = "norg",
-    cmd = { "Neorg", "Telescome neorg" },
-    run = ":Neorg sync-parsers", -- This is the important bit!
-    requires = "nvim-neorg/neorg-telescope",
+    cmd = { "Neorg" },
+    build = ":Neorg sync-parsers", -- This is the important bit!
+    dependencies = "nvim-neorg/neorg-telescope",
     config = function()
       local cmp = require "cmp"
       cmp.setup.filetype("norg", {
@@ -448,33 +428,39 @@ hi @lsp.type.parameter  guifg=Orange
       }
     end,
   },
-  ["stevearc/aerial.nvim"] = {
+  {
+    "stevearc/aerial.nvim",
     cmd = "AerialToggle",
     config = function()
       require("aerial").setup()
     end,
   },
-  ["ibhagwan/smartyank.nvim"] = {
+  {
+    "ibhagwan/smartyank.nvim",
     config = function()
       require("smartyank").setup()
     end,
+    lazy = false,
   },
-  ["kevinhwang91/nvim-hlslens"] = {
+  {
+    "kevinhwang91/nvim-hlslens",
+    lazy = false,
     config = function()
       require("hlslens").setup {}
     end,
   },
-  ["petertriho/nvim-scrollbar"] = {
-    after = { "gitsigns.nvim", "nvim-hlslens" },
+  {
+    "petertriho/nvim-scrollbar",
+    lazy = false,
     config = function()
       require("scrollbar").setup {}
       require("scrollbar.handlers.search").setup()
       require("scrollbar.handlers.gitsigns").setup()
     end,
   },
-  ["lvimuser/lsp-inlayhints.nvim"] = {
-    after = { "nvim-lspconfig" },
-    disable = true,
+  {
+    "lvimuser/lsp-inlayhints.nvim",
+    enabled = false,
     config = function()
       require("lsp-inlayhints").setup {
         inlay_hints = {
@@ -496,18 +482,16 @@ hi @lsp.type.parameter  guifg=Orange
       })
     end,
   },
-  ["danielfalk/smart-open.nvim"] = {
-    after = "telescope.nvim",
+  {
+    "danielfalk/smart-open.nvim",
     config = function()
       require("telescope").load_extension "smart_open"
     end,
-    requires = { "kkharji/sqlite.lua" },
+    dependencies = { "kkharji/sqlite.lua" },
   },
-  ["folke/neodev.nvim"] = {
-    config = function() end,
-  },
-  ["luukvbaal/statuscol.nvim"] = {
-    after = "nvim-ufo",
+  {
+    "luukvbaal/statuscol.nvim",
+    lazy = false,
     config = function()
       vim.o.foldcolumn = "1"
       vim.cmd [[highlight! link CursorLine Visual]]
@@ -529,19 +513,6 @@ hi @lsp.type.parameter  guifg=Orange
             click = "v:lua.ScLa",
           },
         },
-      }
-    end,
-  },
-  ["utilyre/barbecue.nvim"] = {
-    tag = "*",
-    requires = {
-      "SmiteshP/nvim-navic",
-      "nvim-tree/nvim-web-devicons", -- optional dependency
-    },
-    after = "nvim-web-devicons", -- keep this if you're using NvChad
-    config = function()
-      require("barbecue").setup {
-        exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
       }
     end,
   },

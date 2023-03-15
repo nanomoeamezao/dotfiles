@@ -1,10 +1,4 @@
-local present, lspconfig = pcall(require, "lspconfig")
-
-if not present then
-  return
-end
-
-require("base46").load_highlight "lsp"
+dofile(vim.g.base46_cache .. "lsp")
 require "nvchad_ui.lsp"
 
 local M = {}
@@ -39,27 +33,6 @@ M.capabilities.textDocument.completion.completionItem = {
       "documentation",
       "detail",
       "additionalTextEdits",
-    },
-  },
-}
-
-lspconfig.lua_ls.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { "vim" },
-      },
-      workspace = {
-        library = {
-          [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-          [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-        },
-        maxPreload = 100000,
-        preloadFileSize = 10000,
-      },
     },
   },
 }

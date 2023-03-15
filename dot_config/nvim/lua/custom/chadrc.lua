@@ -1,32 +1,19 @@
 local M = {}
-
-local userPlugins = require "custom.plugins"
-
-M.plugins = userPlugins
-
+M.plugins = "custom.plugins"
 M.mappings = require "custom.mappings"
-
 M.ui = {
   theme = "catppuccin",
   hl_override = {
     IndentBlanklineContextChar = { fg = "purple" },
-    -- IndentBlanklineContextStart = { bg = "purple" },
-    --   LspReferenceWrite = {
-    --     underline = true,
-    --     bg = "black",
-    --     fg = "green",
-    --   },
-    --   LspReferenceRead = {
-    --     underline = true,
-    --     bg = "black",
-    --     fg = "green",
-    --   },
-    --   LspReferenceText = {
-    --     underline = true,
-    --     bg = "black",
-    --     fg = "green",
-    --   },
+  },
+  statusline = {
+    overriden_modules = function()
+      return {
+        LSP_progress = function()
+          return ""
+        end,
+      }
+    end,
   },
 }
-
 return M

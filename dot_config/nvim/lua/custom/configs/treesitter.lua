@@ -1,9 +1,4 @@
-local M = {}
-local function ts_disable(_, bufnr)
-  return vim.api.nvim_buf_line_count(bufnr) > 3000
-end
--- overriding default plugin configs!
-M.treesitter = {
+return {
   ensure_installed = {
     "lua",
     "vim",
@@ -27,12 +22,7 @@ M.treesitter = {
     "norg",
     "dockerfile",
   },
-  highlight = {
-    enable = true,
-    disable = function(lang, bufnr)
-      return ts_disable(lang, bufnr)
-    end,
-  },
+  highlight = { enable = true },
   textobjects = {
     select = {
       enable = true,
@@ -62,5 +52,3 @@ M.treesitter = {
     disable = { "yaml", "python", "c", "cpp" },
   },
 }
-
-return M

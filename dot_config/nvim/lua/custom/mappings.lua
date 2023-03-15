@@ -21,7 +21,11 @@ M.telescope = {
     ["<leader>ft"] = { "<cmd> TodoTelescope <CR>", "telescope for todo items" },
     ["<leader>fn"] = { "<cmd> Telescope neorg find_linkable<cr>" },
     ["<leader>fN"] = { "<cmd> Telescope neorg search_headings<cr>" },
-    ["<leader>fo"] = { "<cmd> Telescope smart_open<cr>" },
+    ["<leader>fo"] = {
+      function()
+        require("telescope").extensions.smart_open.smart_open()
+      end,
+    },
     ["<leader>fg"] = { ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>" },
     ["<leader>f."] = { "<cmd> Telescope resume<cr>" },
   },
