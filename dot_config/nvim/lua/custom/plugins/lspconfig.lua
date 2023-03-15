@@ -8,27 +8,28 @@ local servers =
 
 local gopls_caps = function()
   local caps = require("cmp_nvim_lsp").default_capabilities()
-  caps.textDocument.completion.completionItem = {
-    documentationFormat = { "markdown", "plaintext" },
-    snippetSupport = true,
+  caps.textDocument.completion = {
+    completionItem = {
+      documentationFormat = { "markdown", "plaintext" },
+      snippetSupport = true,
 
-    contextSupport = true,
-    dynamicRegistration = true,
-    preselectSupport = true,
-    insertReplaceSupport = true,
-    labelDetailsSupport = true,
-    deprecatedSupport = true,
-    commitCharactersSupport = true,
-    tagSupport = { valueSet = { 1 } },
-    resolveSupport = {
-      properties = {
-        "documentation",
-        "detail",
-        "additionalTextEdits",
+      preselectSupport = true,
+      insertReplaceSupport = true,
+      labelDetailsSupport = true,
+      deprecatedSupport = true,
+      commitCharactersSupport = true,
+      tagSupport = { valueSet = { 1 } },
+      resolveSupport = {
+        properties = {
+          "documentation",
+          "detail",
+          "additionalTextEdits",
+        },
       },
     },
+    contextSupport = true,
+    dynamicRegistration = true,
   }
-
   return caps
 end
 
@@ -50,6 +51,14 @@ for _, lsp in ipairs(servers) do
     on_attach = function(client, bufnr)
       if lsp == "gopls" then
         on_attach_lspconfig(client, bufnr)
+        local caps = vim.lsp.protocol.make_client_capabilities()
+        local semanticTokens = caps.textDocument.semanticTokens
+        local semantic_tokens_provider = {
+          full = true,
+          range = true,
+          legend = { tokenModifiers = semanticTokens.tokenModifiers, tokenTypes = semanticTokens.tokenTypes },
+        }
+        client.server_capabilities.semanticTokensProvider = semantic_tokens_provider
         return
       elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then
         on_attach_lspconfig(client, bufnr)
@@ -64,6 +73,7 @@ for _, lsp in ipairs(servers) do
     },
     settings = {
       gopls = {
+        semanticTokens = true,
         gofumpt = true,
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = { gc_details = false },

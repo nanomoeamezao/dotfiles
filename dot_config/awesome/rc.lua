@@ -59,7 +59,7 @@ beautiful.hotkeys_description_font = "NotoSansMono Nerd Font Regular 12"
 beautiful.hotkeys_modifiers_fg = "#cc0052"
 
 -- This is used later as the default terminal and editor to run.
-terminal = "kitty"
+terminal = "wezterm"
 browser = "firefox"
 filemanager = "pcmanfm"
 editor = terminal .. "-e nvim"

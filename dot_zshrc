@@ -17,6 +17,7 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_VERIFY
 setopt AUTOPARAMSLASH            # tab completing directory appends a slash
 setopt SHARE_HISTORY             # Share your history across all your terminal windows
+setopt COMBINING_CHARS
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits
 setopt autocd                                                   # if only directory path is entered, cd there.
 
@@ -170,7 +171,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # Use history substring search
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 # bind UP and DOWN arrow keys to history substring search
-zmodload zsh/terminfo
+# zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey '^[[A' history-substring-search-up			
@@ -225,7 +226,7 @@ alias scr='sudo systemctl restart'
 alias vim='nvim'
 alias podman='sudo podman'
 alias doom='~/.emacs.d/bin/doom'
-alias ssh='kitty +kitten ssh'
+# alias ssh='kitty +kitten ssh'
 alias la='exa -1la --icons'
 alias ll='exa -1l --icons'
 alias gdsp="git diff origin/sprint -- . ':^gen' ':^server/models'"

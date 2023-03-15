@@ -13,3 +13,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 AUTO_NOTIFY_IGNORE+=("mpv" "mpv_url")
+
+export NNN_OPTS='dHUxCeQao'
+export NNN_FIFO=/tmp/nnn.fifo
+export NNN_PLUG='d:diffs;o:preview-tui'
+# export KITTY_LISTEN_ON=unix:/tmp/kitty

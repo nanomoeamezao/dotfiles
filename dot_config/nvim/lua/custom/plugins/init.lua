@@ -79,6 +79,9 @@ return {
       require("neodev").setup()
       require "plugins.configs.lspconfig"
       require "custom.plugins.lspconfig"
+      vim.cmd [[
+hi @lsp.type.parameter  guifg=Orange
+      ]]
     end,
   },
   ["jose-elias-alvarez/null-ls.nvim"] = {
@@ -388,6 +391,7 @@ return {
     end,
   },
   ["m-demare/hlargs.nvim"] = {
+    disable = true,
     after = { "nvim-treesitter" },
     config = function()
       require("hlargs").setup {}
@@ -470,6 +474,7 @@ return {
   },
   ["lvimuser/lsp-inlayhints.nvim"] = {
     after = { "nvim-lspconfig" },
+    disable = true,
     config = function()
       require("lsp-inlayhints").setup {
         inlay_hints = {
@@ -506,10 +511,24 @@ return {
     config = function()
       vim.o.foldcolumn = "1"
       vim.cmd [[highlight! link CursorLine Visual]]
+      local builtin = require "statuscol.builtin"
       require("statuscol").setup {
         setopt = true,
         ft_ignore = { "NvimTree" },
         foldfunc = "builtin",
+        segments = {
+          {
+            text = { " ", builtin.foldfunc, " " },
+            condition = { builtin.not_empty, true, builtin.not_empty },
+            click = "v:lua.ScFa",
+          },
+          { text = { "%s" }, click = "v:lua.ScSa" },
+          {
+            text = { builtin.lnumfunc, " " },
+            condition = { true, builtin.not_empty },
+            click = "v:lua.ScLa",
+          },
+        },
       }
     end,
   },
@@ -521,7 +540,9 @@ return {
     },
     after = "nvim-web-devicons", -- keep this if you're using NvChad
     config = function()
-      require("barbecue").setup()
+      require("barbecue").setup {
+        exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
+      }
     end,
   },
 }
