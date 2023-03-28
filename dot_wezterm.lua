@@ -1,4 +1,8 @@
 local wezterm = require("wezterm")
+local io = require("io")
+local os = require("os")
+local act = wezterm.action
+
 local home = os.getenv("HOME")
 local hostname = os.getenv("HOSTNAME")
 local url_filter = "file://" .. hostname .. home .. "/"
@@ -29,6 +33,32 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	}
 end)
 
+wezterm.on("scrollback-in-pager", function(window, pane)
+	-- local dimentions = pane:get_dimentions()
+	-- local text = pane:get_text_from_region(0, dimentions.scrollback_top, 0, dimentions.scrollback_top)
+	local text = pane:get_lines_as_text(40000)
+
+	-- Create a temporary file to pass to vim
+	local name = os.tmpname()
+	local f = io.open(name, "w+")
+	f:write(text)
+	f:flush()
+	f:close()
+
+	-- Open a new window running vim and tell it to open the file
+	window:perform_action(
+		act.SpawnCommandInNewWindow({
+			args = { "less", name },
+		}),
+		pane
+	)
+
+	-- Note: We don't strictly need to remove this file, but it is nice
+	-- to avoid cluttering up the temporary directory.
+	wezterm.sleep_ms(1000)
+	os.remove(name)
+end)
+
 return {
 	hide_tab_bar_if_only_one_tab = true,
 	font = wezterm.font("JetBrains Mono Nerd Font"),
@@ -40,5 +70,23 @@ return {
 		right = "0cell",
 		top = "0cell",
 		bottom = "0cell",
+	},
+	keys = {
+		{
+			key = "H",
+			mods = "CTRL",
+			action = act.EmitEvent("scrollback-in-pager"),
+		},
+		{
+			key = "s",
+			mods = "CTRL|SHIFT",
+			action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+		},
+		{
+			key = "w",
+			mods = "ALT",
+			action = wezterm.action.CloseCurrentPane({ confirm = true }),
+		},
+		{ key = "F9", mods = "ALT", action = wezterm.action.ShowTabNavigator },
 	},
 }

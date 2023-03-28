@@ -28,7 +28,8 @@ local sources = {
   b.diagnostics.shellcheck,
 
   -- Go
-  b.formatting.gofumpt,
+  -- b.formatting.gofumpt,
+  -- b.formatting.goimports_reviser.with { args = { "-output", "stdout", "$FILENAME" } },
   b.formatting.goimports,
   -- b.diagnostics.golangci_lint.with {
   --   extra_args = { "-c", vim.fn.getenv "GOPATH" .. "/utils/.golangci.yml" },

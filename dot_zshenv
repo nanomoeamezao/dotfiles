@@ -2,6 +2,7 @@ export GOPATH=${HOME}/code
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:${GOPATH}/bin:${HOME}/.krew/bin:${HOME}/scripts:${HOME}/.local/depot_tools
 export EDITOR=nvim
 export VISUAL=nvim
+export CLICOLOR=1
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BAT_PAGER="less -XRFS --mouse --wheel-lines=5"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -14,7 +15,10 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 AUTO_NOTIFY_IGNORE+=("mpv" "mpv_url")
 
-export NNN_OPTS='dHUxCeQao'
-export NNN_FIFO=/tmp/nnn.fifo
+# export NNN_OPTS='dHUxCeQao'
+# export NNN_FIFO=/tmp/nnn.fifo
+# export NNN_TERMINAL='wezterm'
+export NNN_OPTS='dHUeQao'
 export NNN_PLUG='d:diffs;o:preview-tui'
-# export KITTY_LISTEN_ON=unix:/tmp/kitty
+export NNN_ICONLOOKUP=1
+export TERMINAL='wezterm'

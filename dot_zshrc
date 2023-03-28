@@ -8,18 +8,13 @@ setopt nobeep                                                   # No beep
 setopt COMPLETE_ALIASES
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt HIST_SAVE_NO_DUPS
-setopt HIST_VERIFY
-setopt AUTOPARAMSLASH            # tab completing directory appends a slash
 setopt SHARE_HISTORY             # Share your history across all your terminal windows
 setopt COMBINING_CHARS
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits
-setopt autocd                                                   # if only directory path is entered, cd there.
 
 setopt ALWAYS_TO_END
 setopt AUTO_MENU
@@ -45,16 +40,20 @@ source ~/.zsh/auto-notify.plugin.zsh
 typeset -g comppath="$HOME/.cache"
 typeset -g compfile="$comppath/.zcompdump"
 
-if [[ -d "$comppath" ]]; then
-	[[ -w "$compfile" ]] || rm -rf "$compfile" >/dev/null 2>&1
-else
-	mkdir -p "$comppath"
-fi
-
-autoload -U compinit colors zcalc 
-compinit -u -d "$compfile"
+autoload -U colors zcalc 
 colors
 
+# completion; use cache if updated within 24h
+autoload -Uz compinit
+if [[ -n $HOME/.cache/.zcompdump(#qN.mh+24) ]]; then
+  compinit -u -d "$compfile"
+else
+  compinit -C;
+fi;
+
+# disable zsh bundled function mtools command mcd
+# which causes a conflict.
+compdef -d mcd
 
 source ~/.zsh/git.plugin.zsh 
 source ~/.zsh/docker.plugin.zsh
@@ -64,10 +63,9 @@ source ~/.zsh/docker-compose.plugin.zsh
 # ---| Correction  and Autocompletion |--- #
 zstyle ':completion:*:correct:*' original true
 zstyle ':completion:*:correct:*' insert-unambiguous true
-zstyle ':completion:*:approximate:*' max-errors 'reply=($(( ($#PREFIX + $#SUFFIX) / 3 )) numeric)'
+# matches case insensitive for lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
 # Colorize completions using default `ls` colors.
 zstyle ':completion:*' list-colors ''
 
@@ -78,6 +76,7 @@ zmodload zsh/complist
 
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
 zstyle ':completion:*' rehash true                              # automatically find new executables in path 
+
 zstyle ':completion:*' verbose true
 zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' accept-exact '*(N)'
@@ -105,22 +104,10 @@ zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character t
 zstyle ':completion:*' list-suffixes true
 # End of lines added by compinstall
 
-# Make completion:
-# (stolen from Wincent)
-# - Try exact (case-sensitive) match first.
-# - Then fall back to case-insensitive.
-# - Accept abbreviations after . or _ or - (ie. f.b -> foo.bar).
-# - Substring complete (ie. bar -> foobar).
-zstyle ':completion:*' matcher-list '' \
-  '+m:{[:lower:]}={[:upper:]}' \
-  '+m:{[:upper:]}={[:lower:]}' \
-  '+m:{_-}={-_}' \
-  'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 HISTFILE=~/.zhistory
 HISTSIZE=10000
 SAVEHIST=10000
-WORDCHARS=${WORDCHARS//\/[&.;]}                                 # Don't consider certain characters part of the word
 
 ## Keybindings section
 bindkey -e
@@ -165,7 +152,6 @@ export LESS_TERMCAP_us=$'\E[01;36m'
 export LESS=-R
 
 
-## Plugins section: Enable fish style features
 # Use syntax highlighting
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Use history substring search

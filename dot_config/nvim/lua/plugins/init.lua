@@ -81,7 +81,7 @@ local default_plugins = {
       return require "plugins.configs.treesitter"
     end,
     config = function(_, opts)
-      pcall(dofile, vim.g.base46_cache .. "syntax")
+      dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
@@ -129,6 +129,8 @@ local default_plugins = {
       vim.api.nvim_create_user_command("MasonInstallAll", function()
         vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
       end, {})
+
+      vim.g.mason_binaries_list = opts.ensure_installed
     end,
   },
 
@@ -149,8 +151,9 @@ local default_plugins = {
         -- snippet plugin
         "L3MON4D3/LuaSnip",
         dependencies = "rafamadriz/friendly-snippets",
-        config = function()
-          require("plugins.configs.others").luasnip()
+        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        config = function(_, opts)
+          require("plugins.configs.others").luasnip(opts)
         end,
       },
 

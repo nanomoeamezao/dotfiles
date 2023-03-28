@@ -9,6 +9,16 @@ return {
   },
   {
     "lewis6991/gitsigns.nvim",
+    dependencies = {
+      {
+        "petertriho/nvim-scrollbar",
+        config = function()
+          require("scrollbar").setup()
+          require("scrollbar.handlers.search").setup()
+          require("scrollbar.handlers.gitsigns").setup()
+        end,
+      },
+    },
     opts = {
       signs = {
         delete = { hl = "DiffDelete", text = "│", numhl = "GitSignsDeleteNr" },
@@ -28,6 +38,15 @@ return {
       -- },
       pickers = {
         lsp_references = { show_line = false },
+      },
+    },
+    dependencies = {
+      {
+        "nvim-telescope/telescope-ui-select.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
+        config = function()
+          require("telescope").load_extension "ui-select"
+        end,
       },
     },
   },
@@ -117,124 +136,129 @@ return {
       require("copilot_cmp").setup {}
     end,
   },
-  { "mfussenegger/nvim-dap", cmd = { "DapContinue", "DapToggleBreakpoint" } },
   {
-    "leoluz/nvim-dap-go",
-    config = function()
-      require("dap-go").setup()
-      local dap = require "dap"
-      dap.configurations.go = {}
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      {
+        "leoluz/nvim-dap-go",
+        config = function()
+          require("dap-go").setup()
+          local dap = require "dap"
+          dap.configurations.go = {}
 
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "vuln debug",
-        showLog = true,
-        program = vim.fn.getenv "GOPATH" .. "/scanner/vuln-service/cmd/vuln-service/",
-      })
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "scanner debug",
-        program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
-      })
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "netscan debug",
-        program = vim.fn.getenv "GOPATH" .. "/scanner/netscan-service/cmd/netscan-service/",
-      })
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "installer debug",
-        program = vim.fn.getenv "GOPATH" .. "/scanner-installer/cmd/installer/",
-        args = { "install" },
-      })
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "datacoll debug",
-        program = vim.fn.getenv "GOPATH" .. "/data-collector/cmd/data-collector/",
-        args = {
-          "-c",
-          "configs/config.yaml",
-          "-r",
-          "configs/resources/nvd.yaml",
-          "-r",
-          "configs/resources/redhat.yaml",
-          "-r",
-          "configs/resources/debian.yaml",
-          "-r",
-          "configs/resources/ubuntu.yaml",
-          "-r",
-          "configs/resources/bdu.yaml",
-          "-r",
-          "configs/resources/arch.yaml",
-          "-r",
-          "configs/resources/exploitdb.yaml",
-        },
-      })
-      table.insert(dap.configurations.go, {
-        type = "go",
-        request = "launch",
-        name = "debug package",
-        program = "${fileDirname}",
-      })
-    end,
-  },
-  {
-    "rcarriga/nvim-dap-ui",
-    config = function()
-      require("dapui").setup {
-        render = {
-          max_type_length = nil,
-          max_value_line = nil,
-        },
-        expand_lines = true,
-        layouts = {
-          {
-            elements = {
-              -- Elements can be strings or table with id and size keys.
-              { id = "scopes", size = 0.25 },
-              "breakpoints",
-              "watches",
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "vuln debug",
+            showLog = true,
+            program = vim.fn.getenv "GOPATH" .. "/scanner/vuln-service/cmd/vuln-service/",
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "scanner debug",
+            program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "netscan debug",
+            program = vim.fn.getenv "GOPATH" .. "/scanner/netscan-service/cmd/netscan-service/",
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "installer debug",
+            program = vim.fn.getenv "GOPATH" .. "/scanner-installer/cmd/installer/",
+            args = { "install" },
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "datacoll debug",
+            program = vim.fn.getenv "GOPATH" .. "/data-collector/cmd/data-collector/",
+            args = {
+              "-c",
+              "configs/config.yaml",
+              "-r",
+              "configs/resources/nvd.yaml",
+              "-r",
+              "configs/resources/redhat.yaml",
+              "-r",
+              "configs/resources/debian.yaml",
+              "-r",
+              "configs/resources/ubuntu.yaml",
+              "-r",
+              "configs/resources/bdu.yaml",
+              "-r",
+              "configs/resources/arch.yaml",
+              "-r",
+              "configs/resources/exploitdb.yaml",
             },
-            size = 40, -- 40 columns
-            position = "left",
-          },
-          {
-            elements = {
-              "repl",
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "debug package",
+            program = "${fileDirname}",
+          })
+        end,
+      },
+      {
+        "rcarriga/nvim-dap-ui",
+        config = function()
+          require("dapui").setup {
+            render = {
+              max_type_length = nil,
+              max_value_line = nil,
             },
-            size = 0.25, -- 25% of total lines
-            position = "bottom",
-          },
-        },
-        controls = {
-          -- dependencies Neovim nightly (or 0.8 when released)
-          enabled = true,
-          -- Display controls in this element
-          element = "repl",
-        },
-      }
-      local dap, dapui = require "dap", require "dapui"
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open {}
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close {}
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close {}
-      end
-    end,
-  },
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    config = function()
-      require("nvim-dap-virtual-text").setup {}
-    end,
+            expand_lines = true,
+            layouts = {
+              {
+                elements = {
+                  -- Elements can be strings or table with id and size keys.
+                  { id = "scopes", size = 0.25 },
+                  "breakpoints",
+                  "watches",
+                },
+                size = 40, -- 40 columns
+                position = "left",
+              },
+              {
+                elements = {
+                  "repl",
+                },
+                size = 0.25, -- 25% of total lines
+                position = "bottom",
+              },
+            },
+            controls = {
+              -- dependencies Neovim nightly (or 0.8 when released)
+              enabled = true,
+              -- Display controls in this element
+              element = "repl",
+            },
+          }
+          local dap, dapui = require "dap", require "dapui"
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open {}
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close {}
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close {}
+          end
+        end,
+      },
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        config = function()
+          require("nvim-dap-virtual-text").setup {}
+        end,
+      },
+    },
+    cmd = { "DapContinue", "DapToggleBreakpoint" },
   },
   {
     "nvim-telescope/telescope-dap.nvim",
@@ -360,13 +384,7 @@ return {
       }
     end,
   },
-  {
-    "nvim-telescope/telescope-ui-select.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "ui-select"
-    end,
-  },
+
   {
     "monkoose/matchparen.nvim",
     lazy = false,
@@ -449,15 +467,7 @@ return {
       require("hlslens").setup {}
     end,
   },
-  {
-    "petertriho/nvim-scrollbar",
-    lazy = false,
-    config = function()
-      require("scrollbar").setup {}
-      require("scrollbar.handlers.search").setup()
-      require("scrollbar.handlers.gitsigns").setup()
-    end,
-  },
+
   {
     "lvimuser/lsp-inlayhints.nvim",
     enabled = false,
