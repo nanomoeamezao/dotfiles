@@ -60,7 +60,7 @@ beautiful.hotkeys_modifiers_fg = "#cc0052"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "wezterm"
-browser = "firefox"
+browser = "google-chrome-stable"
 filemanager = "pcmanfm"
 editor = terminal .. "-e nvim"
 -- Default modkey.
@@ -284,7 +284,7 @@ awful.screen.connect_for_each_screen(function(s)
 			s.mypromptbox,
 		},
 		{
-			left = 600,
+			left = 200,
 			layout = wibox.container.margin,
 			s.mytasklist, -- Middle widget
 		},
@@ -385,11 +385,11 @@ globalkeys = gears.table.join(
 		awful.spawn.with_shell("/usr/bin/rofi -show drun -modi drun")
 	end, { description = "launch rofi", group = "launcher" }),
 	awful.key({ modkey }, "e", function()
-		awful.spawn("/usr/bin/thunar")
+		awful.spawn("pcmanfm")
 	end, { description = "launch thunar", group = "launcher" }),
 	awful.key({ modkey, "Shift" }, "e", function()
-		awful.spawn.with_shell(terminal .. " -e ranger")
-	end, { description = "launch ranger", group = "launcher" }),
+		awful.spawn.with_shell(terminal .. " -e nnn")
+	end, { description = "launch nnn", group = "launcher" }),
 	awful.key({ modkey }, "v", function()
 		awful.spawn.with_shell("~/scripts/rofi-vpn")
 	end, { description = "rofi vpn", group = "launcher" }),

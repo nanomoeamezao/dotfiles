@@ -3,8 +3,18 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
 -- lspservers with default config
-local servers =
-  { "gopls", "html", "cssls", "clangd", "emmet_ls", "pylsp", "lua_ls", "docker_compose_language_service", "dockerls" }
+local servers = {
+  "gopls",
+  "html",
+  "cssls",
+  "clangd",
+  "emmet_ls",
+  "pylsp",
+  "lua_ls",
+  "docker_compose_language_service",
+  "dockerls",
+  -- "groovyls",
+}
 
 local gopls_caps = function()
   local caps = require("cmp_nvim_lsp").default_capabilities()
@@ -13,7 +23,7 @@ local gopls_caps = function()
       documentationFormat = { "markdown", "plaintext" },
       snippetSupport = true,
 
-      preselectSupport = true,
+      preselectSupport = false,
       insertReplaceSupport = true,
       labelDetailsSupport = true,
       deprecatedSupport = true,
@@ -51,14 +61,12 @@ for _, lsp in ipairs(servers) do
     on_attach = function(client, bufnr)
       if lsp == "gopls" then
         on_attach_lspconfig(client, bufnr)
-        local caps = vim.lsp.protocol.make_client_capabilities()
-        local semanticTokens = caps.textDocument.semanticTokens
-        local semantic_tokens_provider = {
+        local semantic = client.config.capabilities.textDocument.semanticTokens
+        client.server_capabilities.semanticTokensProvider = {
           full = true,
+          legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
           range = true,
-          legend = { tokenModifiers = semanticTokens.tokenModifiers, tokenTypes = semanticTokens.tokenTypes },
         }
-        client.server_capabilities.semanticTokensProvider = semantic_tokens_provider
         return
       elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then
         on_attach_lspconfig(client, bufnr)
@@ -81,7 +89,6 @@ for _, lsp in ipairs(servers) do
         hints = {
           assignVariableTypes = true,
           compositeLiteralFields = true,
-          compositeLiteralTypes = true,
           constantValues = true,
           functionTypeParameters = true,
           parameterNames = true,
@@ -105,6 +112,17 @@ for _, lsp in ipairs(servers) do
           nonewvars = true,
           fieldalignment = false,
           shadow = true,
+        },
+      },
+      Lua = {
+        completion = {
+          callSnippet = "Replace",
+        },
+        workspace = {
+          checkThirdParty = false,
+        },
+        runtime = {
+          version = "LuaJIT",
         },
       },
     },

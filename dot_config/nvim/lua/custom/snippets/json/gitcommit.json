@@ -1,0 +1,6 @@
+{
+  "skip ci": {
+    "prefix": "skci",
+    "body": ["[skip_ci]"]
+  }
+}

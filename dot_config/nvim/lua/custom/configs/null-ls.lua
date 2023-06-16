@@ -24,13 +24,16 @@ local sources = {
 
   -- Shell
   b.formatting.shfmt,
-  -- b.diagnostics.shellcheck.with { diagnostics_format = "#{m} [#{c}]" },
   b.diagnostics.shellcheck,
+
+  b.diagnostics.npm_groovy_lint,
 
   -- Go
   -- b.formatting.gofumpt,
-  -- b.formatting.goimports_reviser.with { args = { "-output", "stdout", "$FILENAME" } },
-  b.formatting.goimports,
+  b.formatting.goimports_reviser.with {
+    args = { "-rm-unused", "-company-prefixes", "gitlab.etecs.ru/polygon", "$FILENAME" },
+  },
+  -- b.formatting.goimports,
   -- b.diagnostics.golangci_lint.with {
   --   extra_args = { "-c", vim.fn.getenv "GOPATH" .. "/utils/.golangci.yml" },
   -- },

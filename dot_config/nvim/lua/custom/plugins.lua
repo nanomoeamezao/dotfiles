@@ -27,6 +27,41 @@ return {
   },
   { "williamboman/mason.nvim", enabled = false },
   {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      {
+        "rcarriga/cmp-dap",
+        config = function()
+          require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+            sources = {
+              { name = "dap" },
+            },
+          })
+        end,
+      },
+      {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+          require("copilot_cmp").setup {}
+        end,
+      },
+    },
+    opts = {
+      enabled = function()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+      end,
+      sources = {
+        { name = "copilot", max_item_count = 3 },
+        { name = "nvim_lsp", max_item_count = 20 },
+        { name = "luasnip" },
+        { name = "buffer", max_item_count = 5 },
+        { name = "nvim_lua" },
+        { name = "path" },
+      },
+      priority_weight = 2,
+    },
+  },
+  {
     "nvim-telescope/telescope.nvim",
     opts = {
       -- extensions = {
@@ -87,7 +122,17 @@ return {
           exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
         },
       },
-      { "folke/neodev.nvim" },
+      {
+        "folke/neodev.nvim",
+        config = function()
+          require("neodev").setup {
+            override = function(root_dir, library)
+              library.enabled = true
+              library.plugins = true
+            end,
+          }
+        end,
+      },
     },
     config = function()
       require("neodev").setup()
@@ -122,18 +167,19 @@ return {
   { "vim-scripts/ReplaceWithRegister", lazy = false },
   {
     "zbirenbaum/copilot.lua",
+    lazy = false,
     enabled = false,
     config = function()
       vim.defer_fn(function()
-        require("copilot").setup {}
+        require("copilot").setup {
+          suggestion = {
+            enable = false,
+          },
+          panel = {
+            enable = false,
+          },
+        }
       end, 100)
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    enabled = false,
-    config = function()
-      require("copilot_cmp").setup {}
     end,
   },
   {
@@ -151,19 +197,23 @@ return {
             request = "launch",
             name = "vuln debug",
             showLog = true,
-            program = vim.fn.getenv "GOPATH" .. "/scanner/vuln-service/cmd/vuln-service/",
+            program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/vuln-service/",
+            args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/vuln-service/localhost/config.yml" },
           })
           table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
             name = "scanner debug",
+            -- buildFlags = "-tags noauth",
+            env = { SCANNER_SCANNER_URL = "0.0.0.0:3000" },
             program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
+            args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/scanner/localhost/config.yml" },
           })
           table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
             name = "netscan debug",
-            program = vim.fn.getenv "GOPATH" .. "/scanner/netscan-service/cmd/netscan-service/",
+            program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/netscan-service/",
           })
           table.insert(dap.configurations.go, {
             type = "go",
@@ -382,6 +432,7 @@ return {
       require("go").setup {
         disable_defaults = true,
       }
+      vim.cmd [[command! GoLint :let dr=getcwd() | :setl makeprg=golangci-lint\ run\ --print-issued-lines=false\ --exclude-use-default=false\ --config\ \&d/.golangci.yml | :GoMake]]
     end,
   },
 
@@ -427,15 +478,15 @@ return {
         load = {
           ["core.defaults"] = {},
           ["core.ui"] = {},
-          ["core.norg.concealer"] = {},
-          ["core.norg.completion"] = {
+          ["core.concealer"] = {},
+          ["core.completion"] = {
             config = {
               engine = "nvim-cmp",
             },
           },
           ["core.integrations.nvim-cmp"] = {},
           ["core.integrations.telescope"] = {},
-          ["core.norg.dirman"] = {
+          ["core.dirman"] = {
             config = {
               workspaces = {
                 notes = "~/notes",

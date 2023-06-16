@@ -121,6 +121,14 @@ M.git = {
       end,
       "preview hunk",
     },
+    ["<leader>cc"] = {
+      "<cmd>G commit -a<CR>",
+      "commit all changes",
+    },
+    ["<leader>cp"] = {
+      "<cmd>G push<CR>",
+      "git push",
+    },
     -- ["do"] = {
     --   "<cmd> diffget //2 <CR>",
     --   "get diff from left (local)",
