@@ -64,6 +64,14 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     opts = {
+      extensions = {
+        smart_open = {
+          show_scores = false,
+          ignore_patterns = { "*.git/*", "*/tmp/*" },
+          match_algorithm = "fzf",
+          disable_devicons = false,
+        },
+      },
       -- extensions = {
       --   -- fzf = {
       --   --   fuzzy = true,
@@ -81,6 +89,13 @@ return {
         dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
           require("telescope").load_extension "ui-select"
+        end,
+      },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+        config = function()
+          require("telescope").load_extension "fzf"
         end,
       },
     },
@@ -141,12 +156,6 @@ return {
       vim.cmd [[
       hi @lsp.type.parameter  guifg=Orange
       ]]
-    end,
-  },
-  {
-    "nvim-telescope/telescope-fzy-native.nvim",
-    config = function()
-      require("telescope").load_extension "fzy_native"
     end,
   },
   {
@@ -399,7 +408,9 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "antoinemadec/FixCursorHold.nvim",
-      "nvim-neotest/neotest-go",
+      {
+        "nvim-neotest/neotest-go",
+      },
     },
     config = function()
       -- get neotest namespace (api call creates or returns namespace)
@@ -518,31 +529,6 @@ return {
       require("hlslens").setup {}
     end,
   },
-
-  {
-    "lvimuser/lsp-inlayhints.nvim",
-    enabled = false,
-    config = function()
-      require("lsp-inlayhints").setup {
-        inlay_hints = {
-          highlight = "Comment",
-        },
-      }
-      vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = "LspAttach_inlayhints",
-        callback = function(args)
-          if not (args.data and args.data.client_id) then
-            return
-          end
-
-          local bufnr = args.buf
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          require("lsp-inlayhints").on_attach(client, bufnr)
-        end,
-      })
-    end,
-  },
   {
     "danielfalk/smart-open.nvim",
     config = function()
@@ -575,6 +561,14 @@ return {
           },
         },
       }
+    end,
+  },
+  {
+    "tomiis4/Hypersonic.nvim",
+    event = "CmdlineEnter",
+    cmd = "Hypersonic",
+    config = function()
+      require("hypersonic").setup {}
     end,
   },
 }

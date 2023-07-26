@@ -4,6 +4,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 export CLICOLOR=1
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
 export BAT_PAGER="less -XRFS --mouse --wheel-lines=5"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 export VDPAU_DRIVER="va_gl"

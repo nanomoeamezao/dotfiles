@@ -15,8 +15,9 @@ fi
 run nm-applet
 run picom -b
 run udiskie
-#run lxpolkit
+run lxpolkit
 if [ "$HOSTNAME" = "neotop" ]; then
+	#run dex -a
 	run blueman-applet
 	run easyeffects --gapplication-service
 	# run plex-mpv-shim

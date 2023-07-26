@@ -31,7 +31,7 @@ local sources = {
   -- Go
   -- b.formatting.gofumpt,
   b.formatting.goimports_reviser.with {
-    args = { "-rm-unused", "-company-prefixes", "gitlab.etecs.ru/polygon", "$FILENAME" },
+    args = { "-company-prefixes", "gitlab.etecs.ru/polygon", "$FILENAME" },
   },
   -- b.formatting.goimports,
   -- b.diagnostics.golangci_lint.with {

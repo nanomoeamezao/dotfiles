@@ -7,7 +7,7 @@ local servers = {
   "gopls",
   "html",
   "cssls",
-  "clangd",
+  "ccls",
   "emmet_ls",
   "pylsp",
   "lua_ls",
@@ -46,6 +46,9 @@ end
 local function get_capabilities(name)
   if name == "gopls" then
     return gopls_caps()
+  elseif name == "clangd" or name == "ccls" then
+    capabilities.offsetEncoding = { "utf-16" }
+    return capabilities
   else
     return capabilities
   end
@@ -67,6 +70,7 @@ for _, lsp in ipairs(servers) do
           legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
           range = true,
         }
+        -- vim.lsp.buf.inlay_hint(bufnr, true)
         return
       elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then
         on_attach_lspconfig(client, bufnr)
