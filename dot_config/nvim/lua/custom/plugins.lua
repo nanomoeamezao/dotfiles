@@ -50,11 +50,12 @@ return {
       enabled = function()
         return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
       end,
+      preselect = require("cmp").PreselectMode.None,
       sources = {
         { name = "copilot", max_item_count = 3 },
-        { name = "nvim_lsp", max_item_count = 20 },
+        { name = "nvim_lsp", max_item_count = 30 },
         { name = "luasnip" },
-        { name = "buffer", max_item_count = 5 },
+        { name = "buffer", max_item_count = 3 },
         { name = "nvim_lua" },
         { name = "path" },
       },
@@ -379,6 +380,7 @@ return {
     config = function()
       require("trouble").setup()
     end,
+    cmd = "Trouble",
   },
   {
     "kevinhwang91/nvim-ufo",
@@ -391,7 +393,7 @@ return {
       vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
-      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:/]]
+      -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:/]]
 
       require("ufo").setup {
         provider_selector = function(bufnr, filetype, buftype)
@@ -403,39 +405,6 @@ return {
   },
   { "tpope/vim-git", lazy = false },
   {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim",
-      {
-        "nvim-neotest/neotest-go",
-      },
-    },
-    config = function()
-      -- get neotest namespace (api call creates or returns namespace)
-      local neotest_ns = vim.api.nvim_create_namespace "neotest"
-      vim.diagnostic.config({
-        virtual_text = {
-          format = function(diagnostic)
-            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-            return message
-          end,
-        },
-      }, neotest_ns)
-
-      require("neotest").setup {
-        adapters = {
-          require "neotest-go" {
-            experimental = {
-              test_table = true,
-            },
-          },
-        },
-      }
-    end,
-  },
-  {
     "ray-x/go.nvim",
     dependencies = { "ray-x/guihua.lua" },
     ft = { "go" },
@@ -443,7 +412,6 @@ return {
       require("go").setup {
         disable_defaults = true,
       }
-      vim.cmd [[command! GoLint :let dr=getcwd() | :setl makeprg=golangci-lint\ run\ --print-issued-lines=false\ --exclude-use-default=false\ --config\ \&d/.golangci.yml | :GoMake]]
     end,
   },
 
@@ -509,13 +477,6 @@ return {
     end,
   },
   {
-    "stevearc/aerial.nvim",
-    cmd = "AerialToggle",
-    config = function()
-      require("aerial").setup()
-    end,
-  },
-  {
     "ibhagwan/smartyank.nvim",
     config = function()
       require("smartyank").setup()
@@ -535,33 +496,6 @@ return {
       require("telescope").load_extension "smart_open"
     end,
     dependencies = { "kkharji/sqlite.lua" },
-  },
-  {
-    "luukvbaal/statuscol.nvim",
-    lazy = false,
-    config = function()
-      vim.o.foldcolumn = "1"
-      vim.cmd [[highlight! link CursorLine Visual]]
-      local builtin = require "statuscol.builtin"
-      require("statuscol").setup {
-        setopt = true,
-        ft_ignore = { "NvimTree" },
-        foldfunc = "builtin",
-        segments = {
-          {
-            text = { " ", builtin.foldfunc, " " },
-            condition = { builtin.not_empty, true, builtin.not_empty },
-            click = "v:lua.ScFa",
-          },
-          { text = { "%s" }, click = "v:lua.ScSa" },
-          {
-            text = { builtin.lnumfunc, " " },
-            condition = { true, builtin.not_empty },
-            click = "v:lua.ScLa",
-          },
-        },
-      }
-    end,
   },
   {
     "tomiis4/Hypersonic.nvim",

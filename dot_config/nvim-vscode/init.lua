@@ -174,9 +174,13 @@ vim.keymap.set('n', '[d', "<cmd>call VSCodeNotify('editor.action.marker.prev')<c
 vim.keymap.set('n', '<leader>cc', "<cmd>call VSCodeNotify('git.commitAll')<cr>")
 vim.keymap.set('n', '<leader>cp', "<cmd>call VSCodeNotify('git.push')<cr>")
 vim.keymap.set('n', '<leader>gt', "<cmd>call VSCodeNotify('git.openAllChanges')<cr>")
-vim.keymap.set('n', 'zc', "<cmd>call VSCodeCall('editor.fold')<cr>")
-vim.keymap.set('n', 'zR', "<cmd>call VSCodeCall('editor.unfoldAll')<cr>")
-vim.keymap.set('n', 'zo', "<cmd>call VSCodeCall('editor.unfold')<cr>")
+vim.keymap.set('n', 'zc', "<cmd>call VSCodeNotify('editor.fold')<cr>")
+vim.keymap.set('n', 'zR', "<cmd>call VSCodeNotify('editor.unfoldAll')<cr>")
+vim.keymap.set('n', 'zo', "<cmd>call VSCodeNotify('editor.unfold')<cr>")
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

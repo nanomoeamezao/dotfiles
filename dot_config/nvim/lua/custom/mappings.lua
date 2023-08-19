@@ -99,9 +99,6 @@ M.lsp = {
       end,
       "lsp type definitions",
     },
-    ["<leader>la"] = {
-      "<cmd> AerialToggle <cr>",
-    },
   },
   v = {
     ["<leader>ca"] = {
@@ -200,35 +197,6 @@ M.dap = {
         require("telescope").extensions.dap.variables {}
       end,
       "list variables",
-    },
-  },
-}
-
-M.test = {
-  n = {
-    ["<F1>"] = {
-      function()
-        require("neotest").run.run { enter = true }
-      end,
-      "run nearest test",
-    },
-    ["<F2>"] = {
-      function()
-        require("neotest").run.run(vim.fn.expand "%")
-      end,
-      "run test in current file",
-    },
-    ["<F3>"] = {
-      function()
-        require("neotest").summary.toggle()
-      end,
-      "open test summary",
-    },
-    ["<F4>"] = {
-      function()
-        require("neotest").output.open { enter = true }
-      end,
-      "run last test",
     },
   },
 }

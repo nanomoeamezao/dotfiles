@@ -22,7 +22,6 @@ local gopls_caps = function()
     completionItem = {
       documentationFormat = { "markdown", "plaintext" },
       snippetSupport = true,
-
       preselectSupport = false,
       insertReplaceSupport = true,
       labelDetailsSupport = true,
@@ -64,6 +63,8 @@ for _, lsp in ipairs(servers) do
     on_attach = function(client, bufnr)
       if lsp == "gopls" then
         on_attach_lspconfig(client, bufnr)
+        client.server_capabilities.documentFormattingProvider = true
+        client.server_capabilities.documentRangeFormattingProvider = true
         local semantic = client.config.capabilities.textDocument.semanticTokens
         client.server_capabilities.semanticTokensProvider = {
           full = true,
@@ -90,15 +91,15 @@ for _, lsp in ipairs(servers) do
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = { gc_details = false },
         buildFlags = { "-tags", "vault,dbtest" },
-        hints = {
-          assignVariableTypes = true,
-          compositeLiteralFields = true,
-          constantValues = true,
-          functionTypeParameters = true,
-          parameterNames = true,
-          rangeVariableTypes = true,
-        },
-        usePlaceholders = true,
+        -- hints = {
+        --   assignVariableTypes = true,
+        --   compositeLiteralFields = true,
+        --   constantValues = true,
+        --   functionTypeParameters = true,
+        --   parameterNames = true,
+        --   rangeVariableTypes = true,
+        -- },
+        -- usePlaceholders = true,
         completeUnimported = true,
         staticcheck = true,
         matcher = "Fuzzy",
