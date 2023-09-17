@@ -41,8 +41,15 @@ return {
       },
       {
         "zbirenbaum/copilot-cmp",
+        enabled = false,
         config = function()
           require("copilot_cmp").setup {}
+        end,
+      },
+      {
+        "jcdickinson/codeium.nvim",
+        config = function()
+          require("codeium").setup {}
         end,
       },
     },
@@ -53,6 +60,7 @@ return {
       preselect = require("cmp").PreselectMode.None,
       sources = {
         { name = "copilot", max_item_count = 3 },
+        { name = "codeium", max_item_count = 3 },
         { name = "nvim_lsp", max_item_count = 30 },
         { name = "luasnip" },
         { name = "buffer", max_item_count = 3 },
@@ -108,7 +116,6 @@ return {
       require("telescope").load_extension "live_grep_args"
     end,
   },
-  { "windwp/nvim-autopairs", opts = { check_ts = true } },
   { "lukas-reineke/indent-blankline.nvim", opts = {
     show_current_context_start = false,
   } },
@@ -138,20 +145,10 @@ return {
           exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
         },
       },
-      {
-        "folke/neodev.nvim",
-        config = function()
-          require("neodev").setup {
-            override = function(root_dir, library)
-              library.enabled = true
-              library.plugins = true
-            end,
-          }
-        end,
-      },
+      { "folke/neodev.nvim" },
     },
     config = function()
-      require("neodev").setup()
+      require("neodev").setup {}
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
       vim.cmd [[
@@ -503,6 +500,31 @@ return {
     cmd = "Hypersonic",
     config = function()
       require("hypersonic").setup {}
+    end,
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/neotest-go",
+      -- Your other test adapters here
+    },
+    config = function()
+      -- get neotest namespace (api call creates or returns namespace)
+      local neotest_ns = vim.api.nvim_create_namespace "neotest"
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+            return message
+          end,
+        },
+      }, neotest_ns)
+      require("neotest").setup {
+        -- your neotest config here
+        adapters = {
+          require "neotest-go",
+        },
+      }
     end,
   },
 }

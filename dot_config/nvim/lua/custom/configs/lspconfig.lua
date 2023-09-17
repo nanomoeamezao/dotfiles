@@ -13,6 +13,7 @@ local servers = {
   "lua_ls",
   "docker_compose_language_service",
   "dockerls",
+  "jdtls",
   -- "groovyls",
 }
 
@@ -117,17 +118,6 @@ for _, lsp in ipairs(servers) do
           nonewvars = true,
           fieldalignment = false,
           shadow = true,
-        },
-      },
-      Lua = {
-        completion = {
-          callSnippet = "Replace",
-        },
-        workspace = {
-          checkThirdParty = false,
-        },
-        runtime = {
-          version = "LuaJIT",
         },
       },
     },

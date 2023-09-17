@@ -201,6 +201,35 @@ M.dap = {
   },
 }
 
+M.test = {
+  n = {
+    ["<F1>"] = {
+      function()
+        require("neotest").run.run { enter = true }
+      end,
+      "run nearest test",
+    },
+    ["<F2>"] = {
+      function()
+        require("neotest").run.run(vim.fn.expand "%")
+      end,
+      "run test in current file",
+    },
+    ["<F3>"] = {
+      function()
+        require("neotest").summary.toggle()
+      end,
+      "open test summary",
+    },
+    ["<F4>"] = {
+      function()
+        require("neotest").output.open { enter = true }
+      end,
+      "run last test",
+    },
+  },
+}
+
 M.general = {
   n = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
