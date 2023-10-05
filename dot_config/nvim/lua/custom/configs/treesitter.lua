@@ -22,7 +22,7 @@ return {
     "norg",
     "dockerfile",
   },
-  highlight = { enable = false },
+  highlight = { enable = true },
   textobjects = {
     select = {
       enable = true,

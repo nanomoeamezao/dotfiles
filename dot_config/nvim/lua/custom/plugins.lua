@@ -9,16 +9,6 @@ return {
   },
   {
     "lewis6991/gitsigns.nvim",
-    dependencies = {
-      {
-        "petertriho/nvim-scrollbar",
-        config = function()
-          require("scrollbar").setup()
-          require("scrollbar.handlers.search").setup()
-          require("scrollbar.handlers.gitsigns").setup()
-        end,
-      },
-    },
     opts = {
       signs = {
         delete = { hl = "DiffDelete", text = "│", numhl = "GitSignsDeleteNr" },
@@ -26,19 +16,17 @@ return {
     },
   },
   { "williamboman/mason.nvim", enabled = false },
+  { "NvChad/nvterm", enabled = false },
+  { "folke/which-key.nvim", enabled = false },
+  {
+    "NvChad/ui",
+    config = function()
+      vim.opt.statusline = "%!v:lua.require('custom.configs.statusline').run()"
+    end,
+  },
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      {
-        "rcarriga/cmp-dap",
-        config = function()
-          require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-            sources = {
-              { name = "dap" },
-            },
-          })
-        end,
-      },
       {
         "zbirenbaum/copilot-cmp",
         enabled = false,
@@ -55,7 +43,7 @@ return {
     },
     opts = {
       enabled = function()
-        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
       end,
       preselect = require("cmp").PreselectMode.None,
       sources = {
@@ -80,14 +68,12 @@ return {
           match_algorithm = "fzf",
           disable_devicons = false,
         },
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true, -- override the generic sorter
+          override_file_sorter = true, -- override the file sorter
+        },
       },
-      -- extensions = {
-      --   -- fzf = {
-      --   --   fuzzy = true,
-      --   --   override_generic_sorter = true, -- override the generic sorter
-      --   --   override_file_sorter = true, -- override the file sorter
-      --   -- },
-      -- },
       pickers = {
         lsp_references = { show_line = false },
       },
@@ -101,20 +87,30 @@ return {
         end,
       },
       {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
+        "nvim-telescope/telescope-live-grep-args.nvim",
+        config = function()
+          require("telescope").load_extension "live_grep_args"
+        end,
+      },
+      {
+        "benfowler/telescope-luasnip.nvim",
+        config = function()
+          require("telescope").load_extension "luasnip"
+        end,
+      },
+      {
+        "danielfalk/smart-open.nvim",
         config = function()
           require("telescope").load_extension "fzf"
+          require("telescope").load_extension "smart_open"
         end,
+        dependencies = { "kkharji/sqlite.lua" },
       },
     },
   },
   {
-    "nvim-telescope/telescope-live-grep-args.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "live_grep_args"
-    end,
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
   },
   { "lukas-reineke/indent-blankline.nvim", opts = {
     show_current_context_start = false,
@@ -123,27 +119,10 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         config = function()
           require("custom.configs.null-ls").setup()
         end,
-      },
-      {
-        "j-hui/fidget.nvim",
-        config = function()
-          require("fidget").setup()
-        end,
-      },
-      {
-        "utilyre/barbecue.nvim",
-        version = "*",
-        name = "barbecue",
-        dependencies = {
-          "SmiteshP/nvim-navic",
-        },
-        opts = {
-          exclude_filetypes = { "gitcommit", "toggleterm", "chatgpt" },
-        },
       },
       { "folke/neodev.nvim" },
     },
@@ -314,14 +293,14 @@ return {
           require("nvim-dap-virtual-text").setup {}
         end,
       },
+      {
+        "nvim-telescope/telescope-dap.nvim",
+        config = function()
+          require("telescope").load_extension "dap"
+        end,
+      },
     },
     cmd = { "DapContinue", "DapToggleBreakpoint" },
-  },
-  {
-    "nvim-telescope/telescope-dap.nvim",
-    config = function()
-      require("telescope").load_extension "dap"
-    end,
   },
   {
     "sindrets/diffview.nvim",
@@ -337,18 +316,7 @@ return {
     end,
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
   },
-  {
-    "folke/todo-comments.nvim",
-    config = function()
-      require("todo-comments").setup()
-    end,
-  },
-  {
-    "benfowler/telescope-luasnip.nvim",
-    config = function()
-      require("telescope").load_extension "luasnip"
-    end,
-  },
+
   { "wgwoods/vim-systemd-syntax", ft = { "systemd" } },
   {
     "tpope/vim-fugitive",
@@ -373,14 +341,8 @@ return {
     },
   },
   {
-    "folke/trouble.nvim",
-    config = function()
-      require("trouble").setup()
-    end,
-    cmd = "Trouble",
-  },
-  {
     "kevinhwang91/nvim-ufo",
+    lazy = false,
     dependencies = {
       "kevinhwang91/promise-async",
       "nvim-treesitter/nvim-treesitter",
@@ -409,14 +371,6 @@ return {
       require("go").setup {
         disable_defaults = true,
       }
-    end,
-  },
-
-  {
-    "monkoose/matchparen.nvim",
-    lazy = false,
-    config = function()
-      require("matchparen").setup()
     end,
   },
   {
@@ -481,28 +435,6 @@ return {
     lazy = false,
   },
   {
-    "kevinhwang91/nvim-hlslens",
-    lazy = false,
-    config = function()
-      require("hlslens").setup {}
-    end,
-  },
-  {
-    "danielfalk/smart-open.nvim",
-    config = function()
-      require("telescope").load_extension "smart_open"
-    end,
-    dependencies = { "kkharji/sqlite.lua" },
-  },
-  {
-    "tomiis4/Hypersonic.nvim",
-    event = "CmdlineEnter",
-    cmd = "Hypersonic",
-    config = function()
-      require("hypersonic").setup {}
-    end,
-  },
-  {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-neotest/neotest-go",
@@ -525,6 +457,23 @@ return {
           require "neotest-go",
         },
       }
+    end,
+  },
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    lazy = false,
+    config = function()
+      require("bufferline").setup {}
+    end,
+  },
+  {
+    "Wansmer/symbol-usage.nvim",
+    enabled = false,
+    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    config = function()
+      require("symbol-usage").setup()
     end,
   },
 }

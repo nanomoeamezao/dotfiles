@@ -44,36 +44,11 @@ M.lsp = {
       end,
       "telescope lsp references",
     },
-    ["<leader>fd"] = {
-      -- function()
-      -- require("telescope.builtin").diagnostics()
-      -- end,
-      "<cmd>Trouble workspace_diagnostics<cr>",
-      " telescope lsp diagnostics",
-    },
-    ["[d"] = {
-      function()
-        vim.diagnostic.goto_prev { wrap = true, float = true }
-      end,
-      "lsp next diagnostic",
-    },
-    ["]d"] = {
-      function()
-        vim.diagnostic.goto_next { wrap = true, float = true }
-      end,
-      "lsp next diagnostic",
-    },
     ["<leader>m"] = {
       function()
         vim.lsp.stop_client(vim.lsp.get_active_clients())
       end,
       "stop all lsp clients",
-    },
-    ["<leader>ca"] = {
-      function()
-        vim.lsp.buf.code_action()
-      end,
-      "code action",
     },
     ["<leader>cs"] = {
       function()
@@ -235,6 +210,23 @@ M.general = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
     ["<C-ы>"] = { "<cmd> w <CR>" },
     ["<C-в>"] = { "<C-d>" },
+  },
+}
+
+M.bufferline = {
+  n = {
+    ["<tab>"] = {
+      "<cmd>BufferLineCycleNext<CR>",
+      "Goto next buffer",
+    },
+    ["<S-tab>"] = {
+      "<cmd>BufferLineCyclePrev<CR>",
+      "Goto prev buffer",
+    },
+    ["<leader>x"] = {
+      "<cmd>bdelete!<CR>",
+      "Close buffer",
+    },
   },
 }
 

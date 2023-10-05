@@ -1,5 +1,6 @@
 local on_attach_lspconfig = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
+local methods = vim.lsp.protocol.Methods
 
 local lspconfig = require "lspconfig"
 -- lspservers with default config
@@ -18,29 +19,46 @@ local servers = {
 }
 
 local gopls_caps = function()
-  local caps = require("cmp_nvim_lsp").default_capabilities()
-  caps.textDocument.completion = {
-    completionItem = {
-      documentationFormat = { "markdown", "plaintext" },
-      snippetSupport = true,
-      preselectSupport = false,
-      insertReplaceSupport = true,
-      labelDetailsSupport = true,
-      deprecatedSupport = true,
-      commitCharactersSupport = true,
-      tagSupport = { valueSet = { 1 } },
-      resolveSupport = {
-        properties = {
-          "documentation",
-          "detail",
-          "additionalTextEdits",
+  return vim.tbl_deep_extend(
+    "force",
+    vim.lsp.protocol.make_client_capabilities(),
+    require("cmp_nvim_lsp").default_capabilities(),
+    {
+      -- go.nvim
+      textDocument = {
+        completion = {
+          completionItem = {
+            documentationFormat = { "markdown" },
+            snippetSupport = true,
+            preselectSupport = false,
+            insertReplaceSupport = true,
+            labelDetailsSupport = true,
+            deprecatedSupport = true,
+            commitCharactersSupport = true,
+            tagSupport = { valueSet = { 1 } },
+            resolveSupport = {
+              properties = {
+                "documentation",
+                "detail",
+                "additionalTextEdits",
+              },
+            },
+          },
+        },
+        contextSupport = true,
+        dynamicRegistration = false,
+        foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
         },
       },
-    },
-    contextSupport = true,
-    dynamicRegistration = true,
-  }
-  return caps
+      workspace = {
+        -- PERF: didChangeWatchedFiles is too slow.
+        -- TODO: Remove this when https://github.com/neovim/neovim/issues/23291#issuecomment-1686709265 is fixed.
+        didChangeWatchedFiles = { dynamicRegistration = false },
+      },
+    }
+  )
 end
 
 local function get_capabilities(name)
@@ -53,10 +71,6 @@ local function get_capabilities(name)
     return capabilities
   end
 end
-
--- local runtime_path = vim.split(package.path, ";")
--- table.insert(runtime_path, "lua/?.lua")
--- table.insert(runtime_path, "lua/?/init.lua")
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -91,35 +105,83 @@ for _, lsp in ipairs(servers) do
         gofumpt = true,
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = { gc_details = false },
-        buildFlags = { "-tags", "vault,dbtest" },
-        -- hints = {
-        --   assignVariableTypes = true,
-        --   compositeLiteralFields = true,
-        --   constantValues = true,
-        --   functionTypeParameters = true,
-        --   parameterNames = true,
-        --   rangeVariableTypes = true,
-        -- },
-        -- usePlaceholders = true,
+        buildFlags = { "-tags", "vault,dbtest,file_search_feature" },
         completeUnimported = true,
         staticcheck = true,
-        matcher = "Fuzzy",
         diagnosticsDelay = "500ms",
-        symbolMatcher = "fuzzy",
         analyses = {
-          unreachable = true,
-          nilness = true,
+          nillness = true,
           unusedparams = true,
-          useany = true,
           unusedwrite = true,
-          ST1003 = true,
-          undeclaredname = true,
-          fillreturns = true,
-          nonewvars = true,
-          fieldalignment = false,
+          unusedvariable = true,
           shadow = true,
+          useany = true,
         },
       },
     },
   }
+end
+
+local watch_type = require("vim._watch").FileChangeType
+
+local function handler(res, callback)
+  if not res.files or res.is_fresh_instance then
+    return
+  end
+
+  for _, file in ipairs(res.files) do
+    local path = res.root .. "/" .. file.name
+    local change = watch_type.Changed
+    if file.new then
+      change = watch_type.Created
+    end
+    if not file.exists then
+      change = watch_type.Deleted
+    end
+    callback(path, change)
+  end
+end
+
+function watchman(path, opts, callback)
+  vim.system({ "watchman", "watch", path }):wait()
+
+  local buf = {}
+  local sub = vim.system({
+    "watchman",
+    "-j",
+    "--server-encoding=json",
+    "-p",
+  }, {
+    stdin = vim.json.encode {
+      "subscribe",
+      path,
+      "nvim:" .. path,
+      {
+        expression = { "anyof", { "type", "f" }, { "type", "d" } },
+        fields = { "name", "exists", "new" },
+      },
+    },
+    stdout = function(_, data)
+      if not data then
+        return
+      end
+      for line in vim.gsplit(data, "\n", { plain = true, trimempty = true }) do
+        table.insert(buf, line)
+        if line == "}" then
+          local res = vim.json.decode(table.concat(buf))
+          handler(res, callback)
+          buf = {}
+        end
+      end
+    end,
+    text = true,
+  })
+
+  return function()
+    sub:kill "sigint"
+  end
+end
+
+if vim.fn.executable "watchman" == 1 then
+  require("vim.lsp._watchfiles")._watchfunc = watchman
 end
