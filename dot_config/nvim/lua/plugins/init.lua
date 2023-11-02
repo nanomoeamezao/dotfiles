@@ -84,6 +84,15 @@ local default_plugins = {
     config = function(_, opts)
       dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.hypr = {
+        install_info = {
+          url = "https://github.com/luckasRanarison/tree-sitter-hypr",
+          files = { "src/parser.c" },
+          branch = "master",
+        },
+        filetype = "hypr",
+      }
     end,
   },
 
@@ -252,7 +261,7 @@ local default_plugins = {
   -- Only load whichkey after all the gui
   {
     "folke/which-key.nvim",
-    keys = { "<leader>", "<c-r>", '"', "'", "`", "c", "v", "g" },
+    keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
     init = function()
       require("core.utils").load_mappings "whichkey"
     end,

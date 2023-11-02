@@ -74,6 +74,17 @@ M.lsp = {
       end,
       "lsp type definitions",
     },
+    ["<leader>co"] = {
+      function()
+        vim.lsp.buf.code_action {
+          filter = function(a)
+            return a.title == "Organize Imports"
+          end,
+          apply = true,
+        }
+      end,
+      "lsp code action - organize imports",
+    },
   },
   v = {
     ["<leader>ca"] = {

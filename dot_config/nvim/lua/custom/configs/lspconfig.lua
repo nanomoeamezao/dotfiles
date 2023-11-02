@@ -1,6 +1,5 @@
 local on_attach_lspconfig = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
-local methods = vim.lsp.protocol.Methods
 
 local lspconfig = require "lspconfig"
 -- lspservers with default config
@@ -19,46 +18,21 @@ local servers = {
 }
 
 local gopls_caps = function()
-  return vim.tbl_deep_extend(
-    "force",
-    vim.lsp.protocol.make_client_capabilities(),
-    require("cmp_nvim_lsp").default_capabilities(),
-    {
-      -- go.nvim
-      textDocument = {
-        completion = {
-          completionItem = {
-            documentationFormat = { "markdown" },
-            snippetSupport = true,
-            preselectSupport = false,
-            insertReplaceSupport = true,
-            labelDetailsSupport = true,
-            deprecatedSupport = true,
-            commitCharactersSupport = true,
-            tagSupport = { valueSet = { 1 } },
-            resolveSupport = {
-              properties = {
-                "documentation",
-                "detail",
-                "additionalTextEdits",
-              },
-            },
-          },
-        },
-        contextSupport = true,
-        dynamicRegistration = false,
-        foldingRange = {
-          dynamicRegistration = false,
-          lineFoldingOnly = true,
+  return vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities(), {
+    -- go.nvim
+    textDocument = {
+      completion = {
+        completionItem = {
+          preselectSupport = false,
         },
       },
-      workspace = {
-        -- PERF: didChangeWatchedFiles is too slow.
-        -- TODO: Remove this when https://github.com/neovim/neovim/issues/23291#issuecomment-1686709265 is fixed.
-        didChangeWatchedFiles = { dynamicRegistration = false },
-      },
-    }
-  )
+    },
+    workspace = {
+      -- PERF: didChangeWatchedFiles is too slow.
+      -- TODO: Remove this when https://github.com/neovim/neovim/issues/23291#issuecomment-1686709265 is fixed.
+      didChangeWatchedFiles = { dynamicRegistration = false },
+    },
+  })
 end
 
 local function get_capabilities(name)
@@ -80,12 +54,6 @@ for _, lsp in ipairs(servers) do
         on_attach_lspconfig(client, bufnr)
         client.server_capabilities.documentFormattingProvider = true
         client.server_capabilities.documentRangeFormattingProvider = true
-        local semantic = client.config.capabilities.textDocument.semanticTokens
-        client.server_capabilities.semanticTokensProvider = {
-          full = true,
-          legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
-          range = true,
-        }
         -- vim.lsp.buf.inlay_hint(bufnr, true)
         return
       elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then

@@ -7,6 +7,7 @@ return {
       "mrjones2014/nvim-ts-rainbow",
     },
   },
+  { "luckasRanarison/tree-sitter-hypr", ft = "hypr" },
   {
     "lewis6991/gitsigns.nvim",
     opts = {
@@ -290,7 +291,9 @@ return {
       {
         "theHamsta/nvim-dap-virtual-text",
         config = function()
-          require("nvim-dap-virtual-text").setup {}
+          require("nvim-dap-virtual-text").setup {
+            virt_text_pos = "eol",
+          }
         end,
       },
       {

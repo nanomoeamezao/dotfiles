@@ -6,6 +6,11 @@ local act = wezterm.action
 local home = os.getenv("HOME")
 local hostname = os.getenv("HOSTNAME")
 local url_filter = "file://" .. hostname .. home .. "/"
+local way = os.getenv("WAYLAND_DISPLAY")
+local waybool = false
+if way ~= "" then
+	waybool = true
+end
 
 function basename(s)
 	return string.gsub(s, "(.*[/\\])(.*)", "%2")
@@ -75,7 +80,7 @@ return {
 	-- },
 	color_scheme = "Catppuccin Mocha",
 	scrollback_lines = 40000,
-	enable_wayland = false,
+	enable_wayland = waybool,
 	check_for_updates = false,
 	window_padding = {
 		left = "0cell",

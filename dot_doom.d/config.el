@@ -66,7 +66,7 @@
                               company-yasnippet
                               :separate
                               company-files))
-                              
+
 
 (map! :desc "g n" :n "g n" #'flycheck-next-error)
 (map! :desc "g p" :n "g p" #'flycheck-previous-error)
@@ -81,3 +81,6 @@
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]gen\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]dist\\'"))
+
+(setq org-directory "~/notes/")
+(setq org-noter-notes-search-path '("~/notes/"))

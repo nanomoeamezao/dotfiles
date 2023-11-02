@@ -10,5 +10,6 @@ M.ui = {
     enabled = false,
     lazyload = false,
   },
+  lsp_semantic_tokens = true,
 }
 return M
