@@ -34,6 +34,9 @@ disabled = true
 [nodejs]
 disabled = true
 
+[java]
+disabled = true
+
 [directory]
 read_only = " "
 

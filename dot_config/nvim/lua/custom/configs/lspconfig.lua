@@ -73,7 +73,7 @@ for _, lsp in ipairs(servers) do
         gofumpt = true,
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = { gc_details = false },
-        buildFlags = { "-tags", "vault,dbtest,file_search_feature" },
+        buildFlags = { "-tags", "vault,dbtest,file_search_feature,mage" },
         completeUnimported = true,
         staticcheck = true,
         diagnosticsDelay = "500ms",

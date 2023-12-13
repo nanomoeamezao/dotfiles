@@ -53,6 +53,7 @@ default_floating_border none
 titlebar_padding 1
 titlebar_border_thickness 0
 hide_edge_borders --i3 smart
+workspace_layout stacking
 
 
 # workspace names
@@ -86,6 +87,7 @@ input 2652:17667:BM30X_mouse {
 
 
 exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
     gsettings set $gnome-schema gtk-theme 'Dracula'
@@ -100,6 +102,7 @@ exec --no-startup-id blueman-manager &
 exec --no-startup-id dunst &
 exec --no-startup-id xsettingsd &
 exec --no-startup-id flameshot&
+exec env RUST_BACKTRACE=1 RUST_LOG=swayr=debug swayrd > /tmp/swayrd.log 2>&1
 exec $swayidle
 # exec_always ~/.config/hypr/scripts/sleep.sh
 
@@ -177,8 +180,7 @@ bindsym --to-code {
 # Toggle the current focus between tiling and floating mode
 		 $mod+Shift+space floating toggle
 
-# Swap focus between the tiling area and the floating area
-		 $mod+space focus mode_toggle
+		 $mod+space exec swayr switch-window
 
 # Move focus to the parent container
   $mod+a focus parent

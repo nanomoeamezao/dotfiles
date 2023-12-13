@@ -66,7 +66,7 @@ end)
 
 return {
 	hide_tab_bar_if_only_one_tab = true,
-	font = wezterm.font("JetBrains Mono Nerd Font"),
+	font = wezterm.font("JetBrainsMono NFM"),
 	font_size = 14,
 	front_end = "WebGpu",
 	-- webgpu_preferred_adapter = {

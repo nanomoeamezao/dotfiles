@@ -392,45 +392,6 @@ return {
     end,
   },
   {
-    "nvim-neorg/neorg",
-    ft = "norg",
-    cmd = { "Neorg" },
-    build = ":Neorg sync-parsers", -- This is the important bit!
-    dependencies = "nvim-neorg/neorg-telescope",
-    config = function()
-      local cmp = require "cmp"
-      cmp.setup.filetype("norg", {
-        sources = cmp.config.sources {
-          { name = "neorg" },
-          { name = "buffer" },
-          { name = "path" },
-          { name = "luasnip" },
-        },
-      })
-      require("neorg").setup {
-        load = {
-          ["core.defaults"] = {},
-          ["core.ui"] = {},
-          ["core.concealer"] = {},
-          ["core.completion"] = {
-            config = {
-              engine = "nvim-cmp",
-            },
-          },
-          ["core.integrations.nvim-cmp"] = {},
-          ["core.integrations.telescope"] = {},
-          ["core.dirman"] = {
-            config = {
-              workspaces = {
-                notes = "~/notes",
-              },
-            },
-          },
-        },
-      }
-    end,
-  },
-  {
     "ibhagwan/smartyank.nvim",
     config = function()
       require("smartyank").setup()
