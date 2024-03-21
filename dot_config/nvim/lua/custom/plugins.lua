@@ -16,9 +16,14 @@ return {
       },
     },
   },
-  { "williamboman/mason.nvim", enabled = false },
-  { "NvChad/nvterm", enabled = false },
-  { "folke/which-key.nvim", enabled = false },
+  { "williamboman/mason.nvim",          enabled = false },
+  { "NvChad/nvterm",                    enabled = false },
+  { "folke/which-key.nvim",             enabled = false },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build =
+    "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+  },
   {
     "NvChad/ui",
     config = function()
@@ -35,12 +40,6 @@ return {
           require("copilot_cmp").setup {}
         end,
       },
-      {
-        "jcdickinson/codeium.nvim",
-        config = function()
-          require("codeium").setup {}
-        end,
-      },
     },
     opts = {
       enabled = function()
@@ -48,11 +47,11 @@ return {
       end,
       preselect = require("cmp").PreselectMode.None,
       sources = {
-        { name = "copilot", max_item_count = 3 },
-        { name = "codeium", max_item_count = 3 },
+        { name = "copilot",  max_item_count = 3 },
+        { name = "codeium",  max_item_count = 3 },
         { name = "nvim_lsp", max_item_count = 30 },
         { name = "luasnip" },
-        { name = "buffer", max_item_count = 3 },
+        { name = "buffer",   max_item_count = 3 },
         { name = "nvim_lua" },
         { name = "path" },
       },
@@ -62,6 +61,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     opts = {
+      extensions_list = { "fzf" },
       extensions = {
         smart_open = {
           show_scores = false,
@@ -72,7 +72,7 @@ return {
         fzf = {
           fuzzy = true,
           override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true, -- override the file sorter
+          override_file_sorter = true,    -- override the file sorter
         },
       },
       pickers = {
@@ -99,23 +99,22 @@ return {
           require("telescope").load_extension "luasnip"
         end,
       },
-      {
-        "danielfalk/smart-open.nvim",
-        config = function()
-          require("telescope").load_extension "fzf"
-          require("telescope").load_extension "smart_open"
-        end,
-        dependencies = { "kkharji/sqlite.lua" },
-      },
     },
   },
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
+    "danielfalk/smart-open.nvim",
+    config = function()
+      require("telescope").load_extension "smart_open"
+    end,
+    dependencies = { "kkharji/sqlite.lua" },
   },
-  { "lukas-reineke/indent-blankline.nvim", opts = {
-    show_current_context_start = false,
-  } },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    opts = {
+      show_current_context_start = false,
+    },
+  },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -178,15 +177,18 @@ return {
           require("dap-go").setup()
           local dap = require "dap"
           dap.configurations.go = {}
-
           table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
-            name = "vuln debug",
-            showLog = true,
-            program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/vuln-service/",
-            args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/vuln-service/localhost/config.yml" },
+            name = "updatemaker",
+            buildFlags = "-tags osusergo,netgo,sqlite_omit_load_extension",
+            program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/update-maker/",
+            args = {
+              "/home/neozumm/Downloads/646192be228a2a06eb6ae7b79206e70e_v0.2.542.tar.gz",
+              vim.fn.getenv "GOPATH" .. "/scanner/new.db",
+            },
           })
+
           table.insert(dap.configurations.go, {
             type = "go",
             request = "launch",
@@ -320,7 +322,7 @@ return {
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
   },
 
-  { "wgwoods/vim-systemd-syntax", ft = { "systemd" } },
+  { "wgwoods/vim-systemd-syntax",      ft = { "systemd" } },
   {
     "tpope/vim-fugitive",
     cmd = {
@@ -384,7 +386,7 @@ return {
       require("git-conflict").setup {
         default_mappings = true,
         disable_diagnostics = true, -- This will disable the diagnostics in a buffer whilst it is conflicted
-        highlights = { -- They must have background color, otherwise the default color will be used
+        highlights = {              -- They must have background color, otherwise the default color will be used
           incoming = "DiffText",
           current = "DiffAdd",
         },
@@ -418,7 +420,9 @@ return {
       require("neotest").setup {
         -- your neotest config here
         adapters = {
-          require "neotest-go",
+          require "neotest-go" {
+            experimental = { test_table = true },
+          },
         },
       }
     end,
@@ -426,10 +430,19 @@ return {
   {
     "akinsho/bufferline.nvim",
     version = "*",
+    enabled = false,
     dependencies = "nvim-tree/nvim-web-devicons",
     lazy = false,
     config = function()
-      require("bufferline").setup {}
+      require("bufferline").setup {
+        options = {
+          diagnostics = "nvim_lsp",
+          diagnostics_indicator = function(count, level, diagnostics_dict, context)
+            local icon = level:match "error" and " " or " "
+            return " " .. icon .. count
+          end,
+        },
+      }
     end,
   },
   {
@@ -437,7 +450,53 @@ return {
     enabled = false,
     event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
     config = function()
-      require("symbol-usage").setup()
+      require("symbol-usage").setup {
+        implementations = { disable = true },
+      }
+    end,
+  },
+  {
+    "jackMort/ChatGPT.nvim",
+    cmd = { "ChatGPT", "ChatGPTActAs", "ChatGPTRun" },
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+  },
+  {
+    "Exafunction/codeium.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("codeium").setup {}
+    end,
+  },
+
+  {
+    "kristijanhusak/vim-dadbod-ui",
+    dependencies = {
+      { "tpope/vim-dadbod",                     lazy = true },
+      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "plsql" }, lazy = true },
+    },
+    cmd = {
+      "DBUI",
+      "DBUIToggle",
+      "DBUIAddConnection",
+      "DBUIFindBuffer",
+    },
+    init = function()
+      -- Your DBUI configuration
+      vim.g.db_ui_use_nerd_fonts = 1
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "sql", "plsql" },
+        callback = function()
+          require("cmp").setup.buffer { sources = { { name = "vim-dadbod-completion" } } }
+        end,
+      })
     end,
   },
 }

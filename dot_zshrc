@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 ## Options section
 setopt nocaseglob                                               # Case insensitive globbing
 setopt nocheckjobs                                              # Don't warn about running processes when exiting
@@ -17,6 +18,8 @@ setopt INC_APPEND_HISTORY        # Write to the history file immediately, not wh
 setopt ALWAYS_TO_END
 setopt AUTO_MENU
 setopt LIST_PACKED
+unsetopt flowcontrol
+setopt complete_in_word
 
 # completion
 fpath=(/usr/share/zsh/site-functions/ $fpath)
@@ -26,77 +29,68 @@ source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
+autoload -U colors
+colors
 # source ~/.zsh/auto-notify.plugin.zsh
+## COMPLETION
 
 
 # completion cache path setup
 typeset -g comppath="$HOME/.cache"
 typeset -g compfile="$comppath/.zcompdump"
-
-autoload -U colors zcalc 
-colors
-
-# completion; use cache if updated within 24h
+#
+# # completion; use cache if updated within 24h
 autoload -Uz compinit
-if [[ -n $HOME/.cache/.zcompdump(#qN.mh+24) ]]; then
-  compinit -u -d "$compfile"
-else
-  compinit -C;
-fi;
-
-# disable zsh bundled function mtools command mcd
-# which causes a conflict.
-# compdef -d mcd
-
-source ~/.zsh/git.plugin.zsh 
-source ~/.zsh/docker.plugin.zsh
-source ~/.zsh/docker-compose.plugin.zsh
-
+for dump in $HOME/.cache/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 
 # ---| Correction  and Autocompletion |--- #
-zstyle ':completion:*:correct:*' original true
-zstyle ':completion:*:correct:*' insert-unambiguous true
+# zstyle ':completion:*:correct:*' original true
+# zstyle ':completion:*:correct:*' insert-unambiguous true
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # Colorize completions using default `ls` colors.
-zstyle ':completion:*' list-colors ''
+#zstyle ':completion:*' list-colors ''
 
 # Enable keyboard navigation of completions in menu
 # (not just tab/shift-tab but cursor keys as well):
-zstyle ':completion:*' menu select
-zmodload zsh/complist
+# zstyle ':completion:*' menu select
+#zmodload zsh/complist
 
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
-zstyle ':completion:*' rehash true                              # automatically find new executables in path 
-
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' squeeze-slashes true
-zstyle ':completion:*' accept-exact '*(N)'
-zstyle ':completion::complete:*' gain-privileges 1
-zstyle ':completion:*:manuals.*' insert-sections true
-zstyle ':completion:*:manuals' separate-sections true
-zstyle ':completion:*' completer _complete _match _approximate _ignored
-zstyle ':completion:*:match:*' original only
+# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+# zstyle ':completion:*' rehash true                              # automatically find new executables in path 
+#
+# zstyle ':completion:*' verbose true
+# zstyle ':completion:*' squeeze-slashes true
+# zstyle ':completion:*' accept-exact '*(N)'
+# zstyle ':completion::complete:*' gain-privileges 1
+# zstyle ':completion:*:manuals.*' insert-sections true
+# zstyle ':completion:*:manuals' separate-sections true
+# zstyle ':completion:*' completer _complete _match _approximate _ignored
+# zstyle ':completion:*:match:*' original only
 
 # Categorize completion suggestions with headings:
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*' format ' %F{green}->%F{yellow} %d%f'
-zstyle ':completion:*:messages' format ' %F{green}->%F{purple} %d%f'
-zstyle ':completion:*:descriptions' format ' %F{green}->%F{yellow} %d%f'
-zstyle ':completion:*:warnings' format ' %F{green}->%F{red} no matches%f'
-zstyle ':completion:*:corrections' format ' %F{green}->%F{green} %d: %e%f'
+# zstyle ':completion:*' group-name ''
+# zstyle ':completion:*:matches' group 'yes'
+# zstyle ':completion:*:options' auto-description '%d'
+# zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+# zstyle ':completion:*' format ' %F{green}->%F{yellow} %d%f'
+# zstyle ':completion:*:messages' format ' %F{green}->%F{purple} %d%f'
+# zstyle ':completion:*:descriptions' format ' %F{green}->%F{yellow} %d%f'
+# zstyle ':completion:*:warnings' format ' %F{green}->%F{red} no matches%f'
+# zstyle ':completion:*:corrections' format ' %F{green}->%F{green} %d: %e%f'
 
 # Added by running `compinstall`
-zstyle ':completion:*' expand suffix
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' list-suffixes true
+# zstyle ':completion:*' expand suffix
+# zstyle ':completion:*' file-sort modification
+# zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+# zstyle ':completion:*' list-suffixes true
 # End of lines added by compinstall
 
+##HISTORY
 
 HISTFILE=~/.zhistory
 HISTSIZE=10000
@@ -128,11 +122,6 @@ bindkey '^[[1;5C' forward-word                                  #
 bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
-## Alias section 
-alias cp="cp -i"                                                # Confirm before overwriting something
-alias df='df -h'                                                # Human-readable sizes
-alias free='free -m'                                            # Show sizes in MB
-alias gitu='git add . && git commit && git push'
 
 # Color man pages
 # export LESS_TERMCAP_mb=$'\E[01;32m'
@@ -145,20 +134,21 @@ alias gitu='git add . && git commit && git push'
 # export LESS=-R
 
 
-# Use syntax highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Use history substring search
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 # bind UP and DOWN arrow keys to history substring search
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey '^[[A' history-substring-search-up			
 bindkey '^[[B' history-substring-search-down
 
-# File and Dir colors for ls and other outputs
-export LS_OPTIONS='--color=auto'
-eval "$(dircolors -b)"
-alias ls='ls $LS_OPTIONS'
+source ~/.zsh/git.plugin.zsh 
+source ~/.zsh/docker.plugin.zsh
+source ~/.zsh/docker-compose.plugin.zsh
+
+# Use syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Use history substring search
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
 
 
 eval "$(starship init zsh)"
@@ -196,6 +186,16 @@ fzf-git-checkout() {
 }
 source ~/.zshaliases
 
+## Alias section 
+# File and Dir colors for ls and other outputs
+export LS_OPTIONS='--color=auto'
+eval "$(dircolors -b)"
+alias ls='ls $LS_OPTIONS'
+alias cp="cp -i"                                                # Confirm before overwriting something
+alias df='df -h'                                                # Human-readable sizes
+alias free='free -m'                                            # Show sizes in MB
+alias gitu='git add . && git commit && git push'
+
 alias sc='sudo systemctl'
 alias scs='sudo systemctl start'
 alias scst='sudo systemctl stop'
@@ -206,3 +206,6 @@ alias la='eza -1la --icons'
 alias ll='eza -1l --icons'
 alias gdsp="git diff origin/sprint -- . ':^gen' ':^server/models'"
 alias gco='fzf-git-checkout'
+# source /usr/share/nvm/init-nvm.sh
+
+# zprof

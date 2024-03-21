@@ -10,21 +10,19 @@ local sources = {
   -- Yaml\json
   b.formatting.prettierd,
   b.diagnostics.yamllint,
-  b.diagnostics.jsonlint,
 
   b.diagnostics.checkmake,
 
   -- b.formatting.pg_format,
-  -- b.formatting.sqlfluff.with { extra_args = { "--dialect", "postgres" } },
+  b.formatting.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
+  b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
 
   -- Lua
   b.formatting.stylua,
-  b.diagnostics.luacheck,
-  b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "postgres" } },
+  b.diagnostics.selene,
 
   -- Shell
   b.formatting.shfmt,
-  b.diagnostics.shellcheck,
 
   b.diagnostics.npm_groovy_lint,
 

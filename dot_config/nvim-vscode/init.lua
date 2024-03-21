@@ -28,7 +28,7 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   {
     -- Highlight, edit, and navigate code
@@ -160,15 +160,18 @@ require('nvim-treesitter.configs').setup {
 }
 
 vim.keymap.set('n', '<leader>ff', "<cmd>call VSCodeNotify('workbench.action.quickOpen')<cr>")
+vim.keymap.set('n', '<leader>fw', "<cmd>call VSCodeNotify('workbench.action.findInFiles')<cr>")
 vim.keymap.set('n', '<leader>x', "<cmd>call VSCodeNotify('workbench.action.closeActiveEditor')<cr>")
 vim.keymap.set('n', '<leader>X', "<cmd>call VSCodeNotify('workbench.action.closeAllEditors')<cr>")
 vim.keymap.set('n', '<leader>cm', "<cmd>call VSCodeNotify('git.viewHistory')<cr>")
+vim.keymap.set('n', '<leader>sg', "<cmd>call VSCodeNotify('workbench.view.scm')<cr>")
 vim.keymap.set('n', '<tab>', "<cmd>call VSCodeNotify('workbench.action.nextEditor')<cr>")
 vim.keymap.set('n', '<S-tab>', "<cmd>call VSCodeNotify('workbench.action.previousEditor')<cr>")
 vim.keymap.set('n', '<leader>fr', "<cmd>call VSCodeNotify('references-view.findReferences')<cr>")
 vim.keymap.set('n', ']c', "<cmd>call VSCodeNotify('editor.action.dirtydiff.next')<cr>")
 vim.keymap.set('n', '[c', "<cmd>call VSCodeNotify('editor.action.dirtydiff.previous')<cr>")
 vim.keymap.set('n', 'ge', "<cmd>call VSCodeNotify('editor.action.marker.next')<cr>")
+vim.keymap.set('n', 'gi', "<cmd>call VSCodeNotify('editor.action.goToImplementation')<cr>")
 vim.keymap.set('n', ']d', "<cmd>call VSCodeNotify('editor.action.marker.next')<cr>")
 vim.keymap.set('n', '[d', "<cmd>call VSCodeNotify('editor.action.marker.prev')<cr>")
 vim.keymap.set('n', '<leader>cc', "<cmd>call VSCodeNotify('git.commitAll')<cr>")
@@ -177,10 +180,10 @@ vim.keymap.set('n', '<leader>gt', "<cmd>call VSCodeNotify('git.openAllChanges')<
 vim.keymap.set('n', 'zc', "<cmd>call VSCodeNotify('editor.fold')<cr>")
 vim.keymap.set('n', 'zR', "<cmd>call VSCodeNotify('editor.unfoldAll')<cr>")
 vim.keymap.set('n', 'zo', "<cmd>call VSCodeNotify('editor.unfold')<cr>")
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
+-- vim.keymap.set('n', '<C-h>', '<C-w>h')
+-- vim.keymap.set('n', '<C-l>', '<C-w>l')
+-- vim.keymap.set('n', '<C-j>', '<C-w>j')
+-- vim.keymap.set('n', '<C-k>', '<C-w>k')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

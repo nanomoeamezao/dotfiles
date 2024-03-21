@@ -1,0 +1,9 @@
+#! /bin/bash
+
+docker rm -f postgres pauth-server
+docker volume rm scanner_db-data
+docker compose up --build -d postgres
+sleep 5
+docker compose up --build -d pauth-server
+sleep 3
+docker compose up -d pauthctl

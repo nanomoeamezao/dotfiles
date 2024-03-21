@@ -85,6 +85,12 @@ M.lsp = {
       end,
       "lsp code action - organize imports",
     },
+    ["<leader>cu"] = {
+      function()
+        require("symbol-usage").toggle_globally()
+      end,
+      "toggle symbol usage",
+    },
   },
   v = {
     ["<leader>ca"] = {
@@ -221,6 +227,7 @@ M.general = {
     ["<leader><S-x>"] = { "<cmd> %bdel! <CR>", "close all buffers" },
     ["<C-ы>"] = { "<cmd> w <CR>" },
     ["<C-в>"] = { "<C-d>" },
+    ["]q"] = { "<cmd>cn<CR>" },
   },
 }
 

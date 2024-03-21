@@ -14,8 +14,12 @@ local servers = {
   "docker_compose_language_service",
   "dockerls",
   "jdtls",
+  "bashls",
+  "jsonls",
   -- "groovyls",
 }
+local range_format = "textDocument/rangeFormatting"
+local formatting = "textDocument/formatting"
 
 local gopls_caps = function()
   return vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities(), {
@@ -23,8 +27,23 @@ local gopls_caps = function()
     textDocument = {
       completion = {
         completionItem = {
-          preselectSupport = false,
+          commitCharactersSupport = true,
+          deprecatedSupport = true,
+          documentationFormat = { "markdown", "plaintext" },
+          preselectSupport = true,
+          insertReplaceSupport = true,
+          labelDetailsSupport = true,
+          snippetSupport = true,
+          resolveSupport = {
+            properties = {
+              "documentation",
+              "details",
+              "additionalTextEdits",
+            },
+          },
         },
+        contextSupport = true,
+        dynamicRegistration = true,
       },
     },
     workspace = {
@@ -66,13 +85,22 @@ for _, lsp in ipairs(servers) do
     end,
     flags = {
       debounce_text_changes = 100,
+      allow_incremental_sync = true,
     },
     settings = {
       gopls = {
         semanticTokens = true,
         gofumpt = true,
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
-        codelenses = { gc_details = false },
+        codelenses = {
+          generate = true,   -- show the `go generate` lens.
+          gc_details = true, -- Show a code lens toggling the display of gc's choices.
+          test = true,
+          tidy = true,
+          vendor = true,
+          regenerate_cgo = true,
+          upgrade_dependency = true,
+        },
         buildFlags = { "-tags", "vault,dbtest,file_search_feature,mage" },
         completeUnimported = true,
         staticcheck = true,
@@ -83,9 +111,27 @@ for _, lsp in ipairs(servers) do
           unusedwrite = true,
           unusedvariable = true,
           shadow = true,
+          nonewvars = true,
+          ST1003 = true,
+          undeclaredname = true,
+          fillreturns = true,
           useany = true,
         },
       },
+    },
+    handlers = {
+      [range_format] = function(...)
+        vim.lsp.handlers[range_format](...)
+        if vfn.getbufinfo("%")[1].changed == 1 then
+          vim.cmd "noautocmd write"
+        end
+      end,
+      [formatting] = function(...)
+        vim.lsp.handlers[formatting](...)
+        if vfn.getbufinfo("%")[1].changed == 1 then
+          vim.cmd "noautocmd write"
+        end
+      end,
     },
   }
 end
