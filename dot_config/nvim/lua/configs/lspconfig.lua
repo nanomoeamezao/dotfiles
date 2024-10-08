@@ -10,10 +10,9 @@ local servers = {
   "lua_ls",
   "docker_compose_language_service",
   "dockerls",
-  "jdtls",
   "bashls",
   "jsonls",
-  "tsserver",
+  "ts_ls",
 }
 
 local on_attach_lspconfig = function(client, bufnr)

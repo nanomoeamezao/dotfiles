@@ -1,6 +1,5 @@
 require "nvchad.mappings"
 
--- add yours here
 
 local map = vim.keymap.set
 local nomap = vim.keymap.del
@@ -192,3 +191,4 @@ nomap("n", ";")
 nomap("n", "<leader>h")
 -- nomap("n", "<C-i>")
 --
+

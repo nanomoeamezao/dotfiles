@@ -568,4 +568,5 @@ return {
       require("marks").setup {}
     end,
   },
+  { "mfussenegger/nvim-jdtls" },
 }
