@@ -1,6 +1,5 @@
 require "nvchad.mappings"
 
-
 local map = vim.keymap.set
 local nomap = vim.keymap.del
 
@@ -21,7 +20,7 @@ map("n", "ge", function()
   vim.diagnostic.open_float()
 end)
 map("n", "<leader>fr", function()
-  require("telescope.builtin").lsp_references()
+  require("telescope.builtin").lsp_references {}
 end)
 map("n", "<leader>m", function()
   vim.lsp.stop_client(vim.lsp.get_clients())
@@ -121,11 +120,19 @@ map("n", "tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Goto next buffer" })
 map("n", "S-tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Goto prev buffer" })
 map("n", "<leader>x", "<cmd>bdelete!<CR>", { desc = "Close buffer" })
 map("n", "]c", function()
-  require("gitsigns").next_hunk()
+  require("gitsigns").nav_hunk "next"
 end, { desc = "go to next change hunk" })
 map("n", "[c", function()
-  require("gitsigns").prev_hunk()
+  require("gitsigns").nav_hunk "prev"
 end, { desc = "go to prev change hunk" })
+
+map("n", "<leader>hP", function()
+  require("gitsigns").preview_hunk()
+end, { desc = "preview hunk" })
+
+map("n", "<leader>cd", function()
+  require("gitsigns").diffthis()
+end, { desc = "diffthis file" })
 
 map("n", "<leader>ha", function()
   require("harpoon"):list():add()
@@ -164,20 +171,24 @@ map("n", "<leader>fh", function()
   toggle_telescope(require("harpoon"):list())
 end)
 
+map("n", "<leader>hl", function()
+  require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+end)
+
 -- load the session for the current directory
-vim.keymap.set("n", "<leader>qs", function()
+map("n", "<leader>qs", function()
   require("persistence").load()
 end)
 -- select a session to load
-vim.keymap.set("n", "<leader>qS", function()
+map("n", "<leader>qS", function()
   require("persistence").select()
 end)
 -- load the last session
-vim.keymap.set("n", "<leader>ql", function()
+map("n", "<leader>ql", function()
   require("persistence").load { last = true }
 end)
 -- stop Persistence => session won't be saved on exit
-vim.keymap.set("n", "<leader>qd", function()
+map("n", "<leader>qd", function()
   require("persistence").stop()
 end)
 
@@ -191,4 +202,3 @@ nomap("n", ";")
 nomap("n", "<leader>h")
 -- nomap("n", "<C-i>")
 --
-

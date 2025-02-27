@@ -1,4 +1,3 @@
-local capabilities = require("nvchad.configs.lspconfig").capabilities
 local vfn = vim.fn
 local map = vim.keymap.set
 local conf = require("nvconfig").lsp
@@ -32,58 +31,54 @@ end
 local range_format = "textDocument/rangeFormatting"
 local formatting = "textDocument/formatting"
 
-local gopls_caps = function()
-  return vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities(), {
-    -- go.nvim
-    textDocument = {
-      completion = {
-        completionItem = {
-          commitCharactersSupport = true,
-          deprecatedSupport = true,
-          documentationFormat = { "markdown", "plaintext" },
-          preselectSupport = true,
-          insertReplaceSupport = true,
-          labelDetailsSupport = true,
-          snippetSupport = true,
-          resolveSupport = {
-            properties = {
-              "documentation",
-              "details",
-              "additionalTextEdits",
-            },
+local gopls_caps = {
+  -- go.nvim
+  textDocument = {
+    completion = {
+      completionItem = {
+        commitCharactersSupport = true,
+        deprecatedSupport = true,
+        documentationFormat = { "markdown", "plaintext" },
+        preselectSupport = true,
+        insertReplaceSupport = true,
+        labelDetailsSupport = true,
+        snippetSupport = true,
+        resolveSupport = {
+          properties = {
+            "documentation",
+            "details",
+            "additionalTextEdits",
           },
         },
-        contextSupport = true,
-        dynamicRegistration = true,
       },
+      contextSupport = true,
+      dynamicRegistration = true,
     },
-  })
-end
+  },
+}
 
 local function get_capabilities(name)
   if name == "gopls" then
-    return gopls_caps()
+    return require("blink.cmp").get_lsp_capabilities(gopls_caps)
   elseif name == "clangd" or name == "ccls" then
-    capabilities.offsetEncoding = { "utf-16" }
-    return capabilities
+    local c = require("blink.cmp").get_lsp_capabilities()
+    c.offsetEncoding = { "utf-16" }
+    return c
   else
-    return capabilities
+    return require("blink.cmp").get_lsp_capabilities()
   end
 end
 
 for _, lsp in ipairs(servers) do
+  caps = get_capabilities(lsp)
   lspconfig[lsp].setup {
-    capabilities = get_capabilities(lsp),
+    capabilities = caps,
     on_attach = function(client, bufnr)
       on_attach_lspconfig(client, bufnr)
-      if lsp == "gopls" then
+      if lsp == "gopls" or lsp == "dockerls" or lsp == "docker_compose_language_service" then
         client.server_capabilities.documentFormattingProvider = true
         client.server_capabilities.documentRangeFormattingProvider = true
         -- vim.lsp.buf.inlay_hint(bufnr, true)
-        return
-      elseif lsp == "dockerls" or lsp == "docker_compose_language_service" then
-        client.server_capabilities.documentFormattingProvider = true
-        client.server_capabilities.documentRangeFormattingProvider = true
         return
       end
     end,
@@ -139,67 +134,3 @@ for _, lsp in ipairs(servers) do
     },
   }
 end
-
-local watch_type = require("vim._watch").FileChangeType
-
-local function handler(res, callback)
-  if not res.files or res.is_fresh_instance then
-    return
-  end
-
-  for _, file in ipairs(res.files) do
-    local path = res.root .. "/" .. file.name
-    local change = watch_type.Changed
-    if file.new then
-      change = watch_type.Created
-    end
-    if not file.exists then
-      change = watch_type.Deleted
-    end
-    callback(path, change)
-  end
-end
-
-function watchman(path, opts, callback)
-  vim.system({ "watchman", "watch", path }):wait()
-
-  local buf = {}
-  local sub = vim.system({
-    "watchman",
-    "-j",
-    "--server-encoding=json",
-    "-p",
-  }, {
-    stdin = vim.json.encode {
-      "subscribe",
-      path,
-      "nvim:" .. path,
-      {
-        expression = { "anyof", { "type", "f" }, { "type", "d" } },
-        fields = { "name", "exists", "new" },
-      },
-    },
-    stdout = function(_, data)
-      if not data then
-        return
-      end
-      for line in vim.gsplit(data, "\n", { plain = true, trimempty = true }) do
-        table.insert(buf, line)
-        if line == "}" then
-          local res = vim.json.decode(table.concat(buf))
-          handler(res, callback)
-          buf = {}
-        end
-      end
-    end,
-    text = true,
-  })
-
-  return function()
-    sub:kill "sigint"
-  end
-end
-
--- if vim.fn.executable "watchman" == 1 then
---   require("vim.lsp._watchfiles")._watchfunc = watchman
--- end

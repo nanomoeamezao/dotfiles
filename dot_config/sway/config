@@ -109,6 +109,7 @@ exec --no-startup-id blueman-manager &
 exec --no-startup-id dunst &
 exec --no-startup-id xsettingsd &
 exec --no-startup-id flameshot&
+exec --no-startup-id udiskie -t &
 exec swayrd &
 exec ~/scripts/battery.sh
 exec $swayidle
@@ -201,6 +202,7 @@ bindsym --to-code {
 }
 
 bindcode $mod+48 exec cycle_mpv_pause
+bindsym Ctrl+F10 exec ~/scripts/.venv/bin/python ~/scripts/recording-toggle.py
 
 #set floating mode for generated windows
 for_window [title="(?:Open|Save) (?:Files|Folder|As)"] floating enable

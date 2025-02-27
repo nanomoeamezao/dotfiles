@@ -1,3 +1,9 @@
+local function has_words_before()
+  local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+end
+local trigger_text = ";"
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -51,35 +57,242 @@ return {
   { "folke/which-key.nvim",                enabled = false },
   { "NvChad/nvim-colorizer.lua",           enabled = false },
   { "lukas-reineke/indent-blankline.nvim", enabled = false },
+  { "windwp/nvim-autopairs",               enabled = false },
+  { "saadparwaiz1/cmp_luasnip",            enabled = false },
+  { "hrsh7th/cmp-nvim-lua",                enabled = false },
+  { "hrsh7th/cmp-nvim-lsp",                enabled = false },
+  { "hrsh7th/cmp-buffer",                  enabled = false },
+  { "hrsh7th/cmp-path",                    enabled = false },
+
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build =
-    "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+    event = "VeryLazy",
+    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
+  },
+  {
+    "aliaksandr-trush/codeium.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      enable_cmp_source = false,
+      enable_chat = false,
+    },
+    enabled = false,
+    event = "BufEnter",
+  },
+  {
+    "saghen/blink.cmp",
+    lazy = false,
+    event = "VeryLazy",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      { "L3MON4D3/LuaSnip",   version = "v2.*" },
+      { "saghen/blink.compat" },
+    },
+    version = "*", -- use a release tag to download pre-built binaries
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      signature = { enabled = true },
+      -- 'default' for mappings similar to built-in completion
+      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+      -- See the full "keymap" documentation for information on defining your own keymap.
+      keymap = {
+        preset = "default",
+        ["<Tab>"] = {
+          function(cmp)
+            if cmp.is_visible() then
+              return cmp.select_next()
+            elseif require("luasnip").locally_jumpable(1) then
+              require("luasnip").jump(1)
+            elseif has_words_before() then
+              return cmp.show()
+            end
+          end,
+          "fallback",
+        },
+        ["<S-Tab>"] = {
+          function(cmp)
+            if cmp.is_visible() then
+              return cmp.select_prev()
+            elseif require("luasnip").locally_jumpable(-1) then
+              require("luasnip").jump(-1)
+            end
+          end,
+          "fallback",
+        },
+        ["<CR>"] = { "accept", "fallback" },
+        ["<C-k>"] = { "show_documentation" },
+      },
+
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = "mono",
+      },
+    },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+      -- add lazydev to your completion providers
+      default = { "lazydev", "dadbod", "lsp", "path", "snippets", "buffer" },
+      providers = {
+        lazydev = {
+          name = "LazyDev",
+          module = "lazydev.integrations.blink",
+          -- make lazydev completions top priority (see `:h blink.cmp`)
+          score_offset = 100,
+        },
+
+        -- codeium = { name = "Codeium", module = "codeium.blink", score_offset = 100, async = true },
+        -- codeium = {
+        --   name = "codeium",
+        --   module = "blink.compat.source",
+        --   score_offset = 100,
+        -- },
+        lsp = {
+          name = "lsp",
+          enabled = true,
+          module = "blink.cmp.sources.lsp",
+          -- When linking markdown notes, I would get snippets and text in the
+          -- suggestions, I want those to show only if there are no LSP
+          -- suggestions
+          -- Disabling fallbacks as my snippets wouldn't show up
+          -- Enabled fallbacks as this seems to be working now
+          fallbacks = { "snippets", "buffer" },
+          score_offset = 90, -- the higher the number, the higher the priority
+        },
+        path = {
+          name = "path",
+          module = "blink.cmp.sources.path",
+          score_offset = 25,
+          -- When typing a path, I would get snippets and text in the
+          -- suggestions, I want those to show only if there are no path
+          -- suggestions
+          fallbacks = { "snippets", "buffer" },
+          opts = {
+            trailing_slash = false,
+            label_trailing_slash = true,
+            get_cwd = function(context)
+              return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+            end,
+            show_hidden_files_by_default = true,
+          },
+        },
+        buffer = {
+          name = "Buffer",
+          enabled = true,
+          max_items = 3,
+          module = "blink.cmp.sources.buffer",
+          min_keyword_length = 4,
+          score_offset = 15, -- the higher the number, the higher the priority
+        },
+        dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+        snippets = {
+          name = "snippets",
+          enabled = true,
+          max_items = 8,
+          min_keyword_length = 2,
+          module = "blink.cmp.sources.snippets",
+          score_offset = 85, -- the higher the number, the higher the priority
+          -- Only show snippets if I type the trigger_text characters, so
+          -- to expand the "bash" snippet, if the trigger_text is ";" I have to
+          -- type ";bash"
+          should_show_items = function()
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
+            -- NOTE: remember that `trigger_text` is modified at the top of the file
+            return before_cursor:match(trigger_text .. "%w*$") ~= nil
+          end,
+          -- After accepting the completion, delete the trigger_text characters
+          -- from the final inserted text
+          transform_items = function(_, items)
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
+            local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
+            if trigger_pos then
+              for _, item in ipairs(items) do
+                item.textEdit = {
+                  newText = item.insertText or item.label,
+                  range = {
+                    start = { line = vim.fn.line "." - 1, character = trigger_pos - 1 },
+                    ["end"] = { line = vim.fn.line "." - 1, character = col },
+                  },
+                }
+              end
+            end
+            -- NOTE: After the transformation, I have to reload the luasnip source
+            -- Otherwise really crazy shit happens and I spent way too much time
+            -- figurig this out
+            vim.schedule(function()
+              require("blink.cmp").reload "snippets"
+            end)
+            return items
+          end,
+        },
+      },
+
+      snippets = {
+        preset = "luasnip",
+        -- This comes from the luasnip extra, if you don't add it, won't be able to
+        -- jump forward or backward in luasnip snippets
+        -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
+        expand = function(snippet)
+          require("luasnip").lsp_expand(snippet)
+        end,
+        active = function(filter)
+          if filter and filter.direction then
+            return require("luasnip").jumpable(filter.direction)
+          end
+          return require("luasnip").in_snippet()
+        end,
+        jump = function(direction)
+          require("luasnip").jump(direction)
+        end,
+      },
+
+      cmdline = {
+        enabled = false,
+        sources = function()
+          local type = vim.fn.getcmdtype()
+          if type == "/" or type == "?" then
+            return { "buffer" }
+          end
+          if type == ":" then
+            return { "cmdline" }
+          end
+          return {}
+        end,
+      },
+      completion = {
+        menu = {
+          auto_show = function(ctx)
+            return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
+          end,
+        },
+      },
+    },
+
+    opts_extend = { "sources.default" },
   },
   {
     "hrsh7th/nvim-cmp",
-    -- dependencies = {
-    --   -- {
-    --   --   "zbirenbaum/copilot-cmp",
-    --   --   enabled = false,
-    --   --   config = function()
-    --   --     require("copilot_cmp").setup {}
-    --   --   end,
-    --   -- },
+    enabled = false,
+    -- opts = {
+    --   preselect = require("cmp").PreselectMode.None,
+    --   sources = {
+    --     { name = "copilot",  max_item_count = 3 },
+    --     { name = "codeium",  max_item_count = 3 },
+    --     { name = "nvim_lsp", max_item_count = 30 },
+    --     { name = "luasnip" },
+    --     { name = "buffer",   max_item_count = 3 },
+    --     { name = "nvim_lua" },
+    --     { name = "path" },
+    --   },
+    --   priority_weight = 2,
     -- },
-    opts = {
-      preselect = require("cmp").PreselectMode.None,
-      sources = {
-        { name = "copilot",  max_item_count = 3 },
-        { name = "codeium",  max_item_count = 3 },
-        { name = "nvim_lsp", max_item_count = 30 },
-        { name = "luasnip" },
-        { name = "buffer",   max_item_count = 3 },
-        { name = "nvim_lua" },
-        { name = "path" },
-      },
-      priority_weight = 2,
-    },
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -138,7 +351,17 @@ return {
     end,
     dependencies = { "kkharji/sqlite.lua" },
   },
-
+  {
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -148,10 +371,9 @@ return {
           require("configs.null-ls").setup()
         end,
       },
-      { "folke/neodev.nvim" },
     },
+
     config = function()
-      require("neodev").setup {}
       require "nvchad.configs.lspconfig"
       require "configs.lspconfig"
       vim.cmd [[
@@ -210,10 +432,20 @@ return {
             type = "go",
             request = "launch",
             name = "scanner debug",
-            buildFlags = "-tags okr,osusergo,netgo,sqlite_omit_load_extension",
+            buildFlags = "-tags okr,osusergo,netgo,sqlite_omit_load_extension,sqlite",
             env = { SCANNER_SCANNER_URL = "0.0.0.0:3000" },
             program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
-            args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/scanner/okr/config.yml" },
+            args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/scanner/localhost/config.yml" },
+            outputMode = "remote",
+          })
+
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "pipeline debug",
+            buildFlags = "-tags fts5,json1",
+            program = vim.fn.getenv "GOPATH" .. "/pipeline/cmd/",
+            outputMode = "remote",
           })
 
           table.insert(dap.configurations.go, {
@@ -221,6 +453,15 @@ return {
             request = "launch",
             name = "debug package",
             program = "${fileDirname}",
+            outputMode = "remote",
+          })
+
+          table.insert(dap.configurations.go, {
+            type = "go",
+            name = "Attach remote",
+            mode = "remote",
+            request = "attach",
+            outputMode = "remote",
           })
         end,
       },
@@ -395,6 +636,7 @@ return {
         adapters = {
           require "neotest-go" {
             experimental = { test_table = true },
+            args = { "-count=1", "-timeout=60s" },
           },
         },
       }
@@ -411,17 +653,10 @@ return {
     end,
   },
   {
-    "Exafunction/codeium.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("codeium").setup {}
-    end,
-  },
-  {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
       { "tpope/vim-dadbod",                     lazy = true },
-      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "plsql" }, lazy = true },
+      { "kristijanhusak/vim-dadbod-completion", ft = { "sql" }, lazy = true },
     },
     cmd = {
       "DBUI",
@@ -432,13 +667,6 @@ return {
     init = function()
       -- Your DBUI configuration
       vim.g.db_ui_use_nerd_fonts = 1
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "sql", "plsql" },
-        callback = function()
-          require("cmp").setup.buffer { sources = { { name = "vim-dadbod-completion" } } }
-        end,
-      })
     end,
   },
   {
@@ -569,4 +797,12 @@ return {
     end,
   },
   { "mfussenegger/nvim-jdtls" },
+  {
+    "m4xshen/hardtime.nvim",
+    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+    event = "VeryLazy",
+    opts = {
+      disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason", "oil", "dbui", "diffview*", "diffview" },
+    },
+  },
 }
