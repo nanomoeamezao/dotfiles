@@ -45,10 +45,19 @@ local gopls_caps = {
         snippetSupport = true,
         resolveSupport = {
           properties = {
+            "edit",
             "documentation",
             "details",
             "additionalTextEdits",
           },
+        },
+      },
+      completionList = {
+        itemDefaults = {
+          "editRange",
+          "insertTextFormat",
+          "insertTextMode",
+          "data",
         },
       },
       contextSupport = true,
@@ -105,15 +114,6 @@ for _, lsp in ipairs(servers) do
         staticcheck = true,
         diagnosticsDelay = "500ms",
         analyses = {
-          nillness = true,
-          unusedparams = true,
-          unusedwrite = true,
-          unusedvariable = true,
-          shadow = true,
-          nonewvars = true,
-          ST1003 = true,
-          undeclaredname = true,
-          fillreturns = true,
           useany = true,
         },
       },

@@ -81,14 +81,13 @@ return {
   },
   {
     "saghen/blink.cmp",
-    lazy = false,
-    event = "VeryLazy",
+    event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
       { "L3MON4D3/LuaSnip",   version = "v2.*" },
       { "saghen/blink.compat" },
     },
-    version = "*", -- use a release tag to download pre-built binaries
+    version = "1.*", -- use a release tag to download pre-built binaries
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
@@ -121,12 +120,11 @@ return {
           end,
           "fallback",
         },
-        ["<CR>"] = { "accept", "fallback" },
+        ["<CR>"] = { "select_and_accept", "fallback" },
         ["<C-k>"] = { "show_documentation" },
       },
 
       appearance = {
-        use_nvim_cmp_as_default = true,
         -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = "mono",
@@ -137,7 +135,12 @@ return {
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
       -- add lazydev to your completion providers
-      default = { "lazydev", "dadbod", "lsp", "path", "snippets", "buffer" },
+      default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+      per_filetype = {
+        sql = { "snippets", "dadbod" },
+        mysql = { "snippets", "dadbod" },
+        postgresql = { "snippets", "dadbod" },
+      },
       providers = {
         lazydev = {
           name = "LazyDev",
@@ -273,8 +276,14 @@ return {
           end,
         },
       },
+      documentation = {
+        auto_show = true,
+        window = {
+          border = "rounded",
+        },
+      },
     },
-
+    fuzzy = { implementation = "prefer_rust_with_warning" },
     opts_extend = { "sources.default" },
   },
   {
@@ -655,8 +664,8 @@ return {
   {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-      { "tpope/vim-dadbod",                     lazy = true },
-      { "kristijanhusak/vim-dadbod-completion", ft = { "sql" }, lazy = true },
+      { "tpope/vim-dadbod",                     lazy = false },
+      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "postgresql" }, lazy = false },
     },
     cmd = {
       "DBUI",
