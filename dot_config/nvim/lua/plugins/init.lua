@@ -6,13 +6,6 @@ local trigger_text = ";"
 
 return {
   {
-    "nvim-treesitter/nvim-treesitter",
-    opts = require "configs.treesitter",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-  },
-  {
     "hiphish/rainbow-delimiters.nvim",
     event = "VeryLazy",
     config = function()
@@ -42,27 +35,9 @@ return {
       }
     end,
   },
-  { "luckasRanarison/tree-sitter-hypr",    ft = "hypr" },
-  {
-    "lewis6991/gitsigns.nvim",
-    opts = {
-      signs = {
-        delete = { text = "│" },
-      },
-      on_attach = function() end,
-    },
-  },
-  { "williamboman/mason.nvim",             enabled = false },
-  { "NvChad/nvterm",                       enabled = false },
-  { "folke/which-key.nvim",                enabled = false },
-  { "NvChad/nvim-colorizer.lua",           enabled = false },
-  { "lukas-reineke/indent-blankline.nvim", enabled = false },
-  { "windwp/nvim-autopairs",               enabled = false },
-  { "saadparwaiz1/cmp_luasnip",            enabled = false },
-  { "hrsh7th/cmp-nvim-lua",                enabled = false },
-  { "hrsh7th/cmp-nvim-lsp",                enabled = false },
-  { "hrsh7th/cmp-buffer",                  enabled = false },
-  { "hrsh7th/cmp-path",                    enabled = false },
+  { "luckasRanarison/tree-sitter-hypr", ft = "hypr" },
+  { "NvChad/nvterm",                    enabled = false },
+  { "NvChad/nvim-colorizer.lua",        enabled = false },
 
   {
     "nvim-telescope/telescope-fzf-native.nvim",
@@ -84,8 +59,11 @@ return {
     event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      { "L3MON4D3/LuaSnip",   version = "v2.*" },
-      { "saghen/blink.compat" },
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+      },
     },
     version = "1.*", -- use a release tag to download pre-built binaries
     ---@module 'blink.cmp'
@@ -145,7 +123,6 @@ return {
         lazydev = {
           name = "LazyDev",
           module = "lazydev.integrations.blink",
-          -- make lazydev completions top priority (see `:h blink.cmp`)
           score_offset = 100,
         },
 
@@ -287,73 +264,6 @@ return {
     opts_extend = { "sources.default" },
   },
   {
-    "hrsh7th/nvim-cmp",
-    enabled = false,
-    -- opts = {
-    --   preselect = require("cmp").PreselectMode.None,
-    --   sources = {
-    --     { name = "copilot",  max_item_count = 3 },
-    --     { name = "codeium",  max_item_count = 3 },
-    --     { name = "nvim_lsp", max_item_count = 30 },
-    --     { name = "luasnip" },
-    --     { name = "buffer",   max_item_count = 3 },
-    --     { name = "nvim_lua" },
-    --     { name = "path" },
-    --   },
-    --   priority_weight = 2,
-    -- },
-  },
-  {
-    "nvim-telescope/telescope.nvim",
-    opts = {
-      extensions_list = { "fzf" },
-      extensions = {
-        smart_open = {
-          show_scores = false,
-          ignore_patterns = { "*.git/*", "*/tmp/*" },
-          match_algorithm = "fzf",
-          disable_devicons = false,
-        },
-        fzf = {
-          fuzzy = true,
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true,    -- override the file sorter
-        },
-      },
-      pickers = {
-        lsp_references = { show_line = false },
-        buffers = {
-          mappings = {
-            n = {
-              ["<c-x>"] = require("telescope.actions").delete_buffer,
-            },
-          },
-        },
-      },
-    },
-    dependencies = {
-      {
-        "nvim-telescope/telescope-ui-select.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim" },
-        config = function()
-          require("telescope").load_extension "ui-select"
-        end,
-      },
-      {
-        "nvim-telescope/telescope-live-grep-args.nvim",
-        config = function()
-          require("telescope").load_extension "live_grep_args"
-        end,
-      },
-      {
-        "benfowler/telescope-luasnip.nvim",
-        config = function()
-          require("telescope").load_extension "luasnip"
-        end,
-      },
-    },
-  },
-  {
     "danielfalk/smart-open.nvim",
     config = function()
       require("telescope").load_extension "smart_open"
@@ -370,25 +280,6 @@ return {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
       },
     },
-  },
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      {
-        "nvimtools/none-ls.nvim",
-        config = function()
-          require("configs.null-ls").setup()
-        end,
-      },
-    },
-
-    config = function()
-      require "nvchad.configs.lspconfig"
-      require "configs.lspconfig"
-      vim.cmd [[
-      hi @lsp.type.parameter  guifg=Orange
-      ]]
-    end,
   },
   {
     "kylechui/nvim-surround",
