@@ -17,6 +17,19 @@ M.ui = {
     enabled = false,
     lazyload = false,
   },
+  statusline = {
+    theme = "default",
+    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "nvimlint", "diagnostics", "lsp", "cwd", "cursor" },
+    modules = {
+      nvimlint = function()
+        local linters = require("lint").get_running()
+        if #linters == 0 then
+          return "󰦕"
+        end
+        return "󱉶 " .. table.concat(linters, ", ")
+      end,
+    },
+  },
 }
 
 M.lsp = {

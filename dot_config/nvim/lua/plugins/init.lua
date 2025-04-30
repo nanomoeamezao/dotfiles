@@ -1,9 +1,3 @@
-local function has_words_before()
-  local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
-end
-local trigger_text = ";"
-
 return {
   {
     "hiphish/rainbow-delimiters.nvim",
@@ -51,7 +45,7 @@ return {
       enable_cmp_source = false,
       enable_chat = false,
     },
-    enabled = false,
+    enabled = true,
     event = "BufEnter",
   },
   {
@@ -68,199 +62,9 @@ return {
     version = "1.*", -- use a release tag to download pre-built binaries
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
-    opts = {
-      signature = { enabled = true },
-      -- 'default' for mappings similar to built-in completion
-      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
-      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
-      -- See the full "keymap" documentation for information on defining your own keymap.
-      keymap = {
-        preset = "default",
-        ["<Tab>"] = {
-          function(cmp)
-            if cmp.is_visible() then
-              return cmp.select_next()
-            elseif require("luasnip").locally_jumpable(1) then
-              require("luasnip").jump(1)
-            elseif has_words_before() then
-              return cmp.show()
-            end
-          end,
-          "fallback",
-        },
-        ["<S-Tab>"] = {
-          function(cmp)
-            if cmp.is_visible() then
-              return cmp.select_prev()
-            elseif require("luasnip").locally_jumpable(-1) then
-              require("luasnip").jump(-1)
-            end
-          end,
-          "fallback",
-        },
-        ["<CR>"] = { "select_and_accept", "fallback" },
-        ["<C-k>"] = { "show_documentation" },
-      },
-
-      appearance = {
-        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = "mono",
-      },
-    },
-
-    -- Default list of enabled providers defined so that you can extend it
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
-    sources = {
-      -- add lazydev to your completion providers
-      default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-      per_filetype = {
-        sql = { "snippets", "dadbod" },
-        mysql = { "snippets", "dadbod" },
-        postgresql = { "snippets", "dadbod" },
-      },
-      providers = {
-        lazydev = {
-          name = "LazyDev",
-          module = "lazydev.integrations.blink",
-          score_offset = 100,
-        },
-
-        -- codeium = { name = "Codeium", module = "codeium.blink", score_offset = 100, async = true },
-        -- codeium = {
-        --   name = "codeium",
-        --   module = "blink.compat.source",
-        --   score_offset = 100,
-        -- },
-        lsp = {
-          name = "lsp",
-          enabled = true,
-          module = "blink.cmp.sources.lsp",
-          -- When linking markdown notes, I would get snippets and text in the
-          -- suggestions, I want those to show only if there are no LSP
-          -- suggestions
-          -- Disabling fallbacks as my snippets wouldn't show up
-          -- Enabled fallbacks as this seems to be working now
-          fallbacks = { "snippets", "buffer" },
-          score_offset = 90, -- the higher the number, the higher the priority
-        },
-        path = {
-          name = "path",
-          module = "blink.cmp.sources.path",
-          score_offset = 25,
-          -- When typing a path, I would get snippets and text in the
-          -- suggestions, I want those to show only if there are no path
-          -- suggestions
-          fallbacks = { "snippets", "buffer" },
-          opts = {
-            trailing_slash = false,
-            label_trailing_slash = true,
-            get_cwd = function(context)
-              return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
-            end,
-            show_hidden_files_by_default = true,
-          },
-        },
-        buffer = {
-          name = "Buffer",
-          enabled = true,
-          max_items = 3,
-          module = "blink.cmp.sources.buffer",
-          min_keyword_length = 4,
-          score_offset = 15, -- the higher the number, the higher the priority
-        },
-        dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-        snippets = {
-          name = "snippets",
-          enabled = true,
-          max_items = 8,
-          min_keyword_length = 2,
-          module = "blink.cmp.sources.snippets",
-          score_offset = 85, -- the higher the number, the higher the priority
-          -- Only show snippets if I type the trigger_text characters, so
-          -- to expand the "bash" snippet, if the trigger_text is ";" I have to
-          -- type ";bash"
-          should_show_items = function()
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
-            -- NOTE: remember that `trigger_text` is modified at the top of the file
-            return before_cursor:match(trigger_text .. "%w*$") ~= nil
-          end,
-          -- After accepting the completion, delete the trigger_text characters
-          -- from the final inserted text
-          transform_items = function(_, items)
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
-            local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
-            if trigger_pos then
-              for _, item in ipairs(items) do
-                item.textEdit = {
-                  newText = item.insertText or item.label,
-                  range = {
-                    start = { line = vim.fn.line "." - 1, character = trigger_pos - 1 },
-                    ["end"] = { line = vim.fn.line "." - 1, character = col },
-                  },
-                }
-              end
-            end
-            -- NOTE: After the transformation, I have to reload the luasnip source
-            -- Otherwise really crazy shit happens and I spent way too much time
-            -- figurig this out
-            vim.schedule(function()
-              require("blink.cmp").reload "snippets"
-            end)
-            return items
-          end,
-        },
-      },
-
-      snippets = {
-        preset = "luasnip",
-        -- This comes from the luasnip extra, if you don't add it, won't be able to
-        -- jump forward or backward in luasnip snippets
-        -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
-        expand = function(snippet)
-          require("luasnip").lsp_expand(snippet)
-        end,
-        active = function(filter)
-          if filter and filter.direction then
-            return require("luasnip").jumpable(filter.direction)
-          end
-          return require("luasnip").in_snippet()
-        end,
-        jump = function(direction)
-          require("luasnip").jump(direction)
-        end,
-      },
-
-      cmdline = {
-        enabled = false,
-        sources = function()
-          local type = vim.fn.getcmdtype()
-          if type == "/" or type == "?" then
-            return { "buffer" }
-          end
-          if type == ":" then
-            return { "cmdline" }
-          end
-          return {}
-        end,
-      },
-      completion = {
-        menu = {
-          auto_show = function(ctx)
-            return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
-          end,
-        },
-      },
-      documentation = {
-        auto_show = true,
-        window = {
-          border = "rounded",
-        },
-      },
-    },
-    fuzzy = { implementation = "prefer_rust_with_warning" },
+    opts = function()
+      return require "configs.blink"
+    end,
     opts_extend = { "sources.default" },
   },
   {
@@ -361,6 +165,25 @@ return {
             name = "Attach remote",
             mode = "remote",
             request = "attach",
+            outputMode = "remote",
+          })
+          table.insert(dap.configurations.go, {
+            type = "go",
+            request = "launch",
+            name = "exporter debug",
+            program = vim.fn.getenv "GOPATH" .. "/scanner-parser/",
+            args = {
+              "--db1",
+              vim.fn.getenv "GOPATH" .. "/scanner/scanner.db",
+              "--db2",
+              vim.fn.getenv "GOPATH" .. "/scanner/vuln.db",
+              "--sql1file",
+              vim.fn.getenv "GOPATH" .. "/scanner-parser/query1.sql",
+              "--sql2file",
+              vim.fn.getenv "GOPATH" .. "/scanner-parser/query2.sql",
+              "--db2cols",
+              "identifier, description",
+            },
             outputMode = "remote",
           })
         end,
@@ -470,7 +293,7 @@ return {
   {
     "kevinhwang91/nvim-ufo",
     event = "VeryLazy",
-    enabled = true,
+    enabled = false,
     dependencies = {
       "kevinhwang91/promise-async",
       "nvim-treesitter/nvim-treesitter",
@@ -584,6 +407,7 @@ return {
   },
   {
     "folke/trouble.nvim",
+    enabled = true,
     keys = {
       {
         "<leader>fd",
@@ -633,6 +457,9 @@ return {
         },
         indent = {
           enable = true,
+          exclude_filetypes = {
+            "*.dbout",
+          },
         },
       }
     end,
@@ -640,6 +467,7 @@ return {
   {
     "luukvbaal/statuscol.nvim",
     event = "VeryLazy",
+    enable = false,
     config = function()
       local builtin = require "statuscol.builtin"
       local segments = {
@@ -696,13 +524,10 @@ return {
       require("marks").setup {}
     end,
   },
-  { "mfussenegger/nvim-jdtls" },
   {
-    "m4xshen/hardtime.nvim",
-    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-    event = "VeryLazy",
-    opts = {
-      disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason", "oil", "dbui", "diffview*", "diffview" },
-    },
+    "mfussenegger/nvim-lint",
+    config = function()
+      require "configs.nvim-lint"
+    end,
   },
 }

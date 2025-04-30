@@ -4,27 +4,27 @@ local b = null_ls.builtins
 
 local sources = {
   -- Proto
-  b.diagnostics.buf.with { args = { "lint" } },
+  -- b.diagnostics.buf.with { args = { "lint" } },
   -- b.formatting.buf,
 
   -- Yaml\json
   b.formatting.prettierd,
-  b.diagnostics.yamllint,
+  -- b.diagnostics.yamllint,
 
-  b.diagnostics.checkmake,
+  -- b.diagnostics.checkmake,
 
   -- b.formatting.pg_format,
   b.formatting.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
-  b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
+  -- b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
 
   -- Lua
   b.formatting.stylua,
-  b.diagnostics.selene,
+  -- b.diagnostics.selene,
 
   -- Shell
   b.formatting.shfmt,
 
-  b.diagnostics.npm_groovy_lint,
+  -- b.diagnostics.npm_groovy_lint,
 
   -- Go
   -- b.formatting.gofumpt,
@@ -32,9 +32,13 @@ local sources = {
   --   args = { "-company-prefixes", "gitlab.etecs.ru/polygon", "$FILENAME" },
   -- },
   -- b.formatting.goimports,
-  -- b.diagnostics.golangci_lint.with { extra_args = { "--fast" } },
   -- b.diagnostics.golangci_lint.with {
-  --   extra_args = { "-c", vim.fn.getenv "GOPATH" .. "/utils/.golangci.yml" },
+  --   prefer_local = ".tools",
+  --   extra_args = {
+  --     "--build-tags=production,dbtest,se,sqlite",
+  --     "--config=" .. vim.fn.getenv "GOPATH" .. "/scanner/.golangci.yml",
+  --     "--tests=false"
+  --   }
   -- },
 
   -- Git
