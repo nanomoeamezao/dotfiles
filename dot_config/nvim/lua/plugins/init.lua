@@ -29,17 +29,13 @@ return {
       }
     end,
   },
-  { "luckasRanarison/tree-sitter-hypr", ft = "hypr" },
-  { "NvChad/nvterm",                    enabled = false },
-  { "NvChad/nvim-colorizer.lua",        enabled = false },
-
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     event = "VeryLazy",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
   },
   {
-    "aliaksandr-trush/codeium.nvim",
+    "Exafunction/codeium.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       enable_cmp_source = false,
@@ -50,22 +46,31 @@ return {
   },
   {
     "saghen/blink.cmp",
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "rafamadriz/friendly-snippets",
       {
         "L3MON4D3/LuaSnip",
         version = "v2.*",
-        build = "make install_jsregexp",
+        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        config = function(_, opts)
+          require("luasnip").config.set_config(opts)
+          require "nvchad.configs.luasnip"
+        end,
+      },
+      {
+        "windwp/nvim-autopairs",
+        opts = {
+          fast_wrap = {},
+          disable_filetype = { "TelescopePrompt", "vim" },
+        },
       },
     },
     version = "1.*", -- use a release tag to download pre-built binaries
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
+    opts_extend = { "sources.default" },
     opts = function()
       return require "configs.blink"
     end,
-    opts_extend = { "sources.default" },
   },
   {
     "danielfalk/smart-open.nvim",

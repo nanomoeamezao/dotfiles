@@ -1,11 +1,10 @@
 local vfn = vim.fn
 local map = vim.keymap.set
-local conf = require("nvconfig").lsp
 
 local lspconfig = require "lspconfig"
 
 dofile(vim.g.base46_cache .. "lsp")
-require("nvchad.lsp").diagnostic_config()
+-- require("nvchad.lsp").diagnostic_config()
 
 local servers = {
   "gopls",
