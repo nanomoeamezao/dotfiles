@@ -3,28 +3,17 @@ local null_ls = require "null-ls"
 local b = null_ls.builtins
 
 local sources = {
-  -- Proto
-  -- b.diagnostics.buf.with { args = { "lint" } },
   -- b.formatting.buf,
 
-  -- Yaml\json
-  b.formatting.prettierd,
-  -- b.diagnostics.yamllint,
-
-  -- b.diagnostics.checkmake,
-
+  -- b.formatting.prettierd,
   -- b.formatting.pg_format,
   b.formatting.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
-  -- b.diagnostics.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
 
   -- Lua
   b.formatting.stylua,
-  -- b.diagnostics.selene,
 
   -- Shell
   b.formatting.shfmt,
-
-  -- b.diagnostics.npm_groovy_lint,
 
   -- Go
   -- b.formatting.gofumpt,
@@ -32,18 +21,9 @@ local sources = {
   --   args = { "-company-prefixes", "gitlab.etecs.ru/polygon", "$FILENAME" },
   -- },
   -- b.formatting.goimports,
-  -- b.diagnostics.golangci_lint.with {
-  --   prefer_local = ".tools",
-  --   extra_args = {
-  --     "--build-tags=production,dbtest,se,sqlite",
-  --     "--config=" .. vim.fn.getenv "GOPATH" .. "/scanner/.golangci.yml",
-  --     "--tests=false"
-  --   }
-  -- },
 
   -- Git
   b.code_actions.gitsigns,
-  -- b.diagnostics.commitlint,
 }
 
 local M = {}

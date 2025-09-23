@@ -21,20 +21,12 @@ map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "toggle line number" })
 map("n", "<leader>rn", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
 map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
 
-
 -- global lsp mappings
 map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
-
--- tabufline
-map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
 
 map("n", "<leader>x", function()
   require("nvchad.tabufline").close_buffer()
 end, { desc = "buffer close" })
-
--- Comment
-map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
-map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
@@ -45,11 +37,9 @@ map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live 
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
 map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
-map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
 map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
-map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
 
 map("n", "<leader>th", function()
   require("nvchad.themes").open()
@@ -80,9 +70,6 @@ end)
 map("n", "<leader>fr", function()
   require("telescope.builtin").lsp_references {}
 end)
-map("n", "<leader>m", function()
-  vim.lsp.stop_client(vim.lsp.get_clients())
-end)
 map("n", "<leader>cs", function()
   require("telescope").extensions.luasnip.luasnip {}
 end)
@@ -102,9 +89,6 @@ map("n", "<leader>co", function()
     end,
     apply = true,
   }
-end)
-map("n", "<leader>cu", function()
-  require("symbol-usage").toggle_globally()
 end)
 map("v", "<leader>ca", function()
   vim.lsp.buf.code_action()
@@ -174,8 +158,6 @@ map("n", "<C-ы>", "<cmd> w <CR>")
 map("n", "<C-в>", "<C-d>")
 map("n", "]q", "<cmd>cn<CR>")
 
-map("n", "tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Goto next buffer" })
-map("n", "S-tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Goto prev buffer" })
 map("n", "<leader>x", "<cmd>bdelete!<CR>", { desc = "Close buffer" })
 map("n", "]c", function()
   require("gitsigns").nav_hunk "next"
@@ -184,7 +166,7 @@ map("n", "[c", function()
   require("gitsigns").nav_hunk "prev"
 end, { desc = "go to prev change hunk" })
 
-map("n", "<leader>hP", function()
+map("n", "<leader>hp", function()
   require("gitsigns").preview_hunk()
 end, { desc = "preview hunk" })
 
@@ -200,12 +182,6 @@ map("n", "<leader>hr", function()
   require("harpoon"):list():remove()
 end, { desc = "Remove harpoon mark" })
 
-map("n", "<leader>hn", function()
-  require("harpoon"):list():next()
-end, { desc = "Go to next harpoon mark" })
-map("n", "<leader>hp", function()
-  require("harpoon"):list():prev()
-end, { desc = "Go to previous harpoon mark" })
 local function toggle_telescope(harpoon_files)
   local conf = require("telescope.config").values
   local file_paths = {}
@@ -249,3 +225,7 @@ end)
 map("n", "<leader>qd", function()
   require("persistence").stop()
 end)
+
+map("n", "<leader>dh", "<cmd>DiffviewFileHistory %<cr>", { desc = "View git history for current file" })
+map("n", "<leader>do", "<cmd>DiffviewOpen<cr>", { desc = "View modified files" })
+map("n", "<leader>dc", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" })

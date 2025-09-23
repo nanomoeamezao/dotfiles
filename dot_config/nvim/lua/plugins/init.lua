@@ -35,13 +35,15 @@ return {
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
   },
   {
-    "Exafunction/codeium.nvim",
+    "Exafunction/windsurf.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      enable_cmp_source = false,
-      enable_chat = false,
-    },
     enabled = true,
+    config = function()
+      require("codeium").setup {
+        enable_cmp_source = false,
+        enable_chat = false,
+      }
+    end,
     event = "BufEnter",
   },
   {
@@ -111,23 +113,6 @@ return {
     config = function() end,
   },
   {
-    "zbirenbaum/copilot.lua",
-    lazy = false,
-    enabled = false,
-    config = function()
-      vim.defer_fn(function()
-        require("copilot").setup {
-          suggestion = {
-            enable = false,
-          },
-          panel = {
-            enable = false,
-          },
-        }
-      end, 100)
-    end,
-  },
-  {
     "mfussenegger/nvim-dap",
     dependencies = {
       {
@@ -141,7 +126,7 @@ return {
             type = "go",
             request = "launch",
             name = "scanner debug",
-            buildFlags = "-tags okr,osusergo,netgo,sqlite_omit_load_extension,sqlite",
+            buildFlags = "-tags se,sqlite,production,okr,osusergo,netgo,sqlite_omit_load_extension,sqlite",
             env = { SCANNER_SCANNER_URL = "0.0.0.0:3000" },
             program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
             args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/scanner/localhost/config.yml" },
@@ -261,6 +246,8 @@ return {
     "sindrets/diffview.nvim",
     config = function()
       require("diffview").setup {
+        enhanced_diff_hl = true,
+        use_icons = true,
         view = {
           merge_tool = {
             layout = "diff1_plain",
@@ -268,6 +255,25 @@ return {
           },
         },
       }
+      local function set_diff_highlights()
+        local is_dark = vim.o.background == "dark"
+        if is_dark then
+          vim.api.nvim_set_hl(0, "DiffAdd", { fg = "none", bg = "#2e4b2e", bold = true })
+          vim.api.nvim_set_hl(0, "DiffDelete", { fg = "none", bg = "#4c1e15", bold = true })
+          vim.api.nvim_set_hl(0, "DiffChange", { fg = "none", bg = "#45565c", bold = true })
+          vim.api.nvim_set_hl(0, "DiffText", { fg = "none", bg = "#996d74", bold = true })
+        else
+          vim.api.nvim_set_hl(0, "DiffAdd", { fg = "none", bg = "palegreen", bold = true })
+          vim.api.nvim_set_hl(0, "DiffDelete", { fg = "none", bg = "tomato", bold = true })
+          vim.api.nvim_set_hl(0, "DiffChange", { fg = "none", bg = "lightblue", bold = true })
+          vim.api.nvim_set_hl(0, "DiffText", { fg = "none", bg = "lightpink", bold = true })
+        end
+      end
+      set_diff_highlights()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        group = vim.api.nvim_create_augroup("DiffColors", { clear = true }),
+        callback = set_diff_highlights,
+      })
     end,
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
   },
@@ -344,7 +350,7 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "nvim-neotest/neotest-go",
+      { "fredrikaverpil/neotest-golang", version = "*" }, -- Installation
       "nvim-neotest/nvim-nio",
       -- Your other test adapters here
     },
@@ -360,23 +366,11 @@ return {
         },
       }, neotest_ns)
       require("neotest").setup {
-        -- your neotest config here
         adapters = {
-          require "neotest-go" {
-            experimental = { test_table = true },
-            args = { "-count=1", "-timeout=60s" },
+          require "neotest-golang" {
+            go_test_args = { "--count=1", "--timeout=60s" },
           },
         },
-      }
-    end,
-  },
-  {
-    "Wansmer/symbol-usage.nvim",
-    enabled = false,
-    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    config = function()
-      require("symbol-usage").setup {
-        implementations = { disable = true },
       }
     end,
   },
@@ -470,69 +464,27 @@ return {
     end,
   },
   {
-    "luukvbaal/statuscol.nvim",
-    event = "VeryLazy",
-    enable = false,
-    config = function()
-      local builtin = require "statuscol.builtin"
-      local segments = {
-        {
-          sign = {
-            name = { "[DapBreakpoint|Marks*]" },
-            maxwidth = 1,
-          },
-          click = "v:lua.ScSa",
-        },
-        {
-          sign = { name = { "Diagnostic" }, maxwidth = 1, auto = true },
-          click = "v:lua.ScSa",
-        },
-        { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
-        { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-      }
-
-      -- Check if the current directory is a git repo, if it is show the gitsigns in the gutter
-      local current_rev = vim.fn.system "git rev-parse --show-toplevel 2> /dev/null"
-      if current_rev ~= "" then
-        table.insert(segments, {
-          sign = {
-            namespace = { "gitsign" },
-            maxwidth = 1,
-          },
-          click = "v:lua.ScSa",
-        })
-      end
-
-      table.insert(segments, {
-        sign = {
-          name = { ".*" },
-          maxwidth = 1,
-          colwidth = 1,
-          wrap = true,
-          auto = true,
-        },
-        click = "v:lua.ScSa",
-      })
-
-      local setup_table = {
-        relculright = true,
-        segments = segments,
-      }
-      require("statuscol").setup(setup_table)
-    end,
-  },
-  {
-    "chentoast/marks.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    config = function()
-      require("marks").setup {}
-    end,
-  },
-  {
     "mfussenegger/nvim-lint",
     config = function()
       require "configs.nvim-lint"
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    opts = {
+      multiline_threshold = 1, -- Maximum number of lines to show for a single context
+    },
+  },
+  {
+    "unblevable/quick-scope",
+    event = "VeryLazy",
+    opts = {},
+    config = function()
+      vim.cmd [[
+          highlight QuickScopePrimary guifg='#af5fff' gui=nocombine
+          highlight QuickScopeSecondary guifg='#5fffff' gui=nocombine
+      ]]
     end,
   },
 }

@@ -13,15 +13,7 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 AUTO_NOTIFY_IGNORE+=("mpv" "mpv_url")
 
-# # context specific colors
-# export NNN_COLORS="#4cd00403"
-# Each context (aka tab) has different color: green, yellow, blue, purple
 export NNN_COLORS="#02030405"
-
-# export NNN_FCOLORS='c1e2272e006033f7c6d6abc4' # defaults
-# directories are bright yellow
-# executables are green (02, 76)
-# symolik links are purple (05)
 export NNN_FCOLORS='c1e20b02006005f7c6d6abc4'
 export NNN_OPTS='dHUeQaoru'
 export NNN_PLUG='d:diffs;p:preview-tui;m:mtpmount;o:open;O:open_with;t:treeview;l:bat'
@@ -29,3 +21,4 @@ export NNN_ICONLOOKUP=1
 export NNN_OPENER=rifle
 export NNN_ARCHIVE="\\.(7z|a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|rar|rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)$"
 export NNN_TERMINAL='foot'
+export XDG_CONFIG_HOME='/home/neozumm/.config'

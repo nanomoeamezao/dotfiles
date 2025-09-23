@@ -1,10 +1,8 @@
 local vfn = vim.fn
 local map = vim.keymap.set
 
-local lspconfig = require "lspconfig"
-
 dofile(vim.g.base46_cache .. "lsp")
--- require("nvchad.lsp").diagnostic_config()
+require("nvchad.lsp").diagnostic_config()
 
 local servers = {
   "gopls",
@@ -87,7 +85,7 @@ end
 
 for _, lsp in ipairs(servers) do
   local caps = get_capabilities(lsp)
-  lspconfig[lsp].setup {
+  vim.lsp.config(lsp, {
     capabilities = caps,
     on_attach = function(client, bufnr)
       on_attach_lspconfig(client, bufnr)
@@ -116,7 +114,7 @@ for _, lsp in ipairs(servers) do
           regenerate_cgo = false,
           upgrade_dependency = false,
         },
-        buildFlags = { "-tags", "se,vault,dbtest,file_search_feature,mage" },
+        buildFlags = { "-tags", "se,vault,dbtest,file_search_feature,mage,licensing" },
         completeUnimported = true,
         staticcheck = true,
         diagnosticsDelay = "500ms",
@@ -139,5 +137,6 @@ for _, lsp in ipairs(servers) do
         end
       end,
     },
-  }
+  })
+  vim.lsp.enable(lsp)
 end

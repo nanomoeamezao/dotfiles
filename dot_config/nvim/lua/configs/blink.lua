@@ -1,10 +1,6 @@
 local trigger_text = ";"
 return {
   signature = { enabled = true },
-  -- 'default' for mappings similar to built-in completion
-  -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
-  -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
-  -- See the full "keymap" documentation for information on defining your own keymap.
   keymap = {
     preset = "default",
     ["<Tab>"] = {
@@ -32,15 +28,10 @@ return {
   },
 
   appearance = {
-    -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-    -- Adjusts spacing to ensure icons are aligned
     nerd_font_variant = "mono",
   },
 
-  -- Default list of enabled providers defined so that you can extend it
-  -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
-    -- add lazydev to your completion providers
     default = { "codeium", "lazydev", "lsp", "path", "snippets", "buffer" },
     per_filetype = {
       sql = { "snippets", "dadbod" },
@@ -54,7 +45,7 @@ return {
         score_offset = 100,
       },
 
-      codeium = { name = "Codeium", module = "codeium.blink", score_offset = 100, async = true },
+      codeium = { name = "Codeium", module = "codeium.blink", max_items = 2, score_offset = 100, async = true },
       path = {
         name = "path",
         module = "blink.cmp.sources.path",
@@ -93,7 +84,6 @@ return {
   },
   snippets = { preset = "luasnip" },
   cmdline = {
-    enabled = false,
     sources = function()
       local type = vim.fn.getcmdtype()
       if type == "/" or type == "?" then
