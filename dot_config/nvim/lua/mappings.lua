@@ -113,6 +113,8 @@ end, { desc = "preview hunk" })
 map("n", "<leader>cc", "<cmd>G commit -a<CR>", { desc = "commit all changes" })
 map("n", "<leader>cp", "<cmd>G push<CR>", { desc = "git push" })
 
+-- dap
+
 map("n", "<F10>", "<cmd> DapContinue <CR>", { desc = "dap continue" })
 map("n", "<F9>", function()
   require("dap").step_over()
@@ -127,18 +129,15 @@ end, { desc = "dap toggle breakpoint with condition" })
 map("n", "<F6>", function()
   require("dap-go").debug_test()
 end, { desc = "dap debug test" })
-map("n", "<leader>de", function()
-  require("dapui").eval()
-end, { desc = "eval under cursor" })
-map("n", "<leader>dt", function()
-  require("dapui").toggle {}
-end, { desc = "toggle dap ui" })
 map("n", "<leader>db", function()
   require("telescope").extensions.dap.list_breakpoints {}
-end, { desc = "list breakpoints" })
+end, { desc = "dap list breakpoints" })
 map("n", "<leader>dv", function()
   require("telescope").extensions.dap.variables {}
-end, { desc = "list variables" })
+end, { desc = "dap list variables" })
+map("n", "<leader>dt", "<cmd>DapViewToggle<cr>", { desc = "dap toggle view" })
+
+-- test
 
 map("n", "<F1>", function()
   require("neotest").run.run { enter = true }
@@ -190,15 +189,15 @@ local function toggle_telescope(harpoon_files)
   end
 
   require("telescope.pickers")
-      .new({}, {
-        prompt_title = "Harpoon",
-        finder = require("telescope.finders").new_table {
-          results = file_paths,
-        },
-        previewer = conf.file_previewer {},
-        sorter = conf.generic_sorter {},
-      })
-      :find()
+    .new({}, {
+      prompt_title = "Harpoon",
+      finder = require("telescope.finders").new_table {
+        results = file_paths,
+      },
+      previewer = conf.file_previewer {},
+      sorter = conf.generic_sorter {},
+    })
+    :find()
 end
 
 map("n", "<leader>fh", function()

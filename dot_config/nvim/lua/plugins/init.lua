@@ -157,79 +157,81 @@ return {
             request = "attach",
             outputMode = "remote",
           })
-          table.insert(dap.configurations.go, {
-            type = "go",
-            request = "launch",
-            name = "exporter debug",
-            program = vim.fn.getenv "GOPATH" .. "/scanner-parser/",
-            args = {
-              "--db1",
-              vim.fn.getenv "GOPATH" .. "/scanner/scanner.db",
-              "--db2",
-              vim.fn.getenv "GOPATH" .. "/scanner/vuln.db",
-              "--sql1file",
-              vim.fn.getenv "GOPATH" .. "/scanner-parser/query1.sql",
-              "--sql2file",
-              vim.fn.getenv "GOPATH" .. "/scanner-parser/query2.sql",
-              "--db2cols",
-              "identifier, description",
-            },
-            outputMode = "remote",
-          })
         end,
       },
       {
-        "rcarriga/nvim-dap-ui",
-        config = function()
-          require("dapui").setup {
-            render = {
-              max_type_length = nil,
-              max_value_line = nil,
+        "igorlfs/nvim-dap-view",
+        ---@module 'dap-view'
+        ---@type dapview.Config
+        opts = {
+          windows = {
+            terminal = {
+              hide = { "delve" },
             },
-            expand_lines = true,
-            layouts = {
-              {
-                elements = {
-                  -- Elements can be strings or table with id and size keys.
-                  { id = "scopes", size = 0.25 },
-                  "breakpoints",
-                  "watches",
-                },
-                size = 40, -- 40 columns
-                position = "left",
-              },
-              {
-                elements = {
-                  "repl",
-                },
-                size = 0.25, -- 25% of total lines
-                position = "bottom",
-              },
+          },
+          winbar = {
+            sections = {
+              "watches",
+              "repl",
+              "breakpoints",
+              "scopes",
             },
-            controls = {
-              -- dependencies Neovim nightly (or 0.8 when released)
-              enabled = true,
-              -- Display controls in this element
-              element = "repl",
-            },
-          }
-          local dap, dapui = require "dap", require "dapui"
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open {}
-          end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close {}
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close {}
-          end
-        end,
+          },
+          auto_toggle = false,
+        },
       },
+      -- {
+      --   "rcarriga/nvim-dap-ui",
+      --   config = function()
+      --     require("dapui").setup {
+      --       render = {
+      --         max_type_length = nil,
+      --         max_value_line = nil,
+      --       },
+      --       expand_lines = true,
+      --       layouts = {
+      --         {
+      --           elements = {
+      --             -- Elements can be strings or table with id and size keys.
+      --             { id = "scopes", size = 0.25 },
+      --             "breakpoints",
+      --             "watches",
+      --           },
+      --           size = 40, -- 40 columns
+      --           position = "left",
+      --         },
+      --         {
+      --           elements = {
+      --             "repl",
+      --           },
+      --           size = 0.25, -- 25% of total lines
+      --           position = "bottom",
+      --         },
+      --       },
+      --       controls = {
+      --         -- dependencies Neovim nightly (or 0.8 when released)
+      --         enabled = true,
+      --         -- Display controls in this element
+      --         element = "repl",
+      --       },
+      --     }
+      --     local dap, dapui = require "dap", require "dapui"
+      --     dap.listeners.after.event_initialized["dapui_config"] = function()
+      --       dapui.open {}
+      --     end
+      --     dap.listeners.before.event_terminated["dapui_config"] = function()
+      --       dapui.close {}
+      --     end
+      --     dap.listeners.before.event_exited["dapui_config"] = function()
+      --       dapui.close {}
+      --     end
+      --   end,
+      -- },
       {
         "theHamsta/nvim-dap-virtual-text",
         config = function()
           require("nvim-dap-virtual-text").setup {
-            virt_text_pos = "eol",
+            virt_text_pos = "inline" or "eol",
           }
         end,
       },
@@ -324,7 +326,7 @@ return {
       }
     end,
   },
-  { "tpope/vim-git",              lazy = false },
+  { "tpope/vim-git", lazy = false },
   {
     "akinsho/git-conflict.nvim",
     lazy = false,
@@ -333,7 +335,7 @@ return {
       require("git-conflict").setup {
         default_mappings = true,
         disable_diagnostics = true, -- This will disable the diagnostics in a buffer whilst it is conflicted
-        highlights = {              -- They must have background color, otherwise the default color will be used
+        highlights = { -- They must have background color, otherwise the default color will be used
           incoming = "DiffText",
           current = "DiffAdd",
         },
@@ -350,8 +352,15 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      { "fredrikaverpil/neotest-golang", version = "*" }, -- Installation
+      {
+        "fredrikaverpil/neotest-golang",
+        version = "*",
+        build = function()
+          vim.system({ "go", "install", "gotest.tools/gotestsum@latest" }):wait() -- Optional, but recommended
+        end,
+      }, -- Installation
       "nvim-neotest/nvim-nio",
+      "antoinemadec/FixCursorHold.nvim",
       -- Your other test adapters here
     },
     config = function()
@@ -369,6 +378,8 @@ return {
         adapters = {
           require "neotest-golang" {
             go_test_args = { "--count=1", "--timeout=60s" },
+            runner = "gotestsum", -- Optional, but recommended
+            warn_test_name_dupes = false,
           },
         },
       }
@@ -377,7 +388,7 @@ return {
   {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-      { "tpope/vim-dadbod",                     lazy = false },
+      { "tpope/vim-dadbod", lazy = false },
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "postgresql" }, lazy = false },
     },
     cmd = {
@@ -398,9 +409,9 @@ return {
     config = function()
       require("persistence").setup {
         dir = vim.fn.expand(vim.fn.stdpath "state" .. "/sessions/"), -- directory where session files are saved
-        options = { "buffers", "curdir", "tabpages", "winsize" },    -- sessionoptions used for saving
-        pre_save = nil,                                              -- a function to call before saving the session
-        save_empty = false,                                          -- don't save if there are no open file buffers
+        options = { "buffers", "curdir", "tabpages", "winsize" }, -- sessionoptions used for saving
+        pre_save = nil, -- a function to call before saving the session
+        save_empty = false, -- don't save if there are no open file buffers
       }
     end,
   },
@@ -486,5 +497,26 @@ return {
           highlight QuickScopeSecondary guifg='#5fffff' gui=nocombine
       ]]
     end,
+  },
+  {
+    "cbochs/portal.nvim",
+    event = "VeryLazy",
+    -- Optional dependencies
+    dependencies = {
+      "cbochs/grapple.nvim",
+      "ThePrimeagen/harpoon",
+    },
+    config = function()
+      vim.keymap.set("n", "<leader>o", "<cmd>Portal jumplist backward<cr>")
+      vim.keymap.set("n", "<leader>i", "<cmd>Portal jumplist forward<cr>")
+    end,
+  },
+  {
+    "junegunn/gv.vim",
+    cmd = "GV",
+  },
+  {
+    "farhanmustar/fugitive-delta.nvim",
+    event = "VeryLazy",
   },
 }

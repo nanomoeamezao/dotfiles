@@ -25,6 +25,6 @@ opt.smoothscroll = true
 vim.cmd "set diffopt+=linematch:50"
 
 opt.langmap =
-"ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
+  "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
 -- vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
 -- o.cursorlineopt ='both' -- to enable cursorline!
