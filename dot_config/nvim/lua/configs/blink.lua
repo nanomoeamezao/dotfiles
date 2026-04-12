@@ -32,7 +32,7 @@ return {
   },
 
   sources = {
-    default = { "codeium", "lazydev", "lsp", "path", "snippets", "buffer" },
+    default = { "conventional_commits", "codeium", "lazydev", "lsp", "path", "snippets", "buffer" },
     per_filetype = {
       sql = { "snippets", "dadbod" },
       mysql = { "snippets", "dadbod" },
@@ -43,6 +43,15 @@ return {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
         score_offset = 100,
+      },
+      conventional_commits = {
+        name = "Conventional Commits",
+        module = "blink-cmp-conventional-commits",
+        enabled = function()
+          return vim.bo.filetype == "gitcommit"
+        end,
+        ---@module 'blink-cmp-conventional-commits'
+        ---@type blink-cmp-conventional-commits.Options
       },
 
       codeium = { name = "Codeium", module = "codeium.blink", max_items = 2, score_offset = 100, async = true },
@@ -106,8 +115,9 @@ return {
     ghost_text = { enabled = true },
     documentation = {
       auto_show = true,
+      auto_show_delay_ms = 200,
       window = {
-        border = "rounded",
+        border = "single",
       },
     },
   },

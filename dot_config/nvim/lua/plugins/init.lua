@@ -51,6 +51,7 @@ return {
     event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "rafamadriz/friendly-snippets",
+      { "disrupted/blink-cmp-conventional-commits" },
       {
         "L3MON4D3/LuaSnip",
         version = "v2.*",
@@ -75,16 +76,10 @@ return {
     end,
   },
   {
-    "danielfalk/smart-open.nvim",
-    config = function()
-      require("telescope").load_extension "smart_open"
-    end,
-    dependencies = { "kkharji/sqlite.lua" },
-  },
-  {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
     opts = {
+      runtime = "LuaJIT",
       library = {
         -- See the configuration section for more details
         -- Load luvit types when the `vim.uv` word is found
@@ -101,10 +96,7 @@ return {
     lazy = false,
   },
   {
-    "ggandor/leap.nvim",
-    config = function()
-      require("leap").set_default_keymaps()
-    end,
+    url = "https://codeberg.org/andyg/leap.nvim.git",
     lazy = false,
   },
   {
@@ -126,37 +118,37 @@ return {
             type = "go",
             request = "launch",
             name = "scanner debug",
-            buildFlags = "-tags se,sqlite,production,okr,osusergo,netgo,sqlite_omit_load_extension,sqlite",
+            buildFlags = "-tags sqlite,licensing,enterprise,osusergo,netgo,sqlite_omit_load_extension,sqlite",
             env = { SCANNER_SCANNER_URL = "0.0.0.0:3000" },
             program = vim.fn.getenv "GOPATH" .. "/scanner/cmd/scanner-server/",
             args = { "--config", vim.fn.getenv "GOPATH" .. "/scanner/configs/scanner/localhost/config.yml" },
             outputMode = "remote",
           })
 
-          table.insert(dap.configurations.go, {
-            type = "go",
-            request = "launch",
-            name = "pipeline debug",
-            buildFlags = "-tags fts5,json1",
-            program = vim.fn.getenv "GOPATH" .. "/pipeline/cmd/",
-            outputMode = "remote",
-          })
-
-          table.insert(dap.configurations.go, {
-            type = "go",
-            request = "launch",
-            name = "debug package",
-            program = "${fileDirname}",
-            outputMode = "remote",
-          })
-
-          table.insert(dap.configurations.go, {
-            type = "go",
-            name = "Attach remote",
-            mode = "remote",
-            request = "attach",
-            outputMode = "remote",
-          })
+          -- table.insert(dap.configurations.go, {
+          --   type = "go",
+          --   request = "launch",
+          --   name = "pipeline debug",
+          --   buildFlags = "-tags fts5,json1",
+          --   program = vim.fn.getenv "GOPATH" .. "/pipeline/cmd/",
+          --   outputMode = "remote",
+          -- })
+          --
+          -- table.insert(dap.configurations.go, {
+          --   type = "go",
+          --   request = "launch",
+          --   name = "debug package",
+          --   program = "${fileDirname}",
+          --   outputMode = "remote",
+          -- })
+          --
+          -- table.insert(dap.configurations.go, {
+          --   type = "go",
+          --   name = "Attach remote",
+          --   mode = "remote",
+          --   request = "attach",
+          --   outputMode = "remote",
+          -- })
         end,
       },
       {
@@ -180,58 +172,24 @@ return {
           auto_toggle = false,
         },
       },
-      -- {
-      --   "rcarriga/nvim-dap-ui",
-      --   config = function()
-      --     require("dapui").setup {
-      --       render = {
-      --         max_type_length = nil,
-      --         max_value_line = nil,
-      --       },
-      --       expand_lines = true,
-      --       layouts = {
-      --         {
-      --           elements = {
-      --             -- Elements can be strings or table with id and size keys.
-      --             { id = "scopes", size = 0.25 },
-      --             "breakpoints",
-      --             "watches",
-      --           },
-      --           size = 40, -- 40 columns
-      --           position = "left",
-      --         },
-      --         {
-      --           elements = {
-      --             "repl",
-      --           },
-      --           size = 0.25, -- 25% of total lines
-      --           position = "bottom",
-      --         },
-      --       },
-      --       controls = {
-      --         -- dependencies Neovim nightly (or 0.8 when released)
-      --         enabled = true,
-      --         -- Display controls in this element
-      --         element = "repl",
-      --       },
-      --     }
-      --     local dap, dapui = require "dap", require "dapui"
-      --     dap.listeners.after.event_initialized["dapui_config"] = function()
-      --       dapui.open {}
-      --     end
-      --     dap.listeners.before.event_terminated["dapui_config"] = function()
-      --       dapui.close {}
-      --     end
-      --     dap.listeners.before.event_exited["dapui_config"] = function()
-      --       dapui.close {}
-      --     end
-      --   end,
-      -- },
       {
         "theHamsta/nvim-dap-virtual-text",
-        config = function()
+        requires = {
+          "nvim-treesitter/nvim-treesitter",
+        },
+        init = function()
           require("nvim-dap-virtual-text").setup {
-            virt_text_pos = "inline" or "eol",
+            enabled = true,
+            enabled_commands = true,
+            highlight_changed_variables = true,
+            highlight_new_as_changed = true,
+            virt_text_pos = "eol",
+            display_callback = function(variable, buf, stackframe, node, options)
+              local v = variable.value:gsub("%s+", " ")
+              return variable.name
+                .. " = "
+                .. require("rex_pcre2").gsub(v, require("configs.private.dap").dap_cutter, "")
+            end,
           }
         end,
       },
@@ -342,13 +300,14 @@ return {
       }
     end,
   },
-  {
-    "ibhagwan/smartyank.nvim",
-    config = function()
-      require("smartyank").setup()
-    end,
-    lazy = false,
-  },
+  -- {
+  --   "ibhagwan/smartyank.nvim",
+  --   config = function()
+  --     require("smartyank").setup()
+  --   end,
+  --   lazy = false,
+  --   enabled = false,
+  -- },
   {
     "nvim-neotest/neotest",
     dependencies = {
@@ -455,9 +414,7 @@ return {
   },
   {
     "shellRaining/hlchunk.nvim",
-
     event = { "BufReadPre", "BufNewFile" },
-
     config = function()
       require("hlchunk").setup {
         chunk = {
@@ -476,6 +433,7 @@ return {
   },
   {
     "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     config = function()
       require "configs.nvim-lint"
     end,
@@ -488,35 +446,29 @@ return {
     },
   },
   {
-    "unblevable/quick-scope",
-    event = "VeryLazy",
-    opts = {},
-    config = function()
-      vim.cmd [[
-          highlight QuickScopePrimary guifg='#af5fff' gui=nocombine
-          highlight QuickScopeSecondary guifg='#5fffff' gui=nocombine
-      ]]
-    end,
-  },
-  {
-    "cbochs/portal.nvim",
-    event = "VeryLazy",
-    -- Optional dependencies
-    dependencies = {
-      "cbochs/grapple.nvim",
-      "ThePrimeagen/harpoon",
+    "TheNoeTrevino/no-go.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = "go",
+    enabled = false,
+    opts = {
+      -- Your configuration here (optional)
+      -- lazy.nvim automatically calls setup() with the opts property
+      identifiers = { "err", "error" }, -- Customize which identifiers to collapse
+      -- look at the default config for more details
     },
-    config = function()
-      vim.keymap.set("n", "<leader>o", "<cmd>Portal jumplist backward<cr>")
-      vim.keymap.set("n", "<leader>i", "<cmd>Portal jumplist forward<cr>")
-    end,
   },
   {
-    "junegunn/gv.vim",
-    cmd = "GV",
+    "esmuellert/codediff.nvim",
+    branch = "next",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    cmd = "CodeDiff",
   },
   {
-    "farhanmustar/fugitive-delta.nvim",
-    event = "VeryLazy",
+    "unblevable/quick-scope",
+    lazy = false,
+  },
+  {
+    "ibhagwan/smartyank.nvim",
+    lazy = false,
   },
 }

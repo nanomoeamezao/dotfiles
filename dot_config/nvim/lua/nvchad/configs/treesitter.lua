@@ -13,6 +13,7 @@ return {
     "css",
     "go",
     "gomod",
+    "gosum",
     "javascript",
     "typescript",
     "json",
@@ -46,14 +47,5 @@ return {
   },
   autotag = {
     enable = true,
-  },
-  indent = {
-    enable = true,
-    disable = { "yaml", "python", "c", "cpp" },
-  },
-
-  highlight = {
-    enable = true,
-    use_languagetree = true,
   },
 }

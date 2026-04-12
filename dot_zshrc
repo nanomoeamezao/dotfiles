@@ -206,7 +206,7 @@ alias la='eza -1la --icons'
 alias ll='eza -1l --icons'
 alias gdsp="git diff origin/sprint -- . ':^gen' ':^server/models'"
 alias gco='fzf-git-checkout'
-source /usr/share/nvm/init-nvm.sh
+# source /usr/share/nvm/init-nvm.sh
 alias ua-drop-caches='sudo paccache -rk3; paru -Sc --aur --noconfirm'
 alias ua-update-all='export TMPFILE="$(mktemp)"; \
     sudo true; \

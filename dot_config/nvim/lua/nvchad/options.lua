@@ -2,6 +2,9 @@ local opt = vim.opt
 local o = vim.o
 local g = vim.g
 
+-- vim.highlight.priorities.semantic_tokens = 1 -- default is 125
+-- vim.highlight.priorities.treesitter = 1000 -- default is 100
+
 -------------------------------------- options ------------------------------------------
 o.laststatus = 3
 o.showmode = false

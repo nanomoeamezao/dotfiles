@@ -23,7 +23,7 @@ opt.completeopt = { "menu", "menuone" }
 opt.smoothscroll = true
 
 vim.cmd "set diffopt+=linematch:50"
-
+require("vim._core.ui2").enable {}
 opt.langmap =
   "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
 -- vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })

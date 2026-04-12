@@ -34,6 +34,22 @@ map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window"
 
 -- telescope
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
+map("n", "<leader>fW", function()
+  require("telescope.builtin").live_grep {
+    additional_args = {
+      "--hidden",
+      "--no-ignore",
+      "-g",
+      "!.git",
+      "-g",
+      "!internal/",
+      "-g",
+      "!.coverage",
+      "-g",
+      "!pkg/static",
+    },
+  }
+end, { desc = "telescope live grep no ignore" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
 map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
@@ -57,9 +73,7 @@ map("n", "gr", "<Plug>ReplaceWithRegisterOperator", { desc = "replace with regis
 map("n", "<leader>gb", "<cmd> Telescope git_branches <CR>", { desc = "list git branches" })
 map("n", "<leader>gf", "<cmd> Telescope git_files <CR>", { desc = "list git files" })
 map("n", "<leader>ft", "<cmd> TodoTelescope <CR>", { desc = "telescope for todo items" })
-map("n", "<leader>fo", function()
-  require("telescope").extensions.smart_open.smart_open()
-end, { desc = "open latest files" })
+map("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>", { desc = "open latest files" })
 map("n", "<leader>fg", function()
   require("telescope").extensions.live_grep_args.live_grep_args()
 end)
@@ -136,6 +150,10 @@ map("n", "<leader>dv", function()
   require("telescope").extensions.dap.variables {}
 end, { desc = "dap list variables" })
 map("n", "<leader>dt", "<cmd>DapViewToggle<cr>", { desc = "dap toggle view" })
+
+map("n", "<leader>de", function()
+  require("dap.ui.widgets").hover(nil, { border = "rounded" })
+end, { desc = "dap evaluate" })
 
 -- test
 
@@ -228,3 +246,6 @@ end)
 map("n", "<leader>dh", "<cmd>DiffviewFileHistory %<cr>", { desc = "View git history for current file" })
 map("n", "<leader>do", "<cmd>DiffviewOpen<cr>", { desc = "View modified files" })
 map("n", "<leader>dc", "<cmd>DiffviewClose<cr>", { desc = "Close Diffview" })
+
+map({ "n", "x", "o" }, "s", "<Plug>(leap-forward)", { desc = "leap forward" })
+map({ "n", "x", "o" }, "S", "<Plug>(leap-backward)", { desc = "leap backward" })

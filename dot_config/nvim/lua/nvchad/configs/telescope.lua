@@ -11,11 +11,12 @@ return {
     fzf = {
       fuzzy = true,
       override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true,    -- override the file sorter
+      override_file_sorter = true, -- override the file sorter
     },
   },
   pickers = {
     lsp_references = { show_line = false },
+    oldfiles = { only_cwd = true },
     buffers = {
       mappings = {
         n = {

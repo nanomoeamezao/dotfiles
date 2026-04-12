@@ -1,5 +1,5 @@
 local glci = require("lint").linters.golangcilint
-glci.cmd = vim.fn.getenv "GOPATH" .. "/scanner/.tool/golangci-lint"
+glci.cmd = vim.fn.getenv "GOPATH" .. "/scanner/.tool/custom-gcl"
 glci.args = {
   "run",
   "--output.json.path=stdout",
@@ -14,13 +14,11 @@ glci.args = {
   "--output.sarif.path=",
   "--issues-exit-code=0",
   "--show-stats=false",
-  "--output.text.print-issued-lines=false",
-  "--build-tags=production,dbtest,se,sqlite",
-  "--config=" .. vim.fn.getenv "GOPATH" .. "/scanner/.golangci.yml",
+  -- Get absolute path of the linted file
+  "--path-mode=abs",
   "--tests=false",
-  "--show-stats=false",
-  "--max-issues-per-linter=0",
-  "--max-same-issues=0",
+  "--fix=false",
+  "--disable=nilaway",
   function()
     return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
   end,
@@ -33,10 +31,18 @@ require("lint").linters_by_ft = {
   go = { "golangcilint" },
   sql = { "sqlfluff" },
 }
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  group = vim.api.nvim_create_augroup("lint", { clear = true }),
   callback = function()
-    -- try_lint without arguments runs the linters defined in `linters_by_ft`
-    -- for the current filetype
+    -- local final_args = {}
+    -- for _, v in ipairs(glci.args) do
+    --   if type(v) == "function" then
+    --     table.insert(final_args, v())
+    --   else
+    --     table.insert(final_args, v)
+    --   end
+    -- end
+    -- vim.print(glci.cmd .. " " .. table.concat(final_args, " "))
     require("lint").try_lint()
   end,
 })

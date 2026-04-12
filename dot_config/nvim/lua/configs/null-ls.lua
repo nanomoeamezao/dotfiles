@@ -10,7 +10,7 @@ local sources = {
   b.formatting.sqlfluff.with { extra_args = { "--dialect", "sqlite" } },
 
   -- Lua
-  b.formatting.stylua,
+  b.formatting.stylua.with { extra_args = { "--respect-ignores" } },
 
   -- Shell
   b.formatting.shfmt,

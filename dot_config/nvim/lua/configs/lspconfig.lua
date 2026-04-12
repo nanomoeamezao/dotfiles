@@ -106,7 +106,7 @@ for _, lsp in ipairs(servers) do
         gofumpt = true,
         directoryFilters = { "-gen", "-docs", "-dist", "-cache", "-tmpbd", "-output", "-tmp" },
         codelenses = {
-          generate = false,   -- show the `go generate` lens.
+          generate = false, -- show the `go generate` lens.
           gc_details = false, -- Show a code lens toggling the display of gc's choices.
           test = false,
           tidy = false,
@@ -114,9 +114,8 @@ for _, lsp in ipairs(servers) do
           regenerate_cgo = false,
           upgrade_dependency = false,
         },
-        buildFlags = { "-tags", "se,vault,dbtest,file_search_feature,mage,licensing" },
+        buildFlags = { "-tags", "vault,dbtest,file_search_feature,mage,licensing" },
         completeUnimported = true,
-        staticcheck = true,
         diagnosticsDelay = "500ms",
         analyses = {
           useany = true,
