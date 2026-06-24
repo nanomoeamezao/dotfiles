@@ -114,7 +114,7 @@ for _, lsp in ipairs(servers) do
           regenerate_cgo = false,
           upgrade_dependency = false,
         },
-        buildFlags = { "-tags", "vault,dbtest,file_search_feature,mage,licensing" },
+        buildFlags = { "-tags", "test_long,windows,vault,dbtest,file_search_feature,mage,licensing" },
         completeUnimported = true,
         diagnosticsDelay = "500ms",
         analyses = {

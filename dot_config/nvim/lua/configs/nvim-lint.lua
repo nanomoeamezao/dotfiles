@@ -23,13 +23,21 @@ glci.args = {
     return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
   end,
 }
+local sqlfluff = require("lint").linters.sqlfluff
+sqlfluff.args = {
+  "lint",
+  "--format=json",
+  "--dialect=sqlite",
+  "-",
+}
+
 require("lint").linters_by_ft = {
   sh = { "shellcheck" },
   css = { "stylelint" },
   yaml = { "yamllint" },
   lua = { "selene" },
   go = { "golangcilint" },
-  sql = { "sqlfluff" },
+  sql = { "sqruff" },
 }
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
   group = vim.api.nvim_create_augroup("lint", { clear = true }),
