@@ -32,7 +32,7 @@ return {
   },
 
   sources = {
-    default = { "conventional_commits", "codeium", "lazydev", "lsp", "path", "snippets", "buffer" },
+    default = { "conventional_commits", "lazydev", "lsp", "path", "snippets", "buffer" },
     per_filetype = {
       sql = { "snippets", "dadbod" },
       mysql = { "snippets", "dadbod" },
@@ -53,8 +53,6 @@ return {
         ---@module 'blink-cmp-conventional-commits'
         ---@type blink-cmp-conventional-commits.Options
       },
-
-      codeium = { name = "Codeium", module = "codeium.blink", max_items = 2, score_offset = 100, async = true },
       path = {
         name = "path",
         module = "blink.cmp.sources.path",

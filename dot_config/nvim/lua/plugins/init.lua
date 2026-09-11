@@ -35,18 +35,6 @@ return {
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
   },
   {
-    "Exafunction/windsurf.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    enabled = true,
-    config = function()
-      require("codeium").setup {
-        enable_cmp_source = false,
-        enable_chat = false,
-      }
-    end,
-    event = "BufEnter",
-  },
-  {
     "saghen/blink.cmp",
     event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
@@ -456,12 +444,6 @@ return {
       identifiers = { "err", "error" }, -- Customize which identifiers to collapse
       -- look at the default config for more details
     },
-  },
-  {
-    "esmuellert/codediff.nvim",
-    branch = "next",
-    dependencies = { "MunifTanjim/nui.nvim" },
-    cmd = "CodeDiff",
   },
   {
     "unblevable/quick-scope",
