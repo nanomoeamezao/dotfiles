@@ -1,0 +1,4 @@
+# One exact video path per line. This file may be empty or absent.
+# Relative paths are resolved from this file's directory.
+
+# C:\Videos\YouTube\video-to-skip.mkv

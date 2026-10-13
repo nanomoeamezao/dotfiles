@@ -1,0 +1,3 @@
+#! /bin/bash
+
+echo '{"command": ["cycle", "pause"]}' | sudo socat - /tmp/mpvsocket

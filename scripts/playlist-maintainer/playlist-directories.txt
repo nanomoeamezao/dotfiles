@@ -1,0 +1,5 @@
+# One directory per line. Quotes are optional, including for paths with spaces.
+# Relative paths are resolved from this file's directory.
+
+C:\Videos\YouTube
+# D:\Media\Another Channel
